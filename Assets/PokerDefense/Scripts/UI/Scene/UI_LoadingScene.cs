@@ -80,6 +80,7 @@ namespace PokerDefense.UI.Scene
 
         private void OnClickStartbutton(PointerEventData evt)
         {
+            // 이 시점은 이미 Data Load가 다 끝난 상태임!
             op.allowSceneActivation = true;
         }
     }

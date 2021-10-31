@@ -56,6 +56,16 @@ namespace PokerDefense.Utils
             return null;
         }
 
+        public static void Stop()
+        {
+            Time.timeScale = 0f;
+        }
+
+        public static void Resume()
+        {
+            Time.timeScale = 1f;
+        }
+
         /*
         public static IEnumerator Fade(float fadeTime, bool isOut, Action callback)
         {

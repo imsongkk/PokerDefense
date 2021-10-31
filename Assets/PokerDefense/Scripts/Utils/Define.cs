@@ -25,5 +25,11 @@ namespace PokerDefense.Utils
             Press,
             Click,
         }
+
+        public enum AttackType
+        {
+            AD,
+            AP,
+        }
     }
 }
