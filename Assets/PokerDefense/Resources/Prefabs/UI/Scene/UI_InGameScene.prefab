@@ -65,8 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -961280449010390996, guid: 2a01691a87fedbe4aa6de6f1c0c0f3d4,
-    type: 3}
+  m_Sprite: {fileID: -961280449010390996, guid: 2a01691a87fedbe4aa6de6f1c0c0f3d4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -198,7 +197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1596450671093852837}
   m_Layer: 5
-  m_Name: Health
+  m_Name: Heart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -507,8 +506,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4598059474086584248, guid: 2a01691a87fedbe4aa6de6f1c0c0f3d4,
-    type: 3}
+  m_Sprite: {fileID: -4598059474086584248, guid: 2a01691a87fedbe4aa6de6f1c0c0f3d4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -605,7 +603,7 @@ GameObject:
   - component: {fileID: 2578283039545687978}
   - component: {fileID: 6975135368224781642}
   m_Layer: 5
-  m_Name: HealthText
+  m_Name: HeartText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -661,8 +659,7 @@ MonoBehaviour:
   m_text: ddda
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
-  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604,
-    type: 2}
+  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -796,8 +793,7 @@ MonoBehaviour:
   m_text: 'Round : '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
-  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604,
-    type: 2}
+  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -931,8 +927,7 @@ MonoBehaviour:
   m_text: dddd
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
-  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604,
-    type: 2}
+  m_sharedMaterial: {fileID: 841306108136239235, guid: e0d49651a13881f45b04ff23dd8d9604, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
