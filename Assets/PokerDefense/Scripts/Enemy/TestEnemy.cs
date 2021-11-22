@@ -8,7 +8,7 @@ public class TestEnemy : Enemy
     protected override void Init()
     {
         enemyInfo.name = "A";
-        enemyInfo.speed = 0.7f;
+        enemyInfo.speed = 1f;
         enemyInfo.hp = 100;
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
@@ -29,6 +29,7 @@ public class TestEnemy : Enemy
 
     protected override void OnSpawn()
     {
+        RotatePath();
         StartCoroutine(Move());
     }
 
@@ -39,7 +40,6 @@ public class TestEnemy : Enemy
             transform.Translate(Vector3.up * enemyInfo.speed * Time.deltaTime);
             if (isInWayPoint)
             {
-                curIndex++;
                 RotatePath();
                 isInWayPoint = false;
             }
@@ -56,11 +56,12 @@ public class TestEnemy : Enemy
     {
         if (collision.gameObject.CompareTag("WayPoint"))
         {
-            isInWayPoint = true;
-            if (curIndex == 4) // ����
+            curIndex++;
+            if (curIndex >= deadIndex) // ����
             {
                 Die();
             }
+            isInWayPoint = true;
         }
     }
 
@@ -69,10 +70,10 @@ public class TestEnemy : Enemy
         if (collision.gameObject.CompareTag("WayPoint"))
         {
             isInWayPoint = false;
-            if (curIndex == 4) // ����
-            {
-                Die();
-            }
+            // if (curIndex == 4) // ����
+            // {
+            //     Die();
+            // }
         }
     }
 }
