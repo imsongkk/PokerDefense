@@ -12,10 +12,13 @@ public abstract class Enemy : MonoBehaviour
         public string name;
     }
 
+    void Start() => Init();
+
     protected EnemyInfo enemyInfo;
     protected Transform[] wayPoint = new Transform[3];
-    protected int curIndex = 0;
-    protected bool isInWayPoint = true;
+
+    protected int curIndex = -1;    //충돌 시 인덱스 1 증가
+    protected bool isInWayPoint = false;
     protected new BoxCollider2D collider;
 
     public abstract void Die();

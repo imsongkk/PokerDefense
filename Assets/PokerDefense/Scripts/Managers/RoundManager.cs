@@ -36,15 +36,16 @@ public class RoundManager : MonoBehaviour
 
     IEnumerator SetTextUI()
     {
-        yield return new WaitUntil(()=>ui_InGameScene != null);
+        yield return new WaitUntil(() => ui_InGameScene != null);
         ui_InGameScene.SetHeartText(heart);
         ui_InGameScene.SetGoldText(gold);
         ui_InGameScene.SetRoundText(Round);
     }
 
+
     private void Update()
     {
-        if(state == State.READY) // ½Ã°£ÀÌ ´Ù µÆ°Å³ª À¯Àú°¡ ½ºÅ¸Æ® ´©¸§
+        if (state == State.READY) // ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Æ°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸Æ® ï¿½ï¿½ï¿½ï¿½
         {
             GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
             Instantiate(target, spawnPoint.position, Quaternion.identity);
