@@ -49,7 +49,7 @@ public class RoundManager : MonoBehaviour
         {
             GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
             Instantiate(target, spawnPoint.position, Quaternion.identity);
-            state = State.STOP;
+            state = State.PLAY;
         }
     }
 
