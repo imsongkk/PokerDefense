@@ -4,23 +4,36 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using PokerDefense.Utils;
 
+public enum TowerType
+{
+    Spade,
+    Clover,
+    Diamond,
+    Heart
+}
+
 [CreateAssetMenu(fileName = "New Tower", menuName = "Tower", order = 0)]
 public class TowerAsset : ScriptableObject
 {
-    [SerializeField] protected TileBase towerTile;
+    [SerializeField] protected Sprite towerSprite;
     [SerializeField] protected float damage;
-    protected Tilemap towerGrid;
+    [SerializeField] protected TowerType towerType;
 
-    protected void OnEnable()
+    public Sprite TowerSprite
     {
-        towerGrid = GameObject.FindWithTag("TowerGrid").GetComponent<Tilemap>();
+        get { return towerSprite; }
     }
 
-    public void PlaceTile(Vector3 towerPosition)
-    {
-        Vector3Int gridPosition = new Vector3Int((int)Mathf.Round((towerPosition.x - 0.25f) * 2), (int)Mathf.Round((towerPosition.y + 0.25f) * 2), 0);
-        Vector3Int targetCell = gridPosition;
-        towerGrid.SetTile(targetCell, towerTile);
-        Debug.Log("Set Tile!@");
-    }
+    // protected void OnEnable()
+    // {
+    //     towerGrid = GameObject.FindWithTag("TowerGrid").GetComponent<Tilemap>();
+    // }
+
+    // public void PlaceTile(Vector3 towerPosition)
+    // {
+    //     Vector3Int gridPosition = new Vector3Int((int)Mathf.Round((towerPosition.x - 0.25f) * 2), (int)Mathf.Round((towerPosition.y + 0.25f) * 2), 0);
+    //     Vector3Int targetCell = gridPosition;
+    //     towerGrid.SetTile(targetCell, towerTile);
+    //     Debug.Log("Set Tile!@");
+    // }
 }

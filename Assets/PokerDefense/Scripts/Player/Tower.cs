@@ -8,8 +8,25 @@ public class Tower : MonoBehaviour
 {
     protected Vector3Int gridPosition;
     [SerializeField] protected TowerAsset towerAsset;
+    protected float towerDamage;    // 계산된 실제 대미지
 
-    public void SetPositionGrid(int posX, int posY)
+    void Start() => Init();
+
+    protected virtual void Init()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().sprite = towerAsset.TowerSprite;
+    }
+
+    protected virtual void Attack()
+    {
+
+    }
+    protected virtual void DamageCalculate()
+    {
+
+    }
+
+    public virtual void SetGridPosition(int posX, int posY)
     {
         // 좌상단부터 (0, 0) ~ (7, 7)
         gridPosition = new Vector3Int(posX, posY, 0);
@@ -17,7 +34,7 @@ public class Tower : MonoBehaviour
         SetPosition(transformPosition);
     }
 
-    protected void SetPosition(Vector3 towerPosition)
+    protected virtual void SetPosition(Vector3 towerPosition)
     {
         /*
         gridXPosition = (xPos - 0.25) * 2 to int
@@ -25,6 +42,6 @@ public class Tower : MonoBehaviour
         */
 
         transform.position = towerPosition;
-        towerAsset.PlaceTile(towerPosition);
+        //// towerAsset.PlaceTile(towerPosition);
     }
 }

@@ -10,7 +10,7 @@ public class TowerManager : MonoBehaviour
     void TestPosition()
     {
         Instantiate(testTower.gameObject);
-        testTower.SetPositionGrid(0, 0);
+        testTower.SetGridPosition(0, 0);
     }
 
     void Update()
