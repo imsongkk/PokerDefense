@@ -24,6 +24,9 @@ namespace PokerDefense.Utils
         {
             Press,
             Click,
+            Drag,
+            PointerDown,
+            PointerUp
         }
 
         public enum AttackType

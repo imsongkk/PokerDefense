@@ -1,9 +1,12 @@
 using PokerDefense.Managers;
+using PokerDefense.Utils;
 using PokerDefense.UI.Scene;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RoundManager : MonoBehaviour
 {
@@ -41,7 +44,6 @@ public class RoundManager : MonoBehaviour
         ui_InGameScene.SetGoldText(gold);
         ui_InGameScene.SetRoundText(Round);
     }
-
 
     private void Update()
     {
