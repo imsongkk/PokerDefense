@@ -29,7 +29,6 @@ public class TestEnemy : Enemy
 
     protected override void OnSpawn()
     {
-        RotatePath();
         StartCoroutine(Move());
     }
 
