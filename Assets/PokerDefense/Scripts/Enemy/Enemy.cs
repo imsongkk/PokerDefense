@@ -15,10 +15,10 @@ public abstract class Enemy : MonoBehaviour
     void Start() => Init();
 
     protected EnemyInfo enemyInfo;
-    protected Transform[] wayPoint = new Transform[3];
+    protected Transform wayPointParent;
+    [SerializeField] protected Transform[] wayPoints;
 
-    [SerializeField] protected int curIndex = 0;
-    protected int deadIndex = 4;    //  WayPoint 4번 들르면 사망
+    protected int curIndex = 0;
     protected bool isInWayPoint = false;
     protected new BoxCollider2D collider;
 

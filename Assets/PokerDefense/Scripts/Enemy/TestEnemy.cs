@@ -13,6 +13,13 @@ public class TestEnemy : Enemy
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
 
+        wayPointParent = GameObject.FindGameObjectWithTag("WayPointParent").transform;
+        wayPoints = new Transform[wayPointParent.childCount];
+        int i = 0;
+        foreach (Transform child in wayPointParent)
+        {
+            wayPoints[i++] = child;
+        }
         OnSpawn();
     }
 
@@ -33,6 +40,26 @@ public class TestEnemy : Enemy
     }
 
     IEnumerator Move()
+    {
+        if (wayPoints.Length >= 2)
+        {
+            Vector3 moveDirection = (wayPoints[1].position - wayPoints[0].position).normalized;
+            while (curIndex < wayPoints.Length)
+            {
+                transform.Translate(moveDirection * enemyInfo.speed * Time.deltaTime);
+                if (isInWayPoint)
+                {
+                    isInWayPoint = false;
+                    curIndex++;
+                    moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Length].position - wayPoints[curIndex].position).normalized;
+                }
+                yield return null;
+            }
+        }
+
+    }
+
+    IEnumerator MoveLegacy()
     {
         while (true)
         {
@@ -55,12 +82,14 @@ public class TestEnemy : Enemy
     {
         if (collision.gameObject.CompareTag("WayPoint"))
         {
-            curIndex++;
-            if (curIndex >= deadIndex) // ����
+            isInWayPoint = true;
+        }
+        else if (collision.gameObject.CompareTag("Respawn"))
+        {
+            if (curIndex >= wayPoints.Length - 1) // ����
             {
                 Die();
             }
-            isInWayPoint = true;
         }
     }
 
