@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour
 {
-    public Tower selectedTower;
+    [SerializeField] private RoundManager roundManager;
 
+    public Tower selectedTower;
     public Tower[,] towersArray;
 
     void Start() => Init();
@@ -42,12 +43,27 @@ public class TowerManager : MonoBehaviour
                 tower.transform.SetParent(this.transform, true);
                 towersArray[x, y] = tower;
             }
+            roundManager.TowerSet(true);
         }
     }
 
-    void Update()
+    public void UpdateTower(Tower towerPrefab, int x, int y)
     {
-
+        if ((x >= 8) || (y >= 8) || (x < 0) || (y < 0))
+        {
+            throw new System.IndexOutOfRangeException();
+        }
+        else
+        {
+            if (towersArray[x, y] == null)
+            {
+                //TODO Tower Not Set Exception
+            }
+            else
+            {
+                //TODO
+            }
+        }
     }
 
 }

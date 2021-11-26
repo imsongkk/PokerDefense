@@ -14,10 +14,20 @@ public class PanelObject : MonoBehaviour
 
     public void Init(int x, int y, RoundManager roundManager, TowerManager towerManager)
     {
-        GameObjectEventHandler.AddObjectEvent(gameObject, HighlightPanel, Define.MouseEvent.Drag);
-        GameObjectEventHandler.AddObjectEvent(gameObject, SetTower, Define.MouseEvent.PointerUp);
         InitPosition(x, y);
         SetManager(roundManager, towerManager);
+    }
+
+    public void AddEvents()
+    {
+        GameObjectEventHandler.AddObjectEvent(gameObject, HighlightPanel, Define.MouseEvent.Drag);
+        GameObjectEventHandler.AddObjectEvent(gameObject, SetTower, Define.MouseEvent.PointerUp);
+    }
+
+    public void DeleteEvents()
+    {
+        GameObjectEventHandler.DeleteObjectEvent(gameObject, HighlightPanel, Define.MouseEvent.Drag);
+        GameObjectEventHandler.DeleteObjectEvent(gameObject, SetTower, Define.MouseEvent.PointerUp);
     }
 
     public void InitPosition(int x, int y)

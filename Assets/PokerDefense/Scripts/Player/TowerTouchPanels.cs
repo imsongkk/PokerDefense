@@ -13,9 +13,9 @@ public class TowerTouchPanels : GameObjectEventHandler
     [SerializeField] private RoundManager roundManager;
     [SerializeField] private TowerManager towerManager;
 
-    void Start() => Init();
+    void Awake() => InitAwake();
 
-    void Init()
+    void InitAwake()
     {
         panels = new PanelObject[8, 8];
         for (int i = 0; i < 8; i++)
@@ -28,5 +28,32 @@ public class TowerTouchPanels : GameObjectEventHandler
         }
     }
 
+    public void AddPanelEvents()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                panels[i, j].AddEvents();
+            }
+        }
+    }
+
+    public void DeletePanelEvents()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                panels[i, j].DeleteEvents();
+            }
+        }
+    }
+
+
+    // public void InitPanelPosition(Transform panel, int x, int y)
+    // {
+    //     panel.localPosition = new Vector3((x - 4) * 0.125f + 0.0625f, (4 - y) * 0.125f - 0.0625f, 0);
+    // }
 
 }

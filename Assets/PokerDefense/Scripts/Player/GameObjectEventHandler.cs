@@ -42,4 +42,19 @@ public class GameObjectEventHandler : MonoBehaviour, IPointerDownHandler, IPoint
                 break;
         }
     }
+
+    public static void DeleteObjectEvent(GameObject go, Action<PointerEventData> action, Define.MouseEvent type)
+    {
+        GameObjectEventHandler evt = Util.GetOrAddComponent<GameObjectEventHandler>(go);
+
+        switch (type)
+        {
+            case Define.MouseEvent.PointerDown:
+                evt.ObjectPointerDownHandler -= action;
+                break;
+            case Define.MouseEvent.PointerUp:
+                evt.ObjectPointerUpHandler -= action;
+                break;
+        }
+    }
 }
