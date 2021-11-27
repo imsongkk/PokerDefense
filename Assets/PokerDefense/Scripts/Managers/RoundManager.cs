@@ -68,47 +68,6 @@ public class RoundManager : MonoBehaviour
         ui_InGameScene.SetRoundText(Round);
     }
 
-    // IEnumerator SetState(State state)
-    // {
-    //     //! currentState set에서만 사용함. 독자적으로 사용하지 말것
-    //     Debug.Log(state.ToString());
-    //     switch (state)
-    //     {
-    //         case State.NONE:
-    //             break;
-    //         case State.READY:
-    //             //TODO  Ready Animaiton
-    //             yield return new WaitForSeconds(1f);
-    //             yield return StartCoroutine(SetState(State.TOWER));
-    //             break;
-    //         case State.TOWER:
-    //             TowerStateStart();
-    //             //TODO set position or wait 2min
-    //             float waitSeconds = timeTowerSetLimit;
-    //             while (waitSeconds >= 0)
-    //             {
-    //                 waitSeconds -= Time.deltaTime;
-    //                 if (towerSet)
-    //                 {
-    //                     yield return StartCoroutine(SetState(State.POKER));
-    //                     towerSet = false;
-    //                     break;
-    //                 }
-    //             }
-    //             if (waitSeconds <= 0) yield return StartCoroutine(SetState(State.PLAY));
-    //             break;
-    //         case State.POKER:
-    //             PokerStateStart();
-    //             //TODO poker
-    //             break;
-    //         case State.PLAY:
-    //             PlayStateStart();
-    //             // SpawnTestEnemy();
-    //             break;
-    //     }
-    //     yield return null;
-    // }
-
     private void Update()
     {
         // Debug.Log(state.ToString());
@@ -118,12 +77,13 @@ public class RoundManager : MonoBehaviour
                 if (stateChanged) { stateChanged = false; }
                 break;
             case State.READY:
-                if (stateChanged) { stateChanged = false; }
+                if (stateChanged) { ReadyStateStart(); }
                 //TODO  Ready Animaiton
-                currentState = State.TOWER;
+                timeLeft -= Time.deltaTime;
+                if (timeLeft <= 0) currentState = State.TOWER;
                 break;
             case State.TOWER:
-                if (stateChanged) { TowerStateStart(); stateChanged = false; }
+                if (stateChanged) { TowerStateStart(); }
                 //set position or wait 2min
                 timeLeft -= Time.deltaTime;
                 if (towerSet)
@@ -135,16 +95,14 @@ public class RoundManager : MonoBehaviour
                 if (timeLeft <= 0) currentState = State.PLAY;
                 break;
             case State.POKER:
-                if (stateChanged) { PokerStateStart(); stateChanged = false; }
+                if (stateChanged) { PokerStateStart(); }
                 //TODO poker
                 break;
             case State.PLAY:
-                if (stateChanged) { PlayStateStart(); stateChanged = false; }
+                if (stateChanged) { PlayStateStart(); }
                 // SpawnTestEnemy();
                 break;
         }
-
-
     }
 
     public void TowerSet(bool ts)
@@ -152,23 +110,34 @@ public class RoundManager : MonoBehaviour
         towerSet = ts;
     }
 
+    private void ReadyStateStart()
+    {
+        Debug.Log(state.ToString());
+        timeLeft = 2f;
+        towerTouchPanels.DeletePanelEvents();
+        stateChanged = false;
+    }
+
     private void TowerStateStart()
     {
         Debug.Log(state.ToString());
         timeLeft = timeTowerSetLimit;
         towerTouchPanels.AddPanelEvents();
+        stateChanged = false;
     }
 
     private void PokerStateStart()
     {
         Debug.Log(state.ToString());
         towerTouchPanels.DeletePanelEvents();
+        stateChanged = false;
     }
 
     private void PlayStateStart()
     {
         Debug.Log(state.ToString());
         towerTouchPanels.DeletePanelEvents();
+        stateChanged = false;
     }
 
     private void SpawnEnemy(GameObject enemy)
