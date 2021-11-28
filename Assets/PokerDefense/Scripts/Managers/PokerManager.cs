@@ -58,8 +58,8 @@ public class PokerManager : MonoBehaviour
         int topCard;        // 가장 높은 숫자
     }
 
-    public Hand HandCalaulate((CardShape, int)[] cardList)
-    {
-        //TODO cardList의 카드를 읽어 어떤 패인지 계산하고 해당하는 Hand 구조체를 반환
-    }
+    // public Hand HandCalaulate((CardShape, int)[] cardList)
+    // {
+    //     //TODO cardList의 카드를 읽어 어떤 패인지 계산하고 해당하는 Hand 구조체를 반환
+    // }
 }
