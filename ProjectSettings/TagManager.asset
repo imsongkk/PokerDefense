@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - WayPoint
+  - Enemy
+  - TowerGrid
+  - WayPointParent
   layers:
   - Default
   - TransparentFX

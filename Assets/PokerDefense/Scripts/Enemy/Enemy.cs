@@ -12,10 +12,14 @@ public abstract class Enemy : MonoBehaviour
         public string name;
     }
 
+    void Start() => Init();
+
     protected EnemyInfo enemyInfo;
-    protected Transform[] wayPoint = new Transform[3];
+    protected Transform wayPointParent;
+    [SerializeField] protected Transform[] wayPoints;
+
     protected int curIndex = 0;
-    protected bool isInWayPoint = true;
+    protected bool isInWayPoint = false;
     protected new BoxCollider2D collider;
 
     public abstract void Die();

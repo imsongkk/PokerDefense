@@ -8,15 +8,25 @@ public class TestEnemy : Enemy
     protected override void Init()
     {
         enemyInfo.name = "A";
-        enemyInfo.speed = 3;
+        enemyInfo.speed = 1f;
         enemyInfo.hp = 100;
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
+
+        wayPointParent = GameObject.FindGameObjectWithTag("WayPointParent").transform;
+        wayPoints = new Transform[wayPointParent.childCount];
+        int i = 0;
+        foreach (Transform child in wayPointParent)
+        {
+            wayPoints[i++] = child;
+        }
+        OnSpawn();
     }
 
     public override void Die()
     {
-        throw new System.NotImplementedException();
+        // throw new System.NotImplementedException();
+        Destroy(gameObject);
     }
 
     public override void OnDamage(Define.AttackType attackType, float damage)
@@ -26,12 +36,46 @@ public class TestEnemy : Enemy
 
     protected override void OnSpawn()
     {
-        
+        StartCoroutine(Move());
     }
 
     IEnumerator Move()
     {
-        return null;
+        if (wayPoints.Length >= 2)
+        {
+            Vector3 moveDirection = (wayPoints[1].position - wayPoints[0].position).normalized;
+            while (curIndex < wayPoints.Length)
+            {
+                transform.Translate(moveDirection * enemyInfo.speed * Time.deltaTime);
+                if (isInWayPoint)
+                {
+                    isInWayPoint = false;
+                    curIndex++;
+                    moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Length].position - wayPoints[curIndex].position).normalized;
+                }
+                yield return null;
+            }
+        }
+
+    }
+
+    IEnumerator MoveLegacy()
+    {
+        while (true)
+        {
+            transform.Translate(Vector3.up * enemyInfo.speed * Time.deltaTime);
+            if (isInWayPoint)
+            {
+                RotatePath();
+                isInWayPoint = false;
+            }
+            yield return null;
+        }
+    }
+
+    protected void RotatePath()
+    {
+        transform.Rotate(0, 0, -90);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -39,7 +83,10 @@ public class TestEnemy : Enemy
         if (collision.gameObject.CompareTag("WayPoint"))
         {
             isInWayPoint = true;
-            if(curIndex == 3) // Á×À½
+        }
+        else if (collision.gameObject.CompareTag("Respawn"))
+        {
+            if (curIndex >= wayPoints.Length - 1) // ï¿½ï¿½ï¿½ï¿½
             {
                 Die();
             }
@@ -51,10 +98,10 @@ public class TestEnemy : Enemy
         if (collision.gameObject.CompareTag("WayPoint"))
         {
             isInWayPoint = false;
-            if (curIndex == 3) // Á×À½
-            {
-                Die();
-            }
+            // if (curIndex == 4) // ï¿½ï¿½ï¿½ï¿½
+            // {
+            //     Die();
+            // }
         }
     }
 }
