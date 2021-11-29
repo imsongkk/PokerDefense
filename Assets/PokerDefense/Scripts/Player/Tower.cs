@@ -5,15 +5,23 @@ using PokerDefense.Utils;
 
 public class Tower : MonoBehaviour
 {
-    [SerializeField] protected TowerAsset towerAsset;
+    protected TowerAsset towerAsset;
     protected float towerDamage;    // 계산된 실제 대미지
 
     void Start() => Init();
 
     protected virtual void Init()
     {
+        towerAsset = Tower.LoadTowerAsset("TestTower");
         this.gameObject.GetComponent<SpriteRenderer>().sprite = towerAsset.TowerSprite;
     }
+
+    public static TowerAsset LoadTowerAsset(string name)
+    {
+        var loadedTowerAsset = Resources.Load<TowerAsset>($"Assets/Tower/{name}");
+        return loadedTowerAsset;
+    }
+
 
     protected virtual void Attack()
     {
@@ -41,4 +49,10 @@ public class Tower : MonoBehaviour
         transform.position = towerPosition;
         //// towerAsset.PlaceTile(towerPosition);
     }
+
+    public virtual void UpdateTower(TowerAsset towerAsset)
+    {
+
+    }
+
 }
