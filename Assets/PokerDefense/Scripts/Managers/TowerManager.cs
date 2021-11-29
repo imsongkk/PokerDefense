@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour
 {
-    public Tower selectedTower;
+    private Tower tempTower;
     public Tower[,] towersArray;
 
     void Start() => Init();
@@ -17,9 +17,9 @@ public class TowerManager : MonoBehaviour
         towersArray = new Tower[8, 8];
     }
 
-    public void SetSelectedTowerPosition(int x, int y)
+    public void SetTempTowerPosition(int x, int y)
     {
-        SetTowerPosition(selectedTower, x, y);
+        SetTowerPosition(tempTower, x, y);
     }
 
     public void SetTowerPosition(Tower towerPrefab, int x, int y)
@@ -36,7 +36,7 @@ public class TowerManager : MonoBehaviour
             }
             else
             {
-                Tower tower = Instantiate(towerPrefab.gameObject).GetComponent<Tower>();
+                Tower tower = GameManager.Resource.Instantiate("TestTower").GetComponent<Tower>();
                 tower.SetGridPosition(x, y);
                 tower.transform.SetParent(this.transform, true);
                 towersArray[x, y] = tower;

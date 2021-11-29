@@ -42,7 +42,7 @@ public class RoundManager : MonoBehaviour
     List<Transform> wayPoints = new List<Transform>();
     UI_InGameScene ui_InGameScene;
 
-    [SerializeField] private TowerTouchPanels towerTouchPanels;
+    private TowerTouchPanels towerTouchPanels;
 
     public int Round { get; private set; } = 1;
     private int heart = 5;
@@ -60,6 +60,7 @@ public class RoundManager : MonoBehaviour
         InitPoints();
         StartCoroutine(SetTextUI());
         currentState = State.READY;
+        towerTouchPanels = FindObjectOfType<TowerTouchPanels>();
     }
 
     IEnumerator SetTextUI()

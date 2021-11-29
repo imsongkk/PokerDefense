@@ -50,7 +50,7 @@ public class PanelObject : MonoBehaviour
 
     private void SetTower(PointerEventData eventData)
     {
-        towerManager.SetSelectedTowerPosition(gridCoordinateX, gridCoordinateY);
+        towerManager.SetTempTowerPosition(gridCoordinateX, gridCoordinateY);
     }
 
 
