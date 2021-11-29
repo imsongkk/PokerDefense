@@ -1,13 +1,13 @@
 using PokerDefense.Managers;
 using PokerDefense.UI.Scene;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PokerDefense.Scene
 {
     public class InGameScene : BaseScene
     {
+        [SerializeField] private GameObject RoundManagerObject, TowerManagerObject;
+
         private void Start()
             => Init();
 
@@ -15,6 +15,12 @@ namespace PokerDefense.Scene
         {
             base.Init();
             GameManager.UI.ShowSceneUI<UI_InGameScene>();
+
+            GameManager.AddTowerManager(TowerManagerObject);
+            GameManager.AddRoundManager(RoundManagerObject);
+            GameManager.AddInputManager();
+
+            AddOnDestroyAction(()=>GameManager.DeleteInputManager());
         }
     }
 }

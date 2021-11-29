@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.EventSystems;
 
 public class RoundManager : MonoBehaviour
@@ -37,9 +38,9 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private Transform spawnPoint;
-    [SerializeField] private Transform[] wayPoint = new Transform[3];
-    private UI_InGameScene ui_InGameScene;
+    Transform spawnPoint;
+    List<Transform> wayPoints = new List<Transform>();
+    UI_InGameScene ui_InGameScene;
 
     [SerializeField] private TowerTouchPanels towerTouchPanels;
 
@@ -54,8 +55,9 @@ public class RoundManager : MonoBehaviour
     private void Start()
         => Init();
 
-    private void Init()
+    public void Init()
     {
+        InitPoints();
         StartCoroutine(SetTextUI());
         currentState = State.READY;
     }
@@ -63,9 +65,7 @@ public class RoundManager : MonoBehaviour
     IEnumerator SetTextUI()
     {
         yield return new WaitUntil(() => ui_InGameScene != null);
-        ui_InGameScene.SetHeartText(heart);
-        ui_InGameScene.SetGoldText(gold);
-        ui_InGameScene.SetRoundText(Round);
+        ui_InGameScene.InitText(heart, gold, Round);
     }
 
     private void Update()
@@ -149,6 +149,12 @@ public class RoundManager : MonoBehaviour
     {
         GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
         SpawnEnemy(target);
+    }
+
+    private void InitPoints()
+    {
+        GameObject respawn = GameObject.FindGameObjectWithTag("Respawn");
+        GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
     }
 
     public void SetUIIngameScene(UI_InGameScene target)

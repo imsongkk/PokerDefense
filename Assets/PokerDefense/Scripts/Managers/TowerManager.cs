@@ -7,14 +7,12 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour
 {
-    [SerializeField] private RoundManager roundManager;
-
     public Tower selectedTower;
     public Tower[,] towersArray;
 
     void Start() => Init();
 
-    protected void Init()
+    public void Init()
     {
         towersArray = new Tower[8, 8];
     }
@@ -43,7 +41,7 @@ public class TowerManager : MonoBehaviour
                 tower.transform.SetParent(this.transform, true);
                 towersArray[x, y] = tower;
             }
-            roundManager.TowerSet(true);
+            GameManager.Round.TowerSet(true);
         }
     }
 

@@ -5,17 +5,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using PokerDefense.Utils;
+using PokerDefense.Managers;
 
 public class TowerTouchPanels : GameObjectEventHandler
 {
     protected PanelObject[,] panels;
     [SerializeField] protected GameObject panelPrefab;
-    [SerializeField] private RoundManager roundManager;
-    [SerializeField] private TowerManager towerManager;
 
-    void Awake() => InitAwake();
+    RoundManager roundManager;
+    TowerManager towerManager;
 
-    void InitAwake()
+    void Start() 
+        => Init();
+
+    void Init()
+    {
+        roundManager = GameManager.Round;
+        towerManager = GameManager.Tower;
+        SetPanels();
+    }
+
+    private void SetPanels()
     {
         panels = new PanelObject[8, 8];
         for (int i = 0; i < 8; i++)

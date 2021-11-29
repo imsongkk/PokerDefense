@@ -10,11 +10,22 @@ namespace PokerDefense.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
-        UIManager ui = new UIManager();
-        ResourceManager resouce = new ResourceManager();
 
-        public static UIManager UI { get => Instance.ui; }
-        public static ResourceManager Resource { get => Instance.resouce; }
+
+
+        UIManager uiManager = new UIManager();
+        ResourceManager resourceManager = new ResourceManager();
+        RoundManager roundManager = null;
+        TowerManager towerManager = null;
+        InputManager inputManager = null;
+
+
+
+        public static UIManager UI { get => Instance.uiManager; }
+        public static ResourceManager Resource { get => Instance.resourceManager; }
+        public static RoundManager Round { get => Instance.roundManager; }
+        public static TowerManager Tower { get => Instance.towerManager; }
+        public static InputManager Input { get => Instance.inputManager; }
 
         void Awake()
             => Init();
@@ -31,11 +42,38 @@ namespace PokerDefense.Managers
                 }
                 instance = go.GetComponent<GameManager>();
                 DontDestroyOnLoad(instance.gameObject);
-                /*
-                if (EventSystem.current)
-                    DontDestroyOnLoad(EventSystem.current);
-                */
             }
+        }
+
+        public static void AddRoundManager(GameObject target)
+        {
+            if (instance.roundManager != null) return;
+
+            instance.roundManager = target.AddComponent<RoundManager>();
+        }
+
+        public static void AddTowerManager(GameObject target)
+        {
+            if (instance.towerManager != null) return;
+
+            instance.towerManager = target.AddComponent<TowerManager>();
+        }
+
+        public static void AddInputManager()
+        {
+            if (instance.inputManager != null)
+            {
+                instance.inputManager.enabled = true;
+                return;
+            }
+            instance.inputManager = instance.gameObject.AddComponent<InputManager>();
+        }
+
+        public static void DeleteInputManager()
+        {
+            if (instance.inputManager == null) return;
+
+            instance.inputManager.enabled = false;
         }
     }
 }

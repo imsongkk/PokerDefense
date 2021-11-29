@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using PokerDefense.Managers;
 
 namespace PokerDefense.UI.Scene
 {
@@ -23,9 +24,11 @@ namespace PokerDefense.UI.Scene
         public override void Init()
         {
             base.Init();
+
             Bind<GameObject>(typeof(GameObjects));
             BindObject();
-            GameObject.Find("RoundManager").GetComponent<RoundManager>().SetUIIngameScene(this);
+
+            GameManager.Round.SetUIIngameScene(this);
         }
 
         private void BindObject()
@@ -33,6 +36,13 @@ namespace PokerDefense.UI.Scene
             heartText = GetObject((int)GameObjects.HeartText).GetComponent<TextMeshProUGUI>();
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
+        }
+
+        public void InitText(int heart, int gold, int round)
+        {
+            heartText.text = heart.ToString();
+            goldText.text = gold.ToString();
+            roundText.text = round.ToString();
         }
 
         public void SetHeartText(int count)
