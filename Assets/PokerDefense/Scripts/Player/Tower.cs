@@ -18,7 +18,7 @@ public class Tower : MonoBehaviour
 
     public static TowerAsset LoadTowerAsset(string name)
     {
-        var loadedTowerAsset = Resources.Load<TowerAsset>($"Assets/Tower/{name}");
+        var loadedTowerAsset = Resources.Load<TowerAsset>($"Assets/Towers/{name}");
         return loadedTowerAsset;
     }
 

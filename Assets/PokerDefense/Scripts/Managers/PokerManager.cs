@@ -9,18 +9,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum CardShape
+{
+    Spade,      // 0
+    Heart,      // 1
+    Diamond,    // 2
+    Clover,     // 3
+    Joker       // 4
+}
+
 // 포커 룰: https://silk-ornament-d81.notion.site/Z7JCard-3825581ae9b442229ae51e410bf6fdb4
 public class PokerManager : MonoBehaviour
 {
-    public enum CardShape
-    {
-        Spade,
-        Heart,
-        Clover,
-        Diamond,
-        Joker
-    }
-
     public enum HandRank
     {
         HighCard,
@@ -41,10 +41,53 @@ public class PokerManager : MonoBehaviour
         Jackpot
     }
 
-    //숫자: 1~8, Z는 8로 취급하여 저장
-    public List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
+    //숫자: 0~7, Z는 0으로 취급하여 저장
+    [SerializeField] private List<Sprite> spadeSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> heartSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> cloverSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> diamondSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> jokerSpriteList = new List<Sprite>();
 
-    public List<HandRank> hiddenRanks = new List<HandRank>
+    private List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
+
+    public Transform cardsParent;
+    public GameObject cardPrefab;
+
+    private List<(CardShape shape, int number)> deck = new List<(CardShape shape, int number)>();
+
+    private void Start()
+    {
+        cardsSpriteList[0] = spadeSpriteList;
+        cardsSpriteList[1] = heartSpriteList;
+        cardsSpriteList[2] = diamondSpriteList;
+        cardsSpriteList[3] = cloverSpriteList;
+        SetDeck();
+    }
+
+    private void SetDeck()
+    {
+        deck.Capacity = 32;
+        for (int cardNum = 0; cardNum < 32; cardNum++)
+        {
+            deck.Add(((CardShape)(cardNum / 8), (cardNum % 8)));
+        }
+
+        var random = new System.Random();
+        var randomizedDeck = deck.OrderBy(item => random.Next());
+
+        foreach (var cardTuple in randomizedDeck)
+        {
+            Debug.Log(cardTuple);
+            Card card = Instantiate(cardPrefab, cardsParent).GetComponent<Card>();
+            card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
+            //TODO 카드별 Sorting 순서
+        }
+    }
+
+    // 손패
+    protected List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
+
+    protected List<HandRank> hiddenRanks = new List<HandRank>
     {
         HandRank.Beast,
         HandRank.BackStraight,
@@ -53,6 +96,8 @@ public class PokerManager : MonoBehaviour
         HandRank.BackStraightFlush,
         HandRank.Jackpot
     };
+
+
 
     public struct Hand
     {
@@ -77,7 +122,7 @@ public class PokerManager : MonoBehaviour
         int sameNumber = 1;
         bool isFlush = true;
         bool isStraight = true;
-        bool isBackStraight = false;
+        bool isRoyalStraight = false;
 
         HandRank handRank;
 
@@ -92,11 +137,15 @@ public class PokerManager : MonoBehaviour
             {
                 if (cardList[i].number != cardList[i - 1].number + 1)
                 {
-                    if ((i == 4) && isStraight && (cardList[i - 1].number == 4) && (cardList[i].number == 8))
+                    if ((i == 1) && (cardList[i - 1].number == 0) && (cardList[i].number == 4))
                     {
-                        isBackStraight = true;      // Back Straight
+                        isRoyalStraight = true;      // Back Straight
                     }
-                    else isStraight = false;
+                    else
+                    {
+                        isStraight = false;
+                        isRoyalStraight = false;
+                    }
                 }
                 sameNumbers.Add(sameNumber);
                 sameNumber = 1;
@@ -136,14 +185,14 @@ public class PokerManager : MonoBehaviour
         {
             if (isStraight && isFlush)
             {
-                if (isBackStraight) handRank = HandRank.BackStraightFlush;
-                else if (topCard == 8) handRank = HandRank.RoyalStraightFlush;
+                if (isRoyalStraight) handRank = HandRank.RoyalStraightFlush;
+                else if (topCard == 4) handRank = HandRank.BackStraightFlush;
                 else handRank = HandRank.StraightFlush;
             }
             else if (isStraight)
             {
-                if (isBackStraight) handRank = HandRank.BackStraight;
-                else if (topCard == 8) handRank = HandRank.RoyalStraight;
+                if (isRoyalStraight) handRank = HandRank.RoyalStraight;
+                else if (topCard == 4) handRank = HandRank.BackStraight;
                 else handRank = HandRank.Straight;
             }
             else if (isFlush)
@@ -161,4 +210,6 @@ public class PokerManager : MonoBehaviour
 
         return returnHand;
     }
+
+
 }
