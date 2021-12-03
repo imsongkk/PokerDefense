@@ -10,16 +10,11 @@ namespace PokerDefense.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
-
-
-
         UIManager uiManager = new UIManager();
         ResourceManager resourceManager = new ResourceManager();
         RoundManager roundManager = null;
         TowerManager towerManager = null;
         InputManager inputManager = null;
-
-
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }

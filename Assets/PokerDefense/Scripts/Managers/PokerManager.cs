@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public enum CardShape
@@ -41,52 +42,6 @@ public class PokerManager : MonoBehaviour
         Jackpot
     }
 
-    //숫자: 0~7, Z는 0으로 취급하여 저장
-    [SerializeField] private List<Sprite> spadeSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> heartSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> cloverSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> diamondSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> jokerSpriteList = new List<Sprite>();
-
-    private List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
-
-    public Transform cardsParent;
-    public GameObject cardPrefab;
-
-    private List<(CardShape shape, int number)> deck = new List<(CardShape shape, int number)>();
-
-    private void Start()
-    {
-        cardsSpriteList[0] = spadeSpriteList;
-        cardsSpriteList[1] = heartSpriteList;
-        cardsSpriteList[2] = diamondSpriteList;
-        cardsSpriteList[3] = cloverSpriteList;
-        SetDeck();
-    }
-
-    private void SetDeck()
-    {
-        deck.Capacity = 32;
-        for (int cardNum = 0; cardNum < 32; cardNum++)
-        {
-            deck.Add(((CardShape)(cardNum / 8), (cardNum % 8)));
-        }
-
-        var random = new System.Random();
-        var randomizedDeck = deck.OrderBy(item => random.Next());
-
-        foreach (var cardTuple in randomizedDeck)
-        {
-            Debug.Log(cardTuple);
-            Card card = Instantiate(cardPrefab, cardsParent).GetComponent<Card>();
-            card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
-            //TODO 카드별 Sorting 순서
-        }
-    }
-
-    // 손패
-    protected List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
-
     protected List<HandRank> hiddenRanks = new List<HandRank>
     {
         HandRank.Beast,
@@ -96,8 +51,6 @@ public class PokerManager : MonoBehaviour
         HandRank.BackStraightFlush,
         HandRank.Jackpot
     };
-
-
 
     public struct Hand
     {
@@ -111,6 +64,84 @@ public class PokerManager : MonoBehaviour
             this.isHidden = isHidden;
             this.topCard = topCard;
         }
+    }
+
+
+    //숫자: 0~7, Z는 0으로 취급하여 저장
+    [SerializeField] private List<Sprite> spadeSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> heartSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> cloverSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> diamondSpriteList = new List<Sprite>();
+    [SerializeField] private List<Sprite> jokerSpriteList = new List<Sprite>();
+
+    private List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
+
+    public Transform cardsParent;
+    public GameObject cardPrefab;
+
+    // 덱
+    private List<(CardShape shape, int number)> deck = new List<(CardShape shape, int number)>();
+
+    // 손패
+    protected List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
+
+    private void Start()
+    {
+        cardsSpriteList[0] = spadeSpriteList;
+        cardsSpriteList[1] = heartSpriteList;
+        cardsSpriteList[2] = diamondSpriteList;
+        cardsSpriteList[3] = cloverSpriteList;
+        // PokerStart();
+    }
+
+    private void SetDeck()
+    {
+        deck.Capacity = 32;
+        for (int cardNum = 0; cardNum < 32; cardNum++)
+        {
+            deck.Add(((CardShape)(cardNum / 8), (cardNum % 8)));
+        }
+
+        ShuffleDeck();
+
+        // foreach (var cardTuple in deck)
+        // {
+        //     Card card = Instantiate(cardPrefab, cardsParent).GetComponent<Card>();
+        //     card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
+        //     //TODO 카드별 Sorting 순서
+        // }
+    }
+
+    private void ShuffleDeck()
+    {
+        var random = new System.Random();
+        deck = deck.OrderBy(item => random.Next()).ToList();
+    }
+
+    private (CardShape shape, int number) PopCard()
+    {
+        (CardShape shape, int number) card = deck[deck.Count - 1];
+        deck.RemoveAt(deck.Count - 1);
+        return card;
+    }
+
+    private Card InstantiateCard((CardShape shape, int number) cardTuple, Transform parent)
+    {
+        Card card = Instantiate(cardPrefab, parent).GetComponent<Card>();
+        card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
+        return card;
+    }
+
+    private void PokerStart()
+    {
+        SetDeck();
+        for (int i = 0; i < 5; i++)
+        {
+            cardList.Add(PopCard());
+            //TODO 카드뽑기 애니메이션
+            InstantiateCard(cardList[i], cardsParent.GetChild(i));
+        }
+
     }
 
     public Hand HandCalaulate(List<(CardShape shape, int number)> cardList)
