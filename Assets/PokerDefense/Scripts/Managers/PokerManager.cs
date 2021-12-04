@@ -1,6 +1,6 @@
 using PokerDefense.Managers;
 using PokerDefense.Utils;
-using PokerDefense.UI.Scene;
+using PokerDefense.UI.Popup;
 using System;
 using System.Linq;
 using System.Collections;
@@ -68,16 +68,20 @@ public class PokerManager : MonoBehaviour
 
 
     //숫자: 0~7, Z는 0으로 취급하여 저장
-    [SerializeField] private List<Sprite> spadeSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> heartSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> cloverSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> diamondSpriteList = new List<Sprite>();
-    [SerializeField] private List<Sprite> jokerSpriteList = new List<Sprite>();
+    public List<Sprite> spadeSpriteList = new List<Sprite>();
+    public List<Sprite> heartSpriteList = new List<Sprite>();
+    public List<Sprite> cloverSpriteList = new List<Sprite>();
+    public List<Sprite> diamondSpriteList = new List<Sprite>();
+    public List<Sprite> jokerSpriteList = new List<Sprite>();
 
-    private List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
+    public List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
 
-    public Transform cardsParent;
-    public GameObject cardPrefab;
+    UI_Poker ui_Poker;
+    [SerializeField] private GameObject cardPrefab;
+    public GameObject CardPrefab
+    {
+        get { return cardPrefab; }
+    }
 
     // 덱
     private List<(CardShape shape, int number)> deck = new List<(CardShape shape, int number)>();
@@ -85,14 +89,21 @@ public class PokerManager : MonoBehaviour
     // 손패
     protected List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
 
+    public List<(CardShape shape, int number)> CardList
+    {
+        get { return cardList; }
+    }
+
     private void Start()
     {
         cardsSpriteList[0] = spadeSpriteList;
         cardsSpriteList[1] = heartSpriteList;
         cardsSpriteList[2] = diamondSpriteList;
         cardsSpriteList[3] = cloverSpriteList;
-        // PokerStart();
     }
+
+    public void SetUIPoker(UI_Poker target)
+        => ui_Poker = target;
 
     private void SetDeck()
     {
@@ -103,13 +114,6 @@ public class PokerManager : MonoBehaviour
         }
 
         ShuffleDeck();
-
-        // foreach (var cardTuple in deck)
-        // {
-        //     Card card = Instantiate(cardPrefab, cardsParent).GetComponent<Card>();
-        //     card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
-        //     //TODO 카드별 Sorting 순서
-        // }
     }
 
     private void ShuffleDeck()
@@ -120,28 +124,19 @@ public class PokerManager : MonoBehaviour
 
     private (CardShape shape, int number) PopCard()
     {
-        (CardShape shape, int number) card = deck[deck.Count - 1];
+        var card = deck[deck.Count - 1];
         deck.RemoveAt(deck.Count - 1);
         return card;
     }
 
-    private Card InstantiateCard((CardShape shape, int number) cardTuple, Transform parent)
-    {
-        Card card = Instantiate(cardPrefab, parent).GetComponent<Card>();
-        card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
-        return card;
-    }
-
-    private void PokerStart()
+    public void PokerStart()
     {
         SetDeck();
         for (int i = 0; i < 5; i++)
         {
             cardList.Add(PopCard());
-            //TODO 카드뽑기 애니메이션
-            InstantiateCard(cardList[i], cardsParent.GetChild(i));
         }
-
+        ui_Poker.PokerUIStart();
     }
 
     public Hand HandCalaulate(List<(CardShape shape, int number)> cardList)

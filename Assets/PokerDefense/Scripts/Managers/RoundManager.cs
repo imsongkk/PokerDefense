@@ -42,6 +42,7 @@ public class RoundManager : MonoBehaviour
     List<Transform> wayPoints = new List<Transform>();
     UI_InGameScene ui_InGameScene;
 
+
     private TowerTouchPanels towerTouchPanels;
 
     public int Round { get; private set; } = 1;
@@ -131,6 +132,9 @@ public class RoundManager : MonoBehaviour
     {
         Debug.Log(state.ToString());
         towerTouchPanels.DeletePanelEvents();
+
+        GameManager.Poker.PokerStart();
+
         stateChanged = false;
     }
 
@@ -160,4 +164,6 @@ public class RoundManager : MonoBehaviour
 
     public void SetUIIngameScene(UI_InGameScene target)
         => ui_InGameScene = target;
+
+
 }

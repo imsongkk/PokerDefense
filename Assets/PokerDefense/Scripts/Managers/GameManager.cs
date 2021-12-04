@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using PokerDefense.Utils;
 
 namespace PokerDefense.Managers
 {
@@ -15,12 +16,14 @@ namespace PokerDefense.Managers
         RoundManager roundManager = null;
         TowerManager towerManager = null;
         InputManager inputManager = null;
+        PokerManager pokerManager = null;
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
         public static RoundManager Round { get => Instance.roundManager; }
         public static TowerManager Tower { get => Instance.towerManager; }
         public static InputManager Input { get => Instance.inputManager; }
+        public static PokerManager Poker { get => Instance.pokerManager; }
 
         void Awake()
             => Init();
@@ -52,6 +55,24 @@ namespace PokerDefense.Managers
             if (instance.towerManager != null) return;
 
             instance.towerManager = target.AddComponent<TowerManager>();
+        }
+
+        public static void GetOrAddRoundManager(GameObject target)
+        {
+            if (instance.roundManager != null) return;
+            instance.roundManager = Util.GetOrAddComponent<RoundManager>(target);
+        }
+
+        public static void GetOrAddTowerManager(GameObject target)
+        {
+            if (instance.towerManager != null) return;
+            instance.towerManager = Util.GetOrAddComponent<TowerManager>(target);
+        }
+
+        public static void GetOrAddPokerManager(GameObject target)
+        {
+            if (instance.pokerManager != null) return;
+            instance.pokerManager = Util.GetOrAddComponent<PokerManager>(target);
         }
 
         public static void AddInputManager()

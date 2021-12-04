@@ -485,8 +485,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 004fa7dfa4a59f5469721aa4bb75fcac, type: 3}
   - {fileID: 21300000, guid: 4abc8ed1108690f4cb08b504e1524629, type: 3}
   jokerSpriteList: []
-  cardsParent: {fileID: 1456556492}
-  cardPrefab: {fileID: 1494892887595173720, guid: 503719643ad66794897f1c0643a47388, type: 3}
+  cardPrefab: {fileID: 2162903407152003605, guid: c6a9bc9971dae51448f5ba1e51ba2f38, type: 3}
 --- !u!4 &300709225
 Transform:
   m_ObjectHideFlags: 0
