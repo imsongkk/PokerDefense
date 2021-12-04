@@ -53,13 +53,35 @@ namespace PokerDefense.UI.Popup
             return card;
         }
 
+        public void InstantiateCardIndex(int index, Transform hand)
+        {
+            //TODO 카드뽑기 애니메이션
+            cardObjectHand[index] = InstantiateCard(cardList[index], hand.GetChild(index));
+        }
+
         public void PokerUIStart()
         {
             //TODO 카드뽑기 애니메이션
+            for (int index = 0; index < 5; index++)
+            {
+                InstantiateCardIndex(index, cardHand);
+            }
+        }
+
+        public void PokerUIReset()
+        {
+            //TODO 카드 넣기 & 섞기 애니메이션
             for (int i = 0; i < 5; i++)
             {
-                InstantiateCard(cardList[i], cardHand.GetChild(i));
+                Destroy(cardObjectHand[i]);
             }
+        }
+
+        public void ChangeCardUI(int index)
+        {
+            var oldCard = cardObjectHand[index];
+            InstantiateCardIndex(index, cardHand);
+            Destroy(oldCard);
         }
 
     }

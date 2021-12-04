@@ -84,14 +84,21 @@ public class PokerManager : MonoBehaviour
     }
 
     // 덱
-    private List<(CardShape shape, int number)> deck = new List<(CardShape shape, int number)>();
+    private List<(CardShape shape, int number)> deque = new List<(CardShape shape, int number)>();
 
     // 손패
-    protected List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
-
+    private List<(CardShape shape, int number)> cardList = new List<(CardShape shape, int number)>();
     public List<(CardShape shape, int number)> CardList
     {
         get { return cardList; }
+    }
+    // 각 카드를 라운드마다 1번씩 바꿈
+    // 카드를 바꿀때마나 chance 1씩 소모
+    private bool[] isCardChanged = { false, false, false, false, false };
+    private int chance = 5;
+    public int Chance
+    {
+        get { return chance; }
     }
 
     private void Start()
@@ -105,33 +112,55 @@ public class PokerManager : MonoBehaviour
     public void SetUIPoker(UI_Poker target)
         => ui_Poker = target;
 
-    private void SetDeck()
+    private void SetDeque()
     {
-        deck.Capacity = 32;
+        deque = new List<(CardShape shape, int number)>();
+        deque.Capacity = 32;
         for (int cardNum = 0; cardNum < 32; cardNum++)
         {
-            deck.Add(((CardShape)(cardNum / 8), (cardNum % 8)));
+            deque.Add(((CardShape)(cardNum / 8), (cardNum % 8)));
         }
 
-        ShuffleDeck();
+        ShuffleDeque();
     }
 
-    private void ShuffleDeck()
+    private void ShuffleDeque()
     {
         var random = new System.Random();
-        deck = deck.OrderBy(item => random.Next()).ToList();
+        deque = deque.OrderBy(item => random.Next()).ToList();
     }
 
     private (CardShape shape, int number) PopCard()
     {
-        var card = deck[deck.Count - 1];
-        deck.RemoveAt(deck.Count - 1);
+        var card = deque[deque.Count - 1];
+        deque.RemoveAt(deque.Count - 1);
         return card;
+    }
+
+    private void ChangeCard(int index)
+    {
+        if (chance <= 0) return;
+        chance--;
+
+        var oldCard = cardList[index];
+        cardList[index] = PopCard();
+        deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
+    }
+
+    private void ResetDeque()
+    {
+        for (int i = 4; i >= 0; i--)
+        {
+            deque.Add(cardList[i]);
+            cardList.RemoveAt(i);
+        }
+        ui_Poker.PokerUIReset();
+        ShuffleDeque();
     }
 
     public void PokerStart()
     {
-        SetDeck();
+        SetDeque();
         for (int i = 0; i < 5; i++)
         {
             cardList.Add(PopCard());
