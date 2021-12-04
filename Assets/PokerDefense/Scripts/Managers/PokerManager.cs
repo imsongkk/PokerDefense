@@ -145,6 +145,7 @@ public class PokerManager : MonoBehaviour
         var oldCard = cardList[index];
         cardList[index] = PopCard();
         deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
+        ui_Poker.ChangeCardUI(index);
     }
 
     private void ResetDeque()
