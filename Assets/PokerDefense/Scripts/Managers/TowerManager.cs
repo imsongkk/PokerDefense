@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static PokerDefense.Managers.RoundManager;
 
 namespace PokerDefense.Managers
 {
@@ -55,18 +56,19 @@ namespace PokerDefense.Managers
 
         }
 
-        public void BuildTower(string towerName)
+        public void BuildTower() // 이미 포커 패를 뽑은 이후이기 때문에, 이에 맞는 TowerData가 설정되어있음(PokerManager에서 가져옴)
         {
+            // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
             if (selectedTowerPanel == null) return;
 
-            // GameObject towerObject = GameManager.Resource.Instantiate(towerName, selectedTowerPanel.transform);
             GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
-            //towerObject.AddComponent<Tower>(); 이미 Tower Component가 붙어 있게 설계 할듯?
             Tower tower = towerObject.GetComponent<Tower>();
             tower.InitTower("TestTower");
-            //tower.InitTower(towerName);
 
             selectedTowerPanel.SetTower(tower);
+
+            // 타워 건설 성공시 라운드 시작
+            GameManager.Round.BuildTower();
         }
 
         public void UpgradeTower(Tower tower)

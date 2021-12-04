@@ -15,11 +15,16 @@ namespace PokerDefense.Scene
         {
             base.Init();
             GameManager.UI.ShowSceneUI<UI_InGameScene>();
+            InitManagers();
+        }
 
+        private void InitManagers()
+        {
             GameManager.AddRoundManager(RoundManagerObject);
             GameManager.AddInputManager();
+            GameManager.Tower.InitTowerManager();
 
-            AddOnDestroyAction(()=>GameManager.DeleteInputManager());
+            AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }
     }
 }

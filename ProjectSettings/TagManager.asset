@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - TowerGrid
   - WayPointParent
+  - TowerPanels
   layers:
   - Default
   - TransparentFX

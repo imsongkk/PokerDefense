@@ -1,23 +1,50 @@
 using UnityEngine;
 using static PokerDefense.Managers.RoundManager;
 using PokerDefense.Managers;
+using PokerDefense.UI.Popup;
+using PokerDefense.Towers;
+using UnityEngine.EventSystems;
 
-public class InputManager : MonoBehaviour
+namespace PokerDefense.Managers
 {
-    RoundState roundState = RoundState.NONE;
-
-    private void Update()
+    public class InputManager : MonoBehaviour
     {
-        if (Input.GetMouseButtonDown(0))
+        RoundState roundState = RoundState.NONE;
+
+        private void Update()
         {
-            roundState = GameManager.Round.CurrentState;
-            if (roundState.HasFlag(
-                RoundState.POKER | 
-                RoundState.PLAY |
-                RoundState.TOWER))
-                return;
-            // Tower선택 UI 띄우기
-            // GameManager.UI.ShowPopupUI<> 
+            if (Input.GetMouseButtonDown(0))
+            {
+#if UNITY_EDITOR
+                if (EventSystem.current.IsPointerOverGameObject()) // UI 터치는 안받음
+#else
+                if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+#endif
+                {
+                    return;
+                }
+
+                roundState = GameManager.Round.CurrentState;
+                if (roundState.HasFlag(
+                    RoundState.POKER |
+                    RoundState.PLAY |
+                    RoundState.TOWER))
+                    return;
+
+                Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Ray ray = new Ray(touchPos, Vector3.forward);
+                RaycastHit2D[] result = Physics2D.GetRayIntersectionAll(ray);
+                for(int i=0; i<result.Length; i++)
+                {
+                    TowerPanel towerPanel = result[i].collider?.GetComponent<TowerPanel>();
+                    
+                    if (towerPanel != null)
+                    {
+                        UI_TowerSelectPopup towerselect = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
+                        towerselect.SetTowerPanel(towerPanel);
+                    }
+                }
+            }
         }
     }
 }

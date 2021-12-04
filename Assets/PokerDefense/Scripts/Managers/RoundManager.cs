@@ -106,9 +106,10 @@ namespace PokerDefense.Managers
             }
         }
 
-        public void TowerSet(bool ts)
+        public void BuildTower()
         {
-            towerSet = ts;
+            //CurrentState = RoundState.PLAY;
+            towerSet = true;
         }
 
         private void ReadyStateStart()
