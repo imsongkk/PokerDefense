@@ -11,20 +11,20 @@ namespace PokerDefense.Managers
         public static GameManager Instance { get { Init(); return instance; } }
 
 
-
-
         UIManager uiManager = new UIManager();
         ResourceManager resourceManager = new ResourceManager();
+        TowerManager towerManager = new TowerManager();
+        DataManager dataManager = new DataManager();
         RoundManager roundManager = null;
-        TowerManager towerManager = null;
         InputManager inputManager = null;
 
 
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
-        public static RoundManager Round { get => Instance.roundManager; }
         public static TowerManager Tower { get => Instance.towerManager; }
+        public static DataManager Data { get => Instance.dataManager; }
+        public static RoundManager Round { get => Instance.roundManager; }
         public static InputManager Input { get => Instance.inputManager; }
 
         void Awake()
@@ -50,13 +50,6 @@ namespace PokerDefense.Managers
             if (instance.roundManager != null) return;
 
             instance.roundManager = target.AddComponent<RoundManager>();
-        }
-
-        public static void AddTowerManager(GameObject target)
-        {
-            if (instance.towerManager != null) return;
-
-            instance.towerManager = target.AddComponent<TowerManager>();
         }
 
         public static void AddInputManager()

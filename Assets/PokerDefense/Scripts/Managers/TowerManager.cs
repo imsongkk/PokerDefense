@@ -1,67 +1,86 @@
+using PokerDefense.Data;
 using PokerDefense.Managers;
+using PokerDefense.Towers;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-
-public class TowerManager : MonoBehaviour
+namespace PokerDefense.Managers
 {
-    private Tower tempTower;
-    public Tower[,] towersArray;
-
-    void Start() => Init();
-
-    public void Init()
+    public class TowerManager
     {
-        towersArray = new Tower[8, 8];
-    }
-
-    public void SetTempTowerPosition(int x, int y)
-    {
-        SetTowerPosition(tempTower, x, y);
-    }
-
-    public void SetTowerPosition(Tower towerPrefab, int x, int y)
-    {
-        if ((x >= 8) || (y >= 8) || (x < 0) || (y < 0))
+        public enum TowerType
         {
-            throw new System.IndexOutOfRangeException();
+            Spade,
+            Clover,
+            Diamond,
+            Heart,
         }
-        else
-        {
-            if (towersArray[x, y] != null)
-            {
-                //TODO Place Occupied Exception
-            }
-            else
-            {
-                Tower tower = GameManager.Resource.Instantiate("TestTower").GetComponent<Tower>();
-                tower.SetGridPosition(x, y);
-                tower.transform.SetParent(this.transform, true);
-                towersArray[x, y] = tower;
-            }
-            GameManager.Round.TowerSet(true);
-        }
-    }
 
-    public void UpdateTower(Tower towerPrefab, int x, int y)
-    {
-        if ((x >= 8) || (y >= 8) || (x < 0) || (y < 0))
-        {
-            throw new System.IndexOutOfRangeException();
-        }
-        else
-        {
-            if (towersArray[x, y] == null)
-            {
-                //TODO Tower Not Set Exception
-            }
-            else
-            {
-                //TODO
-            }
-        }
-    }
+        readonly private int TOWER_AREA_WITDH = 8;
+        readonly private int TOWER_AREA_HEIGHT = 8;
 
+        TowerPanel[,] towerPanelArray;
+        TowerPanel selectedTowerPanel = null;
+
+        GameObject towerPanelsObject;
+
+        public void InitTowerManager()
+        {
+            InitTowerPanels();
+        }
+
+        private void InitTowerPanels()
+        {
+            towerPanelsObject = GameObject.FindGameObjectWithTag("TowerPanels");
+            if (towerPanelsObject == null)
+            {
+                Debug.LogError($"towerPanelsObject not found");
+                return;
+            }
+
+            towerPanelArray = new TowerPanel[TOWER_AREA_HEIGHT, TOWER_AREA_WITDH];
+
+            for(int i=0; i<TOWER_AREA_HEIGHT; i++)
+            {
+                for(int j=0; j<TOWER_AREA_WITDH; j++)
+                {
+                    GameObject towerPanelObject = GameManager.Resource.Instantiate($"Tile/TowerPanel", towerPanelsObject.transform);
+                    TowerPanel towerPanel = towerPanelObject.AddComponent<TowerPanel>();
+                    towerPanel.InitTowerPanel(j, i);
+                    towerPanelArray[i, j] = towerPanel;
+                }
+            }
+
+        }
+
+        public void BuildTower(string towerName)
+        {
+            if (selectedTowerPanel == null) return;
+
+            // GameObject towerObject = GameManager.Resource.Instantiate(towerName, selectedTowerPanel.transform);
+            GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
+            //towerObject.AddComponent<Tower>(); 이미 Tower Component가 붙어 있게 설계 할듯?
+            Tower tower = towerObject.GetComponent<Tower>();
+            tower.InitTower("TestTower");
+            //tower.InitTower(towerName);
+
+            selectedTowerPanel.SetTower(tower);
+        }
+
+        public void UpgradeTower(Tower tower)
+        {
+
+        }
+
+
+        public void DestroyTower(Tower tower, FastAction destroyAction)
+        {
+            // TODO : Destroy 성공시 action
+        }
+
+        public void SetSelectedTowerPanel(TowerPanel target)
+            => selectedTowerPanel = target;
+    }
 }
