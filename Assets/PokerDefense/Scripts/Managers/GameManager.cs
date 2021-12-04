@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using PokerDefense.Utils;
 
 namespace PokerDefense.Managers
 {
@@ -10,15 +8,13 @@ namespace PokerDefense.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
-
         UIManager uiManager = new UIManager();
         ResourceManager resourceManager = new ResourceManager();
         TowerManager towerManager = new TowerManager();
         DataManager dataManager = new DataManager();
         RoundManager roundManager = null;
         InputManager inputManager = null;
-
-
+        PokerManager pokerManager = null;
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
@@ -26,6 +22,7 @@ namespace PokerDefense.Managers
         public static DataManager Data { get => Instance.dataManager; }
         public static RoundManager Round { get => Instance.roundManager; }
         public static InputManager Input { get => Instance.inputManager; }
+        public static PokerManager Poker { get => Instance.pokerManager; }
 
         void Awake()
             => Init();
@@ -50,6 +47,12 @@ namespace PokerDefense.Managers
             if (instance.roundManager != null) return;
 
             instance.roundManager = target.AddComponent<RoundManager>();
+        }
+
+        public static void GetOrAddPokerManager(GameObject target)
+        {
+            if (instance.pokerManager != null) return;
+            instance.pokerManager = Util.GetOrAddComponent<PokerManager>(target);
         }
 
         public static void AddInputManager()

@@ -1,13 +1,9 @@
-using PokerDefense.Managers;
-using PokerDefense.Utils;
 using PokerDefense.UI.Scene;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.EventSystems;
 
 namespace PokerDefense.Managers
 {
@@ -129,6 +125,9 @@ namespace PokerDefense.Managers
         private void PokerStateStart()
         {
             Debug.Log(state.ToString());
+
+            GameManager.Poker.PokerStart();
+
             stateChanged = false;
         }
 
