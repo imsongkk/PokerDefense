@@ -1,11 +1,8 @@
-using PokerDefense.Data;
-using PokerDefense.Managers;
 using PokerDefense.Towers;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static PokerDefense.Managers.RoundManager;
 
 namespace PokerDefense.Managers
 {
@@ -56,9 +53,9 @@ namespace PokerDefense.Managers
 
         }
 
-        private void BuildTower() // �̹� ��Ŀ �и� ���� �����̱� ������, �̿� �´� TowerData�� �����Ǿ�����(PokerManager���� ������)
+        private void BuildTower() // 이미 포커 패를 뽑은 이후이기 대문에, 이에 맞는 TowerDatat가 설정되어있음(PokerManager에서 가져옴)
         {
-            // TODO : PokerManager���� ��Ŀ �п� �´� Tower ���� ��������
+            // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
             if (selectedTowerPanel == null) return;
 
             GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
@@ -67,7 +64,7 @@ namespace PokerDefense.Managers
 
             selectedTowerPanel.SetTower(tower);
 
-            // Ÿ�� �Ǽ� ������ ���� ����
+            // 타워 건설 성공시 라운드 시작
             GameManager.Round.BuildTower();
         }
 
@@ -79,7 +76,7 @@ namespace PokerDefense.Managers
 
         public void DestroyTower(Tower tower, FastAction destroyAction)
         {
-            // TODO : Destroy ������ action
+
         }
 
         public void SetSelectedTowerPanel(TowerPanel target)

@@ -53,7 +53,7 @@ namespace PokerDefense.UI
             RefreshImage();
         }
 
-        private void RefreshImage() // ī���� �̹��� �ٲ�(�� ó�� �ʱ�ȭ or ������ ī�� �ٲ� or ���� Ŭ�� �̺�Ʈ)
+        private void RefreshImage() // Poker 패에 맞는 스프라이트 가져오기
         {
             cardImage.sprite = GameManager.Poker.GetSprite((shape, number));
         }
