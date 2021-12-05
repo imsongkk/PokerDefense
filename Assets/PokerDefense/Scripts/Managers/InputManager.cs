@@ -16,9 +16,9 @@ namespace PokerDefense.Managers
             if (Input.GetMouseButtonDown(0))
             {
 #if UNITY_EDITOR
-                if (EventSystem.current.IsPointerOverGameObject()) // UI ÅÍÄ¡´Â ¾È¹ÞÀ½
+                if (EventSystem.current.IsPointerOverGameObject()) // UI ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½È¹ï¿½ï¿½ï¿½
 #else
-                if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
 #endif
                 {
                     return;
@@ -42,7 +42,6 @@ namespace PokerDefense.Managers
             for (int i = 0; i < result.Length; i++)
             {
                 TowerPanel towerPanel = result[i].collider?.GetComponent<TowerPanel>();
-
                 if (towerPanel != null)
                 {
                     UI_TowerSelectPopup towerselect = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();

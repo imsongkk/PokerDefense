@@ -99,7 +99,7 @@ namespace PokerDefense.UI.Popup
         public void PokerUIStart()
         {
             //TODO 카드뽑기 애니메이션
-            
+
         }
 
         public void PokerUIReset()
@@ -131,7 +131,7 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
-            if(!isPokerDrawed)
+            if (!isPokerDrawed)
             {
                 GameManager.UI.ShowPopupUI<UI_PokerErrorPopup>();
                 return;
@@ -139,6 +139,7 @@ namespace PokerDefense.UI.Popup
 
             // 포커 패 확정!
             // RoundManager에게 Poker State 종료 알리기
+            GameManager.Round.PokerSet();
             ClosePopupUI();
         }
     }
