@@ -16,10 +16,12 @@ namespace PokerDefense.UI.Popup
             CardList,
             CardDeck,
             PokerButton,
+            ConfirmButton,
         }
 
         GameObject cardDeck;
         UI_CardItem[] cardItems = new UI_CardItem[5];
+        bool isPokerDrawed = false;
 
         private Transform cardHand;
         private GameObject cardPrefab;
@@ -57,6 +59,10 @@ namespace PokerDefense.UI.Popup
             GameObject pokerButton = GetObject((int)GameObjects.PokerButton);
             AddUIEvent(pokerButton, OnClickPokerButton, Define.UIEvent.Click);
             AddButtonAnim(pokerButton);
+
+            GameObject confirmButton = GetObject((int)GameObjects.ConfirmButton);
+            AddUIEvent(confirmButton, OnClickConfirmButton, Define.UIEvent.Click);
+            AddButtonAnim(confirmButton);
         }
 
         private void InitCardItems(Transform parent)
@@ -93,10 +99,7 @@ namespace PokerDefense.UI.Popup
         public void PokerUIStart()
         {
             //TODO 카드뽑기 애니메이션
-            for (int index = 0; index < 5; index++)
-            {
-                InstantiateCardIndex(index, cardHand);
-            }
+            
         }
 
         public void PokerUIReset()
@@ -118,6 +121,25 @@ namespace PokerDefense.UI.Popup
         private void OnClickPokerButton(PointerEventData evt)
         {
             /* RoundState, 찬스 개수에 따라 눌릴지 안눌릴지 결정 */
+
+            for (int index = 0; index < 5; index++)
+            {
+                InstantiateCardIndex(index, cardHand);
+            }
+            isPokerDrawed = true;
+        }
+
+        private void OnClickConfirmButton(PointerEventData evt)
+        {
+            if(!isPokerDrawed)
+            {
+                GameManager.UI.ShowPopupUI<UI_PokerErrorPopup>();
+                return;
+            }
+
+            // 포커 패 확정!
+            // RoundManager에게 Poker State 종료 알리기
+            ClosePopupUI();
         }
     }
 }

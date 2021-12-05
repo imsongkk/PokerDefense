@@ -42,7 +42,7 @@ namespace PokerDefense.UI
 
         private void OnClickCardItem(PointerEventData evt)
         {
-            Debug.Log($"{shape.ToString()} {number} ī�� ��ġ");
+            Debug.Log($"{shape.ToString()} {number} 터치 됨");
         }
 
         public void InitCard(int num, CardShape shape)
