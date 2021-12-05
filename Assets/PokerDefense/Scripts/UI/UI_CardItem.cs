@@ -42,7 +42,7 @@ namespace PokerDefense.UI
 
         private void OnClickCardItem(PointerEventData evt)
         {
-            Debug.Log($"{shape.ToString()} {number} Ä«µå ÅÍÄ¡");
+            Debug.Log($"{shape.ToString()} {number} Ä«ï¿½ï¿½ ï¿½ï¿½Ä¡");
         }
 
         public void InitCard(int num, CardShape shape)
@@ -53,9 +53,9 @@ namespace PokerDefense.UI
             RefreshImage();
         }
 
-        private void RefreshImage() // Ä«µåÀÇ ÀÌ¹ÌÁö ¹Ù²Þ(¸Ç Ã³À½ ÃÊ±âÈ­ or Âù½º·Î Ä«µå ¹Ù²Þ or À¯Àú Å¬¸¯ ÀÌº¥Æ®)
+        private void RefreshImage() // Ä«ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½(ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½Ê±ï¿½È­ or ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½Ù²ï¿½ or ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ ï¿½Ìºï¿½Æ®)
         {
-            cardImage = GameManager.Poker.GetImage((shape, number));
+            cardImage.sprite = GameManager.Poker.GetSprite((shape, number));
         }
     }
 }
