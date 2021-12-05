@@ -25,24 +25,28 @@ namespace PokerDefense.Managers
                 }
 
                 roundState = GameManager.Round.CurrentState;
-                if (roundState.HasFlag(
-                    RoundState.POKER |
-                    RoundState.PLAY |
-                    RoundState.TOWER))
-                    return;
 
-                Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Ray ray = new Ray(touchPos, Vector3.forward);
-                RaycastHit2D[] result = Physics2D.GetRayIntersectionAll(ray);
-                for(int i=0; i<result.Length; i++)
+                if (roundState == RoundState.TOWER)
                 {
-                    TowerPanel towerPanel = result[i].collider?.GetComponent<TowerPanel>();
-                    
-                    if (towerPanel != null)
-                    {
-                        UI_TowerSelectPopup towerselect = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
-                        towerselect.SetTowerPanel(towerPanel);
-                    }
+                    FindTowerPanel();
+                    return;
+                }
+            }
+        }
+
+        private void FindTowerPanel()
+        {
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Ray ray = new Ray(touchPos, Vector3.forward);
+            RaycastHit2D[] result = Physics2D.GetRayIntersectionAll(ray);
+            for (int i = 0; i < result.Length; i++)
+            {
+                TowerPanel towerPanel = result[i].collider?.GetComponent<TowerPanel>();
+
+                if (towerPanel != null)
+                {
+                    UI_TowerSelectPopup towerselect = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
+                    towerselect.SetTowerPanel(towerPanel);
                 }
             }
         }
