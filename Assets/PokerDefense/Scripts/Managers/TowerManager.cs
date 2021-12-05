@@ -31,6 +31,7 @@ namespace PokerDefense.Managers
         {
             InitTowerPanels();
         }
+        /* 테스트 */
 
         private void InitTowerPanels()
         {
