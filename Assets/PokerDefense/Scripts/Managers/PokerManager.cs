@@ -159,18 +159,22 @@ public class PokerManager : MonoBehaviour
             deque.Add(cardList[i]);
             cardList.RemoveAt(i);
         }
-        ui_Poker.PokerUIReset();
+        // ui_Poker.PokerUIReset();
         ShuffleDeque();
     }
 
     public void PokerStart()
     {
         SetDeque();
+    }
+
+    public void GetHand()
+    {
         for (int i = 0; i < 5; i++)
         {
             cardList.Add(PopCard());
+            ui_Poker.InstantiateCardIndex(i);
         }
-        ui_Poker.PokerUIStart();
     }
 
     public Hand HandCalaulate(List<(CardShape shape, int number)> cardList)

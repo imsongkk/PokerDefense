@@ -51,8 +51,7 @@ namespace PokerDefense.UI.Popup
         {
             Bind<GameObject>(typeof(GameObjects));
 
-            Transform cardListTransform = GetObject((int)GameObjects.CardList).transform;
-            InitCardItems(cardListTransform);
+            PokerUIReset();
 
             cardDeck = GetObject((int)GameObjects.CardDeck);
 
@@ -69,7 +68,7 @@ namespace PokerDefense.UI.Popup
         {
             for (int i = 0; i < parent.childCount; i++)
             {
-                UI_CardItem cardItem = parent.GetChild(i).gameObject.AddComponent<UI_CardItem>();
+                UI_CardItem cardItem = Util.GetOrAddComponent<UI_CardItem>(parent.GetChild(i).gameObject);
                 cardItems[i] = cardItem;
             }
         }
@@ -87,24 +86,16 @@ namespace PokerDefense.UI.Popup
             InstantiateCard(index, cardItems[index], cardList[index]);
         }
 
-        public void PokerUIStart()
-        {
-            //TODO 카드뽑기 애니메이션
+        // public void PokerUIStart()
+        // {
 
-        }
+
+        // }
 
         public void PokerUIReset()
         {
-            //TODO 카드 넣기 & 섞기 애니메이션
-            for (int i = 0; i < 5; i++)
-            {
-                Destroy(cardObjectHand[i]);
-            }
-        }
-
-        public void ChangeCardUI(int index)
-        {
-            InstantiateCardIndex(index);
+            Transform cardListTransform = GetObject((int)GameObjects.CardList).transform;
+            InitCardItems(cardListTransform);
         }
 
         // public void ChangeCardUI(int index)
@@ -118,10 +109,7 @@ namespace PokerDefense.UI.Popup
         {
             /* RoundState, 찬스 개수에 따라 눌릴지 안눌릴지 결정 */
 
-            for (int index = 0; index < 5; index++)
-            {
-                InstantiateCardIndex(index);
-            }
+            GameManager.Poker.GetHand();
             isPokerDrawed = true;
         }
 
