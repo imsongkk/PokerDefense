@@ -21,12 +21,6 @@ namespace PokerDefense.UI.Popup
         GameObject cardDeck;
         UI_CardItem[] cardItems = new UI_CardItem[5];
 
-
-
-
-
-
-
         private Transform cardHand;
         private GameObject cardPrefab;
 
@@ -48,7 +42,7 @@ namespace PokerDefense.UI.Popup
             cardList = GameManager.Poker.CardList;
 
             cardPrefab = GameManager.Poker.CardPrefab;
-            
+
         }
 
         private void BindObjects()
@@ -83,12 +77,9 @@ namespace PokerDefense.UI.Popup
         }
         */
 
-        private void InstantiateCard((CardShape shape, int number) cardTuple)
+        private void InstantiateCard(UI_CardItem card, (CardShape shape, int number) cardTuple)
         {
-            foreach(var card in cardItems)
-            {
-                card.InitCard(cardTuple.number, cardTuple.shape);
-            }
+            card.InitCard(cardTuple.number, cardTuple.shape);
         }
 
         public void InstantiateCardIndex(int index, Transform hand)
@@ -96,7 +87,7 @@ namespace PokerDefense.UI.Popup
             //TODO 카드뽑기 애니메이션
             //cardObjectHand[index] = InstantiateCard(cardList[index], hand.GetChild(index));
 
-            InstantiateCard(cardList[index]);
+            InstantiateCard(cardItems[index], cardList[index]);
         }
 
         public void PokerUIStart()

@@ -3364,6 +3364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1504277983}
+  - component: {fileID: 1504277984}
   m_Layer: 0
   m_Name: PokerManager
   m_TagString: Untagged
@@ -3385,6 +3386,56 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1504277984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504277982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22bd7e3610c524f48ae9a3bf3a589870, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spadeSpriteList:
+  - {fileID: 21300000, guid: c73e3e8d4c9dfd34d9dc8a8631408391, type: 3}
+  - {fileID: 21300000, guid: b0450782f365b6f4789f30228c9cc7d0, type: 3}
+  - {fileID: 21300000, guid: 0f6086dba9bca414aa85e47558855e4d, type: 3}
+  - {fileID: 21300000, guid: de96d7983d5ec5d48a5c1958377fa0bc, type: 3}
+  - {fileID: 21300000, guid: 9631bb3d81436c346aa4883f6435aa3b, type: 3}
+  - {fileID: 21300000, guid: f610edf8ac7d948428c5df68110df1ad, type: 3}
+  - {fileID: 21300000, guid: 71ddad7b4125cce4f8c4791d2c8ec701, type: 3}
+  - {fileID: 21300000, guid: ef5f51aceb516254bbf5f1ca1c8c90fb, type: 3}
+  heartSpriteList:
+  - {fileID: 21300000, guid: 899656ffecb98c04fb2bfaf7c528dc7a, type: 3}
+  - {fileID: 21300000, guid: 8a3cc4c3d56d7e641b50f218e242d863, type: 3}
+  - {fileID: 21300000, guid: 529739c7bec73cf44afddfb10d7bb60c, type: 3}
+  - {fileID: 21300000, guid: e88e91d9e5224ef47826b3da7488de8f, type: 3}
+  - {fileID: 21300000, guid: 35b11c20f9a3ec945b98527ae876b456, type: 3}
+  - {fileID: 21300000, guid: 2bc3b5e98406142409fcd46bcc6bba65, type: 3}
+  - {fileID: 21300000, guid: 46c4818628d7c5643b8fdc4f508b1f9d, type: 3}
+  - {fileID: 21300000, guid: ef622b5dbe955c14e8c130db08be4e2d, type: 3}
+  cloverSpriteList:
+  - {fileID: 21300000, guid: 5c7866a827015574a8ab4ae4b1cbdf29, type: 3}
+  - {fileID: 21300000, guid: fe8e51fa81e8b5a4c883f9a0c4d59875, type: 3}
+  - {fileID: 21300000, guid: 9530aa8c256a12b49b95bccebfdfdcac, type: 3}
+  - {fileID: 21300000, guid: 5eb2cbcd980eb7c448ee66b1ff8f7c12, type: 3}
+  - {fileID: 21300000, guid: f59356e58848d2144a4acfc8f74faa40, type: 3}
+  - {fileID: 21300000, guid: 3bd5add2045ace24cb9d65ca56cebeeb, type: 3}
+  - {fileID: 21300000, guid: 6fbf2b53696e3ff408db6dae10e39125, type: 3}
+  - {fileID: 21300000, guid: c763a13e6f0c0c741b0074f8d1f5ad52, type: 3}
+  diamondSpriteList:
+  - {fileID: 21300000, guid: 36e6ff456adca6e478e1f9c2e470bd40, type: 3}
+  - {fileID: 21300000, guid: 603f923ea58965140ae5acaa95a0b8b6, type: 3}
+  - {fileID: 21300000, guid: 69b262e89c16f7b4dbef2b0233337513, type: 3}
+  - {fileID: 21300000, guid: 3e03fdcaff532d04d8e7f51529e1d9d4, type: 3}
+  - {fileID: 21300000, guid: b5abb5529d080584a9b3111d071fadcf, type: 3}
+  - {fileID: 21300000, guid: f79f13cbef824b44983e1bac46fbecff, type: 3}
+  - {fileID: 21300000, guid: 004fa7dfa4a59f5469721aa4bb75fcac, type: 3}
+  - {fileID: 21300000, guid: 4abc8ed1108690f4cb08b504e1524629, type: 3}
+  jokerSpriteList: []
+  cardPrefab: {fileID: 0}
 --- !u!1 &1518697716
 GameObject:
   m_ObjectHideFlags: 0

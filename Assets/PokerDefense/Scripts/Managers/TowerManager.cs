@@ -43,9 +43,9 @@ namespace PokerDefense.Managers
 
             towerPanelArray = new TowerPanel[TOWER_AREA_HEIGHT, TOWER_AREA_WITDH];
 
-            for(int i=0; i<TOWER_AREA_HEIGHT; i++)
+            for (int i = 0; i < TOWER_AREA_HEIGHT; i++)
             {
-                for(int j=0; j<TOWER_AREA_WITDH; j++)
+                for (int j = 0; j < TOWER_AREA_WITDH; j++)
                 {
                     GameObject towerPanelObject = GameManager.Resource.Instantiate($"Tile/TowerPanel", towerPanelsObject.transform);
                     TowerPanel towerPanel = towerPanelObject.AddComponent<TowerPanel>();
@@ -56,9 +56,9 @@ namespace PokerDefense.Managers
 
         }
 
-        public void BuildTower() // ÀÌ¹Ì Æ÷Ä¿ ÆÐ¸¦ »ÌÀº ÀÌÈÄÀÌ±â ¶§¹®¿¡, ÀÌ¿¡ ¸Â´Â TowerData°¡ ¼³Á¤µÇ¾îÀÖÀ½(PokerManager¿¡¼­ °¡Á®¿È)
+        private void BuildTower() // ï¿½Ì¹ï¿½ ï¿½ï¿½Ä¿ ï¿½Ð¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ì¿ï¿½ ï¿½Â´ï¿½ TowerDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½(PokerManagerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         {
-            // TODO : PokerManager¿¡¼­ Æ÷Ä¿ ÆÐ¿¡ ¸Â´Â Tower Á¤º¸ °¡Á®¿À±â
+            // TODO : PokerManagerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ ï¿½Ð¿ï¿½ ï¿½Â´ï¿½ Tower ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (selectedTowerPanel == null) return;
 
             GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
@@ -67,7 +67,7 @@ namespace PokerDefense.Managers
 
             selectedTowerPanel.SetTower(tower);
 
-            // Å¸¿ö °Ç¼³ ¼º°ø½Ã ¶ó¿îµå ½ÃÀÛ
+            // Å¸ï¿½ï¿½ ï¿½Ç¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             GameManager.Round.BuildTower();
         }
 
@@ -79,10 +79,13 @@ namespace PokerDefense.Managers
 
         public void DestroyTower(Tower tower, FastAction destroyAction)
         {
-            // TODO : Destroy ¼º°ø½Ã action
+            // TODO : Destroy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ action
         }
 
         public void SetSelectedTowerPanel(TowerPanel target)
-            => selectedTowerPanel = target;
+        {
+            selectedTowerPanel = target;
+            BuildTower();
+        }
     }
 }
