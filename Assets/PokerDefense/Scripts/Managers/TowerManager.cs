@@ -60,6 +60,7 @@ namespace PokerDefense.Managers
         private void BuildTower() // �̹� ��Ŀ �и� ���� �����̱� ������, �̿� �´� TowerData�� �����Ǿ�����(PokerManager���� ������)
         {
             // TODO : PokerManager���� ��Ŀ �п� �´� Tower ���� ��������
+            // 각주 테스트
             if (selectedTowerPanel == null) return;
 
             GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
