@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* Deprecated */
 public class Card : MonoBehaviour
 {
     private Image cardImage;

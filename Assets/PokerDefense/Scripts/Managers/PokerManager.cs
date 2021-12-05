@@ -267,5 +267,9 @@ public class PokerManager : MonoBehaviour
         return returnHand;
     }
 
+    public Image GetImage((CardShape shape, int number) cardTuple) // Poker패에 맞는 카드 Image 리소스를 반환
+    {
+        throw new NotImplementedException();
+    }
 
 }

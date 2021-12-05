@@ -22,8 +22,10 @@ namespace PokerDefense.UI.Popup
         private void Start()
             => Init();
 
-        private void Init()
+        public override void Init()
         {
+            base.Init();
+
             Bind<GameObject>(typeof(GameObjects));
             BindObjects();
         }
@@ -52,7 +54,9 @@ namespace PokerDefense.UI.Popup
         private void OnClickConfirmButton(PointerEventData evt)
         {
             GameManager.Tower.SetSelectedTowerPanel(selectedTowerPanel);
+
             ClosePopupUI();
+            GameManager.UI.ShowPopupUI<UI_Poker>();
         }
 
         private void OnClickCancelButton(PointerEventData evt)

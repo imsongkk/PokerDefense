@@ -7,7 +7,7 @@ namespace PokerDefense.Scene
 {
     public class InGameScene : BaseScene
     {
-        [SerializeField] private GameObject RoundManagerObject;
+        [SerializeField] private GameObject RoundManagerObject, PokerManagerObject;
 
         private void Start()
             => Init();
@@ -23,7 +23,7 @@ namespace PokerDefense.Scene
         private void InitManagers()
         {
             GameManager.AddRoundManager(RoundManagerObject);
-            GameManager.GetOrAddPokerManager(RoundManagerObject);
+            GameManager.GetOrAddPokerManager(PokerManagerObject);
             GameManager.AddInputManager();
             GameManager.Tower.InitTowerManager();
 
