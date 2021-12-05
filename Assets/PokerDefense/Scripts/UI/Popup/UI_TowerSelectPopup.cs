@@ -49,25 +49,28 @@ namespace PokerDefense.UI.Popup
         {
             selectedTowerPanel = target;
             selectedTowerPanel.HighligtPanel();
+            GameManager.Round.TowerSetting();
         }
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
             GameManager.Tower.SetSelectedTowerPanel(selectedTowerPanel);
-
             ClosePopupUI();
             GameManager.UI.ShowPopupUI<UI_Poker>();
+            GameManager.Round.TowerSetDone();
         }
 
         private void OnClickCancelButton(PointerEventData evt)
         {
             selectedTowerPanel.ResetPanel();
+            GameManager.Round.TowerSetDone();
             ClosePopupUI();
         }
 
         private void OnClickBackButton(PointerEventData evt)
         {
             selectedTowerPanel.ResetPanel();
+            GameManager.Round.TowerSetDone();
             ClosePopupUI();
         }
     }

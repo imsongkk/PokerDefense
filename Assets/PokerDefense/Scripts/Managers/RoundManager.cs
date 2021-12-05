@@ -45,10 +45,11 @@ namespace PokerDefense.Managers
         private int heart = 5;
         private int gold = 10;
 
-        private float timeTowerSetLimit = 10f;
+        private float timeTowerSetLimit = 8f;
         private float timeLeft = 0;
 
         private bool towerSet = false;
+        private bool towerSetting = false;
         private bool pokerSet = false;
 
         private void Start()
@@ -84,7 +85,7 @@ namespace PokerDefense.Managers
                 case RoundState.TOWER:
                     if (stateChanged) { TowerStateStart(); }
                     //set position or wait 2min
-                    timeLeft -= Time.deltaTime;
+                    if (!towerSetting) { timeLeft -= Time.deltaTime; }
                     if (towerSet)
                     {
                         CurrentState = RoundState.POKER;
@@ -113,6 +114,16 @@ namespace PokerDefense.Managers
         public void TowerSet()
         {
             towerSet = true;
+        }
+
+        public void TowerSetting()
+        {
+            towerSetting = true;
+        }
+
+        public void TowerSetDone()
+        {
+            towerSetting = false;
         }
 
         public void PokerSet()
@@ -144,7 +155,7 @@ namespace PokerDefense.Managers
         private void PlayStateStart()
         {
             Debug.Log(state.ToString());
-            SpawnTestEnemy();
+            // SpawnTestEnemy();
             stateChanged = false;
         }
 
