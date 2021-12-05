@@ -47,7 +47,9 @@ namespace PokerDefense.Managers
 
         private float timeTowerSetLimit = 10f;
         private float timeLeft = 0;
+
         private bool towerSet = false;
+        private bool pokerSet = false;
 
         private void Start()
             => Init();
@@ -93,7 +95,13 @@ namespace PokerDefense.Managers
                     break;
                 case RoundState.POKER:
                     if (stateChanged) { PokerStateStart(); }
-                    //TODO poker
+                    if (pokerSet)
+                    {
+                        //TODO 타워 종류 결정
+                        CurrentState = RoundState.PLAY;
+                        pokerSet = false;
+                        break;
+                    }
                     break;
                 case RoundState.PLAY:
                     if (stateChanged) { PlayStateStart(); }
@@ -102,10 +110,14 @@ namespace PokerDefense.Managers
             }
         }
 
-        public void BuildTower()
+        public void TowerSet()
         {
-            //CurrentState = RoundState.PLAY;
             towerSet = true;
+        }
+
+        public void PokerSet()
+        {
+            pokerSet = true;
         }
 
         private void ReadyStateStart()
@@ -125,15 +137,14 @@ namespace PokerDefense.Managers
         private void PokerStateStart()
         {
             Debug.Log(state.ToString());
-
             GameManager.Poker.PokerStart();
-
             stateChanged = false;
         }
 
         private void PlayStateStart()
         {
             Debug.Log(state.ToString());
+            SpawnTestEnemy();
             stateChanged = false;
         }
 

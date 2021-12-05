@@ -66,7 +66,7 @@ namespace PokerDefense.Managers
             selectedTowerPanel.SetTower(tower);
 
             // 타워 건설 성공시 라운드 시작
-            GameManager.Round.BuildTower();
+            GameManager.Round.TowerSet();
         }
 
         public void UpgradeTower(Tower tower)
