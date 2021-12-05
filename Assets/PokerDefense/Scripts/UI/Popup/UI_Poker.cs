@@ -74,26 +74,17 @@ namespace PokerDefense.UI.Popup
             }
         }
 
-        /*
-        public Card InstantiateCard((CardShape shape, int number) cardTuple, Transform parent)
+        private void InstantiateCard(int index, UI_CardItem card, (CardShape shape, int number) cardTuple)
         {
-            Card card = Instantiate(cardPrefab, parent).GetComponent<Card>();
-            card.InitCard(cardTuple.number, cardTuple.shape, cardsSpriteList[(int)cardTuple.shape][cardTuple.number]);
-            return card;
-        }
-        */
-
-        private void InstantiateCard(UI_CardItem card, (CardShape shape, int number) cardTuple)
-        {
-            card.InitCard(cardTuple.number, cardTuple.shape);
+            card.InitCard(index, cardTuple.number, cardTuple.shape);
         }
 
-        public void InstantiateCardIndex(int index, Transform hand)
+        public void InstantiateCardIndex(int index)
         {
             //TODO 카드뽑기 애니메이션
             //cardObjectHand[index] = InstantiateCard(cardList[index], hand.GetChild(index));
 
-            InstantiateCard(cardItems[index], cardList[index]);
+            InstantiateCard(index, cardItems[index], cardList[index]);
         }
 
         public void PokerUIStart()
@@ -113,10 +104,15 @@ namespace PokerDefense.UI.Popup
 
         public void ChangeCardUI(int index)
         {
-            var oldCard = cardObjectHand[index];
-            InstantiateCardIndex(index, cardHand);
-            Destroy(oldCard);
+            InstantiateCardIndex(index);
         }
+
+        // public void ChangeCardUI(int index)
+        // {
+        //     var oldCard = cardObjectHand[index];
+        //     InstantiateCardIndex(index, cardHand);
+        //     Destroy(oldCard);
+        // }
 
         private void OnClickPokerButton(PointerEventData evt)
         {
@@ -124,7 +120,7 @@ namespace PokerDefense.UI.Popup
 
             for (int index = 0; index < 5; index++)
             {
-                InstantiateCardIndex(index, cardHand);
+                InstantiateCardIndex(index);
             }
             isPokerDrawed = true;
         }

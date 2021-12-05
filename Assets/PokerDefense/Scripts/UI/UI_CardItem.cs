@@ -18,6 +18,8 @@ namespace PokerDefense.UI
         int number;
         CardShape shape;
 
+        int cardIndex;
+
         enum GameObjects
         {
             CardItem,
@@ -42,11 +44,14 @@ namespace PokerDefense.UI
 
         private void OnClickCardItem(PointerEventData evt)
         {
+            //TODO 찬스 있을 경우 다시 뽑기
             Debug.Log($"{shape.ToString()} {number} 터치 됨");
+            GameManager.Poker.ChangeCard(cardIndex);
         }
 
-        public void InitCard(int num, CardShape shape)
+        public void InitCard(int index, int num, CardShape shape)
         {
+            this.cardIndex = index;
             this.number = num;
             this.shape = shape;
 

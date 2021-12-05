@@ -137,15 +137,19 @@ public class PokerManager : MonoBehaviour
         return card;
     }
 
-    private void ChangeCard(int index)
+    public void ChangeCard(int index)
     {
-        if (chance <= 0) return;
-        chance--;
+        if (!isCardChanged[index])
+        {
+            if (chance <= 0) return;
+            chance--;
+            var oldCard = cardList[index];
+            cardList[index] = PopCard();
+            deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
+            ui_Poker.InstantiateCardIndex(index);
+            isCardChanged[index] = true;
+        }
 
-        var oldCard = cardList[index];
-        cardList[index] = PopCard();
-        deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
-        ui_Poker.ChangeCardUI(index);
     }
 
     private void ResetDeque()
