@@ -3434,7 +3434,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f79f13cbef824b44983e1bac46fbecff, type: 3}
   - {fileID: 21300000, guid: 004fa7dfa4a59f5469721aa4bb75fcac, type: 3}
   - {fileID: 21300000, guid: 4abc8ed1108690f4cb08b504e1524629, type: 3}
-  jokerSpriteList: []
+  jokerSpriteList:
+  - {fileID: 21300000, guid: ebc96a99d243be44db2ab22a1cd775a9, type: 3}
   cardPrefab: {fileID: 0}
 --- !u!1 &1518697716
 GameObject:

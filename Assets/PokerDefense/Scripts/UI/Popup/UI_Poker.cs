@@ -26,7 +26,6 @@ namespace PokerDefense.UI.Popup
         private Transform cardHand;
         private GameObject cardPrefab;
 
-        private Card[] cardObjectHand = new Card[5];
         private List<Sprite>[] cardsSpriteList;
         private List<(CardShape shape, int number)> cardList;
 
@@ -68,8 +67,14 @@ namespace PokerDefense.UI.Popup
         {
             for (int i = 0; i < parent.childCount; i++)
             {
-                UI_CardItem cardItem = Util.GetOrAddComponent<UI_CardItem>(parent.GetChild(i).gameObject);
-                cardItems[i] = cardItem;
+                if (cardItems[i] == null)   // UI_Poker를 처음 불러올 때 초기화
+                {
+                    UI_CardItem cardItem = Util.GetOrAddComponent<UI_CardItem>(parent.GetChild(i).gameObject);
+                    cardItems[i] = cardItem;
+                    cardItem.SetUIPoker(this);
+                }
+                // 모든 카드를 Joker Z(디폴트 스프라이트)로 교체
+                InstantiateCard(i, cardItems[i], (CardShape.Joker, 0));
             }
         }
 
@@ -81,16 +86,8 @@ namespace PokerDefense.UI.Popup
         public void InstantiateCardIndex(int index)
         {
             //TODO 카드뽑기 애니메이션
-            //cardObjectHand[index] = InstantiateCard(cardList[index], hand.GetChild(index));
-
             InstantiateCard(index, cardItems[index], cardList[index]);
         }
-
-        // public void PokerUIStart()
-        // {
-
-
-        // }
 
         public void PokerUIReset()
         {
@@ -98,19 +95,16 @@ namespace PokerDefense.UI.Popup
             InitCardItems(cardListTransform);
         }
 
-        // public void ChangeCardUI(int index)
-        // {
-        //     var oldCard = cardObjectHand[index];
-        //     InstantiateCardIndex(index, cardHand);
-        //     Destroy(oldCard);
-        // }
-
         private void OnClickPokerButton(PointerEventData evt)
         {
             /* RoundState, 찬스 개수에 따라 눌릴지 안눌릴지 결정 */
 
-            GameManager.Poker.GetHand();
-            isPokerDrawed = true;
+            GameManager.Poker.GetHand((int index) =>
+            {
+                InstantiateCardIndex(index);
+                isPokerDrawed = true;
+            }
+            );
         }
 
         private void OnClickConfirmButton(PointerEventData evt)
@@ -125,6 +119,14 @@ namespace PokerDefense.UI.Popup
             // RoundManager에게 Poker State 종료 알리기
             GameManager.Round.PokerSet();
             ClosePopupUI();
+        }
+
+        private void OnClickResetButton(PointerEventData evt)
+        {
+            GameManager.Poker.ResetDeque(() =>
+            {
+                PokerUIReset();
+            });
         }
     }
 }

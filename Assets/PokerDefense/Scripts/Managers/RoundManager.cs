@@ -1,4 +1,5 @@
 using PokerDefense.UI.Scene;
+using PokerDefense.UI.Popup;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -148,6 +149,7 @@ namespace PokerDefense.Managers
         private void PokerStateStart()
         {
             Debug.Log(state.ToString());
+            GameManager.UI.ShowPopupUI<UI_Poker>();
             GameManager.Poker.PokerStart();
             stateChanged = false;
         }

@@ -25,6 +25,11 @@ namespace PokerDefense.UI
             CardItem,
         }
 
+        private void Awake()    // Self Component Reference
+        {
+            cardImage = gameObject.GetComponent<Image>();
+        }
+
         private void Start()
             => Init();
 
@@ -36,17 +41,22 @@ namespace PokerDefense.UI
         private void BindObjects()
         {
             Bind<GameObject>(typeof(GameObjects));
-
-            cardImage = GetObject((int)GameObjects.CardItem).GetComponent<Image>();
-
             AddUIEvent(gameObject, OnClickCardItem, Define.UIEvent.Click);
+        }
+
+        public void SetUIPoker(UI_Poker pokerUI)
+        {
+            this.ui_Poker = pokerUI;
         }
 
         private void OnClickCardItem(PointerEventData evt)
         {
             //TODO 찬스 있을 경우 다시 뽑기
             Debug.Log($"{shape.ToString()} {number} 터치 됨");
-            GameManager.Poker.ChangeCard(cardIndex);
+            GameManager.Poker.ChangeCard(cardIndex, (int index) =>
+            {
+                ui_Poker.InstantiateCardIndex(index);
+            });
         }
 
         public void InitCard(int index, int num, CardShape shape)
