@@ -73,6 +73,7 @@ public class PokerManager : MonoBehaviour
     public List<Sprite> cloverSpriteList = new List<Sprite>();
     public List<Sprite> diamondSpriteList = new List<Sprite>();
     public List<Sprite> jokerSpriteList = new List<Sprite>();
+    // Joker Z카드는 존재하지 않음. 패 초기화 시 디폴트 스프라이트로 활용(덮인 카드)
 
     public List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
 
@@ -107,6 +108,7 @@ public class PokerManager : MonoBehaviour
         cardsSpriteList[1] = heartSpriteList;
         cardsSpriteList[2] = diamondSpriteList;
         cardsSpriteList[3] = cloverSpriteList;
+        cardsSpriteList[4] = jokerSpriteList;
     }
 
     public void SetUIPoker(UI_Poker target)
@@ -137,7 +139,7 @@ public class PokerManager : MonoBehaviour
         return card;
     }
 
-    public void ChangeCard(int index)
+    public void ChangeCard(int index, Action<int> OnChangeCardSuccess)
     {
         if (!isCardChanged[index])
         {
@@ -146,13 +148,13 @@ public class PokerManager : MonoBehaviour
             var oldCard = cardList[index];
             cardList[index] = PopCard();
             deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
-            ui_Poker.InstantiateCardIndex(index);
+            OnChangeCardSuccess?.Invoke(index);
             isCardChanged[index] = true;
         }
 
     }
 
-    private void ResetDeque()
+    public void ResetDeque(Action OnResetDequeSuccess)
     {
         for (int i = 4; i >= 0; i--)
         {
@@ -160,6 +162,7 @@ public class PokerManager : MonoBehaviour
             cardList.RemoveAt(i);
         }
         // ui_Poker.PokerUIReset();
+        OnResetDequeSuccess?.Invoke();
         ShuffleDeque();
     }
 
@@ -168,12 +171,12 @@ public class PokerManager : MonoBehaviour
         SetDeque();
     }
 
-    public void GetHand()
+    public void GetHand(Action<int> OnGetHandSuccess)
     {
         for (int i = 0; i < 5; i++)
         {
             cardList.Add(PopCard());
-            ui_Poker.InstantiateCardIndex(i);
+            OnGetHandSuccess?.Invoke(i);
         }
     }
 

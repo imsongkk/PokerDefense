@@ -56,7 +56,6 @@ namespace PokerDefense.UI.Popup
         {
             GameManager.Tower.SetSelectedTowerPanel(selectedTowerPanel);
             ClosePopupUI();
-            GameManager.UI.ShowPopupUI<UI_Poker>();
             GameManager.Round.TowerSetDone();
         }
 
