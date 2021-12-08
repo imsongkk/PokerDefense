@@ -1,4 +1,5 @@
 using PokerDefense.Towers;
+using static PokerDefense.Utils.Define;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
