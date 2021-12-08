@@ -49,9 +49,8 @@ namespace PokerDefense.Managers
         private float timeTowerSetLimit = 8f;
         private float timeLeft = 0;
 
-        private bool towerSet = false;
-        private bool towerSetting = false;
-        private bool pokerSet = false;
+        private bool stateBreak = false;
+        private bool timerBreak = false;        // false일때만 State 타이머가 흐르게 됨
 
         private void Start()
             => Init();
@@ -86,22 +85,24 @@ namespace PokerDefense.Managers
                 case RoundState.TOWER:
                     if (stateChanged) { TowerStateStart(); }
                     //set position or wait 2min
-                    if (!towerSetting) { timeLeft -= Time.deltaTime; }
-                    if (towerSet)
+                    if (!timerBreak) { timeLeft -= Time.deltaTime; }
+                    if (stateBreak)
                     {
                         CurrentState = RoundState.POKER;
-                        towerSet = false;
+                        stateBreak = false;
                         break;
                     }
                     if (timeLeft <= 0) CurrentState = RoundState.PLAY;
                     break;
                 case RoundState.POKER:
                     if (stateChanged) { PokerStateStart(); }
-                    if (pokerSet)
+                    if (stateBreak)
                     {
                         //TODO 타워 종류 결정
+
+
                         CurrentState = RoundState.PLAY;
-                        pokerSet = false;
+                        stateBreak = false;
                         break;
                     }
                     break;
@@ -112,24 +113,14 @@ namespace PokerDefense.Managers
             }
         }
 
-        public void TowerSet()
+        public void BreakState()
         {
-            towerSet = true;
+            stateBreak = true;
         }
 
-        public void TowerSetting()
+        public void BreakTimer(bool b)
         {
-            towerSetting = true;
-        }
-
-        public void TowerSetDone()
-        {
-            towerSetting = false;
-        }
-
-        public void PokerSet()
-        {
-            pokerSet = true;
+            timerBreak = b;
         }
 
         private void ReadyStateStart()
@@ -159,6 +150,11 @@ namespace PokerDefense.Managers
             Debug.Log(state.ToString());
             // SpawnTestEnemy();
             stateChanged = false;
+        }
+
+        private void PokerCalculate()
+        {
+
         }
 
         private void SpawnEnemy(GameObject enemy)

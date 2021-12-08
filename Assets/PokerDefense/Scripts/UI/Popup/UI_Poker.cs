@@ -117,7 +117,7 @@ namespace PokerDefense.UI.Popup
 
             // 포커 패 확정!
             // RoundManager에게 Poker State 종료 알리기
-            GameManager.Round.PokerSet();
+            GameManager.Round.BreakState();
             ClosePopupUI();
         }
 
