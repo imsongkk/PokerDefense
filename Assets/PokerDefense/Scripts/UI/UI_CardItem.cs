@@ -1,6 +1,7 @@
 using PokerDefense.Managers;
 using PokerDefense.UI.Popup;
 using PokerDefense.Utils;
+using static PokerDefense.Utils.Define;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Managers
 {
@@ -178,6 +179,11 @@ namespace PokerDefense.Managers
                 cardList.Add(PopCard());
                 OnGetHandSuccess?.Invoke(i);
             }
+        }
+
+        public Hand CalculateMyHand()
+        {
+            return HandCalaulate(cardList);
         }
 
         public Hand HandCalaulate(List<(CardShape shape, int number)> cardList)

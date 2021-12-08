@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Managers
 {
@@ -20,7 +21,6 @@ namespace PokerDefense.Managers
             TOWER,
             POKER,
             PLAY
-
         }
 
         private RoundState state = RoundState.NONE;
@@ -154,7 +154,9 @@ namespace PokerDefense.Managers
         private void PokerConfirm()
         {
             //TODO 손패 계산
+            Hand roundHand = GameManager.Poker.CalculateMyHand();
             //TODO 타워 종류 결정
+            GameManager.Tower.ConfirmTower(roundHand);
         }
 
         private void SpawnEnemy(GameObject enemy)

@@ -54,9 +54,8 @@ namespace PokerDefense.Managers
 
         }
 
-        private void BuildTower() // 이미 포커 패를 뽑은 이후이기 대문에, 이에 맞는 TowerDatat가 설정되어있음(PokerManager에서 가져옴)
+        private void SelectTowerPosition() // 포커 패를 뽑기 전, Tower의 위치 선정
         {
-            // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
             if (selectedTowerPanel == null) return;
 
             GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
@@ -69,9 +68,10 @@ namespace PokerDefense.Managers
             GameManager.Round.BreakState();
         }
 
-        public void UpgradeTower(Tower tower)
+        public void ConfirmTower(Hand hand)
         {
-
+            // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
+            // TODO : selectedTower에서 타워 종류 결정
         }
 
 
@@ -83,7 +83,7 @@ namespace PokerDefense.Managers
         public void SetSelectedTowerPanel(TowerPanel target)
         {
             selectedTowerPanel = target;
-            BuildTower();
+            SelectTowerPosition();
         }
     }
 }

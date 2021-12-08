@@ -6,6 +6,7 @@ using TMPro;
 using PokerDefense.Managers;
 using UnityEngine.EventSystems;
 using PokerDefense.Utils;
+using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.UI.Popup
 {
