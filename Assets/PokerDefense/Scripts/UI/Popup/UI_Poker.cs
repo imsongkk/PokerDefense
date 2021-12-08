@@ -24,7 +24,6 @@ namespace PokerDefense.UI.Popup
         bool isPokerDrawed = false;
 
         private Transform cardHand;
-        private GameObject cardPrefab;
 
         private List<Sprite>[] cardsSpriteList;
         private List<(CardShape shape, int number)> cardList;
@@ -41,8 +40,6 @@ namespace PokerDefense.UI.Popup
 
             cardsSpriteList = GameManager.Poker.cardsSpriteList;
             cardList = GameManager.Poker.CardList;
-
-            cardPrefab = GameManager.Poker.CardPrefab;
 
         }
 

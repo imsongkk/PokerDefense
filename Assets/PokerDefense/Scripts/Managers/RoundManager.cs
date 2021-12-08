@@ -1,5 +1,6 @@
 using PokerDefense.UI.Scene;
 using PokerDefense.UI.Popup;
+using PokerDefense.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -98,9 +99,7 @@ namespace PokerDefense.Managers
                     if (stateChanged) { PokerStateStart(); }
                     if (stateBreak)
                     {
-                        //TODO 타워 종류 결정
-
-
+                        PokerConfirm();
                         CurrentState = RoundState.PLAY;
                         stateBreak = false;
                         break;
@@ -152,9 +151,10 @@ namespace PokerDefense.Managers
             stateChanged = false;
         }
 
-        private void PokerCalculate()
+        private void PokerConfirm()
         {
-
+            //TODO 손패 계산
+            //TODO 타워 종류 결정
         }
 
         private void SpawnEnemy(GameObject enemy)
