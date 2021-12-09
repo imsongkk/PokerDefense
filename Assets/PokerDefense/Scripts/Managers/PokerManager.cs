@@ -12,38 +12,10 @@ using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Managers
 {
-    // public enum CardShape
-    // {
-    //     Spade,      // 0
-    //     Heart,      // 1
-    //     Diamond,    // 2
-    //     Clover,     // 3
-    //     Joker       // 4
-    // }
 
     // 포커 룰: https://silk-ornament-d81.notion.site/Z7JCard-3825581ae9b442229ae51e410bf6fdb4
     public class PokerManager : MonoBehaviour
     {
-        // public enum HandRank
-        // {
-        //     HighCard,
-        //     Beast,
-        //     OnePair,
-        //     TwoPair,
-        //     Tripple,
-        //     Straight,
-        //     BackStraight,
-        //     RoyalStraight,
-        //     FullHouse,
-        //     Flush,
-        //     FourCards,
-        //     StraightFlush,
-        //     BackStraightFlush,
-        //     RoyalStraightFlush,
-        //     FiveCards,
-        //     Jackpot
-        // }
-
         protected List<HandRank> hiddenRanks = new List<HandRank>
         {
             HandRank.Beast,
@@ -54,22 +26,8 @@ namespace PokerDefense.Managers
             HandRank.Jackpot
         };
 
-        // public struct Hand
-        // {
-        //     HandRank handRank;  // 패의 종류
-        //     bool isHidden;      // 히든 패인지 여부
-        //     int topCard;        // 가장 높은 숫자
-
-        //     public Hand(HandRank handRank, bool isHidden, int topCard)
-        //     {
-        //         this.handRank = handRank;
-        //         this.isHidden = isHidden;
-        //         this.topCard = topCard;
-        //     }
-        // }
-
-
         //숫자: 0~7, Z는 0으로 취급하여 저장
+        //! 에디터 직렬화! MonoBehaviour 빼지 말것!!!!!
         public List<Sprite> spadeSpriteList = new List<Sprite>();
         public List<Sprite> heartSpriteList = new List<Sprite>();
         public List<Sprite> cloverSpriteList = new List<Sprite>();
@@ -142,17 +100,16 @@ namespace PokerDefense.Managers
 
         public void ChangeCard(int index, Action<int> OnChangeCardSuccess)
         {
-            if (!isCardChanged[index])
-            {
-                if (chance <= 0) return;
-                chance--;
-                var oldCard = cardList[index];
-                cardList[index] = PopCard();
-                deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
-                OnChangeCardSuccess?.Invoke(index);
-                isCardChanged[index] = true;
-            }
-
+            // if (!isCardChanged[index])
+            // {
+            if (chance <= 0) return;
+            chance--;
+            var oldCard = cardList[index];
+            cardList[index] = PopCard();
+            deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
+            OnChangeCardSuccess?.Invoke(index);
+            // isCardChanged[index] = true;
+            // }
         }
 
         public void ResetDeque(Action OnResetDequeSuccess)
