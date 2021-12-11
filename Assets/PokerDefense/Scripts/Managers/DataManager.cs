@@ -9,7 +9,7 @@ namespace PokerDefense.Managers
         PlayerData playerData;
 
         public PlayerData PlayerData { get; private set; }
-        public Dictionary<string, TowerData> TowerDataDict { get; private set; } = new Dictionary<string, TowerData>(); // key : Å¸¿ö ÆÐ¿¡ ¸Â´Â °íÀ¯ id
+        public Dictionary<string, TowerData> TowerDataDict { get; private set; } = new Dictionary<string, TowerData>(); // key : Å¸ï¿½ï¿½ ï¿½Ð¿ï¿½ ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ id
 
 
         public void InitDataManager()
@@ -22,12 +22,12 @@ namespace PokerDefense.Managers
 
         private void InitPlayerData()
         {
-            // TODO : ÀúÀåµÈ jsonÀ» ºÒ·¯¿Í PlayerData ÃÊ±âÈ­
+            // TODO : ï¿½ï¿½ï¿½ï¿½ï¿½ jsonï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ PlayerData ï¿½Ê±ï¿½È­
         }
 
         private void InitTowerDataList()
         {
-            // TODO : ÀúÀåµÈ jsonÀ» ºÒ·¯¿Í TowerData¿¡ ÀÔÈ÷±â
+            // TODO : ï¿½ï¿½ï¿½ï¿½ï¿½ jsonï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ TowerDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
 
         private void MakeTowerDataDict()

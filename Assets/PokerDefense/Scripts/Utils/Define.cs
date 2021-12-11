@@ -66,15 +66,22 @@ namespace PokerDefense.Utils
 
         public struct Hand
         {
-            HandRank handRank;  // 패의 종류
-            bool isHidden;      // 히든 패인지 여부
-            int topCard;        // 가장 높은 숫자
+            private HandRank handRank;  // 패의 종류
+            private bool isHidden;      // 히든 패인지 여부
+            private int topCard;        // 가장 높은 숫자
+            private CardShape topShape;       // 탑카드의 문양
 
-            public Hand(HandRank handRank, bool isHidden, int topCard)
+            public HandRank Rank { get { return handRank; } }
+            public bool IsHidden { get { return isHidden; } }
+            public int TopCard { get { return topCard; } }
+            public CardShape TopShape { get { return topShape; } }
+
+            public Hand(HandRank handRank, bool isHidden, int topCard, CardShape topShape)
             {
                 this.handRank = handRank;
                 this.isHidden = isHidden;
                 this.topCard = topCard;
+                this.topShape = topShape;
             }
         }
     }

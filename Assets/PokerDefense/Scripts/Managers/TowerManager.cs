@@ -11,10 +11,9 @@ namespace PokerDefense.Managers
     {
         public enum TowerType
         {
-            Spade,
-            Clover,
-            Diamond,
-            Heart,
+            Red,
+            Black,
+            Joker
         }
 
         readonly private int TOWER_AREA_WITDH = 8;
@@ -22,6 +21,7 @@ namespace PokerDefense.Managers
 
         TowerPanel[,] towerPanelArray;
         TowerPanel selectedTowerPanel = null;
+        Tower currentTower;
 
         GameObject towerPanelsObject;
 
@@ -59,11 +59,8 @@ namespace PokerDefense.Managers
         {
             if (selectedTowerPanel == null) return;
 
-            GameObject towerObject = GameManager.Resource.Instantiate("TestTower", selectedTowerPanel.transform);
-            Tower tower = towerObject.GetComponent<Tower>();
-            tower.InitTower("TestTower");
-
-            selectedTowerPanel.SetTower(tower);
+            //TODO TowerBase 프리팹을 만들어 바꿀 것: 속성이 없는 기본 타워
+            BuildTower("TestTower");
 
             // 타워 건설 성공시 라운드 시작
             GameManager.Round.BreakState();
@@ -71,10 +68,34 @@ namespace PokerDefense.Managers
 
         public void ConfirmTower(Hand hand)
         {
+            /*
+            * Tower Prefab은 족보별로 그 족보의 이름을 딴 Prefab이 존재한다
+            * 공격방식 및 생김새, 기초 데이터는 해당 족보에서 가져오고,
+            * 탑카드 버프 및 타입 결정은 SetTowerSettings으로 따로 결정
+            */
             // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
             // TODO : selectedTower에서 타워 종류 결정
+            HandRank handRank = hand.Rank;
+            BuildTower(handRank.ToString());
+            TowerType towerType;
+            if (hand.TopShape == CardShape.Joker) towerType = TowerType.Joker;
+            else if ((hand.TopShape == CardShape.Spade) || (hand.TopShape == CardShape.Clover))
+            {
+                towerType = TowerType.Black;
+            }
+            else towerType = TowerType.Red;
+
+            currentTower.SetTowerSettings(towerType, hand.TopCard);
         }
 
+        private void BuildTower(string towerName)
+        {
+            GameObject towerObject = GameManager.Resource.Instantiate(towerName, selectedTowerPanel.transform);
+            currentTower = towerObject.GetComponent<Tower>();
+            currentTower.InitTower(towerName);
+
+            selectedTowerPanel.SetTower(currentTower);
+        }
 
         public void DestroyTower(Tower tower, FastAction destroyAction)
         {

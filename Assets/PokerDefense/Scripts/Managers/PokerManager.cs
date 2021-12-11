@@ -26,6 +26,11 @@ namespace PokerDefense.Managers
             HandRank.Jackpot
         };
 
+        public List<HandRank> HiddenRanks
+        {
+            get { return hiddenRanks; }
+        }
+
         //숫자: 0~7, Z는 0으로 취급하여 저장
         //! 에디터 직렬화! MonoBehaviour 빼지 말것!!!!!
         public List<Sprite> spadeSpriteList = new List<Sprite>();
@@ -236,7 +241,10 @@ namespace PokerDefense.Managers
                 }
             }
 
-            Hand returnHand = new Hand(handRank, hiddenRanks.Contains(handRank), topCard);
+            // 플러시 계열 패이고 탑카드가 조커일 경우 탑셰이프가 조커가 아닌 다른 모든 카드의 문양으로 결정
+            CardShape topShape = ((cardList[4].shape == CardShape.Joker) && isFlush) ? cardList[3].shape : cardList[4].shape;
+
+            Hand returnHand = new Hand(handRank, hiddenRanks.Contains(handRank), topCard, topShape);
 
             return returnHand;
         }

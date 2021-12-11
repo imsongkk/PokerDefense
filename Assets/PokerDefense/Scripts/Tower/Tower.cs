@@ -1,7 +1,7 @@
 using UnityEngine;
 using PokerDefense.Data;
-using static PokerDefense.Managers.TowerManager;
 using PokerDefense.Managers;
+using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Towers
 {
@@ -10,14 +10,16 @@ namespace PokerDefense.Towers
         TowerData towerData;
 
         SpriteRenderer spriteRenderer;
-        TowerType towerType;
-        
-        bool isInit = false;
-        
-        protected float towerDamage;    // 계산된 실제 대미지
-        
 
-        private void Start() 
+        bool isInit = false;
+
+        TowerType towerType;
+        protected int topCard;          // 탑 버프
+        protected float towerDamage;    // 계산된 실제 대미지
+        protected int finalPrice;       // 탑 버프 및 업그레이드에 의해 결정된 최종 가격
+
+
+        private void Start()
             => Init();
 
         private void Init()
@@ -31,7 +33,6 @@ namespace PokerDefense.Towers
             if (towerData == null) return;
 
             InitTowerSprite();
-            InitTowerType();
 
             isInit = true;
         }
@@ -48,9 +49,12 @@ namespace PokerDefense.Towers
             // TODO : towerName으로 Sprite 불러오기
         }
 
-        private void InitTowerType()
+        public void SetTowerSettings(TowerType type, int topCard)
         {
-            // TODO : towerType으로 TowerType 결정
+            //TODO towerType 결정
+            //TODO topcard 결정
+            this.towerType = type;
+            this.topCard = topCard;
         }
 
 
