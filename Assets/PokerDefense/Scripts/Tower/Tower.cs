@@ -14,9 +14,9 @@ namespace PokerDefense.Towers
         bool isInit = false;
 
         TowerType towerType;
-        protected int topCard;          // 탑 버프
-        protected float towerDamage;    // 계산된 실제 대미지
-        protected int finalPrice;       // 탑 버프 및 업그레이드에 의해 결정된 최종 가격
+        [SerializeField] protected int topCard;          // 탑 버프
+        [SerializeField] protected float towerDamage;    // 계산된 실제 대미지
+        [SerializeField] protected int finalPrice;    // 탑 버프 및 업그레이드에 의해 결정된 최종 가격
 
 
         private void Start()
