@@ -26,6 +26,7 @@ namespace PokerDefense.Scene
             GameManager.GetOrAddPokerManager(PokerManagerObject);
             GameManager.AddInputManager();
             GameManager.Tower.InitTowerManager();
+            GameManager.Data.InitDataManager();
 
             AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }
