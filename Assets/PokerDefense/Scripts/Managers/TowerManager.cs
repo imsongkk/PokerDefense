@@ -59,8 +59,8 @@ namespace PokerDefense.Managers
         {
             if (selectedTowerPanel == null) return;
 
-            //TODO TowerBase 프리팹을 만들어 바꿀 것: 속성이 없는 기본 타워
-            BuildTower("TestTower");
+            //속성이 없는 기본 타워 기반
+            BuildTower("TowerBase");
 
             // 타워 건설 성공시 라운드 시작
             GameManager.Round.BreakState();
@@ -86,11 +86,14 @@ namespace PokerDefense.Managers
             else towerType = TowerType.Red;
 
             currentTower.SetTowerSettings(towerType, hand.TopCard);
+
+            currentTower = null;
         }
 
         private void BuildTower(string towerName)
         {
-            GameObject towerObject = GameManager.Resource.Instantiate(towerName, selectedTowerPanel.transform);
+            if (currentTower != null) UnityEngine.Object.Destroy(currentTower.gameObject);
+            GameObject towerObject = GameManager.Resource.Instantiate($"TowerPrefabs/{towerName}", selectedTowerPanel.transform);
             currentTower = towerObject.GetComponent<Tower>();
             currentTower.InitTower(towerName);
 

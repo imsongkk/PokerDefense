@@ -8,15 +8,17 @@ namespace PokerDefense.Towers
     public class Tower : MonoBehaviour
     {
         TowerData towerData;
+        // 족보로 결정되는 값들
+        // damage, attackSpeed, attackRange, basePrice, rareNess;
 
         SpriteRenderer spriteRenderer;
 
         bool isInit = false;
 
         TowerType towerType;
-        [SerializeField] protected int topCard;          // 탑 버프
-        [SerializeField] protected float towerDamage;    // 계산된 실제 대미지
-        [SerializeField] protected int finalPrice;    // 탑 버프 및 업그레이드에 의해 결정된 최종 가격
+        protected int topCard;          // 탑 버프
+        protected float towerDamage;    // 계산된 실제 대미지
+        protected int finalPrice;    // 탑 버프 및 업그레이드에 의해 결정된 최종 가격
 
 
         private void Start()
@@ -58,10 +60,11 @@ namespace PokerDefense.Towers
         }
 
 
-        private void Attack()
+        protected virtual void Attack()
         {
 
         }
+        // 객체마다 다른 공격 방식
 
         protected virtual void DamageCalculate()
         {
