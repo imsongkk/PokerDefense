@@ -1,5 +1,6 @@
 using PokerDefense.Towers;
 using static PokerDefense.Utils.Define;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -60,7 +61,7 @@ namespace PokerDefense.Managers
             if (selectedTowerPanel == null) return;
 
             //속성이 없는 기본 타워 기반
-            BuildTower("TowerBase");
+            selectedTowerPanel.SetTowerBase(true);
 
             // 타워 건설 성공시 라운드 시작
             GameManager.Round.BreakState();
@@ -95,12 +96,14 @@ namespace PokerDefense.Managers
             if (currentTower != null) UnityEngine.Object.Destroy(currentTower.gameObject);
             GameObject towerObject = GameManager.Resource.Instantiate($"TowerPrefabs/{towerName}", selectedTowerPanel.transform);
             currentTower = towerObject.GetComponent<Tower>();
+            Debug.Log(currentTower);
             currentTower.InitTower(towerName);
 
+            selectedTowerPanel.SetTowerBase(false);
             selectedTowerPanel.SetTower(currentTower);
         }
 
-        public void DestroyTower(Tower tower, FastAction destroyAction)
+        public void DestroyTower(Tower tower, Action destroyAction)
         {
 
         }

@@ -7,6 +7,7 @@ namespace PokerDefense.Towers
     public class TowerPanel : MonoBehaviour
     {
         SpriteRenderer spriteRenderer;
+        GameObject towerBase;
 
         bool isInit = false;
         int xIndex, yIndex;
@@ -28,11 +29,18 @@ namespace PokerDefense.Towers
 
             spriteRenderer = GetComponent<SpriteRenderer>();
             originColor = spriteRenderer.color;
+            towerBase = transform.GetChild(0).gameObject;
+            towerBase.SetActive(false);
 
-            // TODO : ÇÏµåÄÚµù ¸»°í µû·Î ÇØ»óµµ ´ëÀÀ!
+            // TODO : ï¿½Ïµï¿½ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø»ï¿½ ï¿½ï¿½ï¿½ï¿½!
             transform.localPosition = new Vector2((float)(-3.5 + x), (float)(3.5 - y));
 
             isInit = true;
+        }
+
+        public void SetTowerBase(bool setBase)
+        {
+            towerBase.SetActive(setBase);
         }
 
         public void SetTower(Tower target)
