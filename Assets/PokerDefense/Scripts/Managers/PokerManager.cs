@@ -243,6 +243,7 @@ namespace PokerDefense.Managers
 
             // 플러시 계열 패이고 탑카드가 조커일 경우 탑셰이프가 조커가 아닌 다른 모든 카드의 문양으로 결정
             CardShape topShape = ((cardList[4].shape == CardShape.Joker) && isFlush) ? cardList[3].shape : cardList[4].shape;
+            if (cardList[4].number == cardList[3].number) topShape = CardShape.Null;
 
             Hand returnHand = new Hand(handRank, hiddenRanks.Contains(handRank), topCard, topShape);
 

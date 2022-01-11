@@ -12,6 +12,7 @@ namespace PokerDefense.Managers
     {
         public enum TowerType
         {
+            Normal,
             Red,
             Black,
             Joker
@@ -80,6 +81,7 @@ namespace PokerDefense.Managers
             BuildTower(handRank.ToString());
             TowerType towerType;
             if (hand.TopShape == CardShape.Joker) towerType = TowerType.Joker;
+            else if (hand.TopShape == CardShape.Null) towerType = TowerType.Normal;
             else if ((hand.TopShape == CardShape.Spade) || (hand.TopShape == CardShape.Clover))
             {
                 towerType = TowerType.Black;

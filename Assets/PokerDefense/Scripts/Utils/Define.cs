@@ -41,7 +41,8 @@ namespace PokerDefense.Utils
             Heart,      // 1
             Diamond,    // 2
             Clover,     // 3
-            Joker       // 4
+            Joker,      // 4
+            Null        // 5
         }
 
         public enum HandRank

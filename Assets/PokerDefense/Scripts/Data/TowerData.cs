@@ -11,6 +11,7 @@ namespace PokerDefense.Data
         public float attackSpeed;
         public float attackRange;
         public int basePrice; // 기본 가격.
+        public bool isHidden;   // 히든 여부
         public int rareNess;      // 수가 클 수록 높은 희귀도
     }
 }
