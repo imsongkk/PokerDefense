@@ -62,5 +62,8 @@ namespace PokerDefense.Towers
         {
             ResetPanel();
         }
+
+        public bool HasTower()
+            => towerBase.activeSelf;
     }
 }

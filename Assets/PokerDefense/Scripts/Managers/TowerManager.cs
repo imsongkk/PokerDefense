@@ -25,8 +25,6 @@ namespace PokerDefense.Managers
         TowerPanel selectedTowerPanel = null;
         Tower currentTower;
 
-        GameObject towerPanelsObject;
-
         public void InitTowerManager()
         {
             InitTowerPanels();
@@ -35,6 +33,8 @@ namespace PokerDefense.Managers
 
         private void InitTowerPanels()
         {
+            GameObject towerPanelsObject;
+
             towerPanelsObject = GameObject.FindGameObjectWithTag("TowerPanels");
             if (towerPanelsObject == null)
             {
