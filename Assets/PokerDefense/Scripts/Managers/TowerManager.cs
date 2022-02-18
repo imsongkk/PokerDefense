@@ -23,7 +23,6 @@ namespace PokerDefense.Managers
 
         TowerPanel[,] towerPanelArray;
         TowerPanel selectedTowerPanel = null;
-        Tower currentTower;
 
         public void InitTowerManager()
         {
@@ -57,17 +56,6 @@ namespace PokerDefense.Managers
 
         }
 
-        private void SelectTowerPosition() // 포커 패를 뽑기 전, Tower의 위치 선정
-        {
-            if (selectedTowerPanel == null) return;
-
-            //속성이 없는 기본 타워 기반
-            selectedTowerPanel.SetTowerBaseStatus(true);
-
-            // 타워 건설 성공시 라운드 시작
-            GameManager.Round.BreakState();
-        }
-
         public void ConfirmTower(Hand hand)
         {
             /*
@@ -78,7 +66,12 @@ namespace PokerDefense.Managers
             // TODO : PokerManager에서 포커 패에 맞는 Tower 정보 가져오기
             // TODO : selectedTower에서 타워 종류 결정
             HandRank handRank = hand.Rank;
-            BuildTower(handRank.ToString());
+            Tower tower = BuildTower(handRank.ToString());
+            if (tower == null)
+            {
+                Debug.LogError("Build Tower Error");
+                return;
+            }
             TowerType towerType;
             if (hand.TopShape == CardShape.Joker) towerType = TowerType.Joker;
             else if (hand.TopShape == CardShape.Null) towerType = TowerType.Normal;
@@ -88,32 +81,56 @@ namespace PokerDefense.Managers
             }
             else towerType = TowerType.Red;
 
-            currentTower.SetTowerSettings(towerType, hand.TopCard);
-
-            currentTower = null;
+            tower.SetTowerSettings(towerType, hand.TopCard);
         }
 
-        private void BuildTower(string towerName)
+        private Tower BuildTower(string towerName)
         {
-            if (currentTower != null) UnityEngine.Object.Destroy(currentTower.gameObject);
+            Tower tower;
+
             GameObject towerObject = GameManager.Resource.Instantiate($"TowerPrefabs/{towerName}", selectedTowerPanel.transform);
-            currentTower = towerObject.GetComponent<Tower>();
-            Debug.Log(currentTower);
-            currentTower.InitTower(towerName);
+            tower = towerObject.GetComponent<Tower>();
+            Debug.Log(tower);
+            tower.InitTower(towerName);
 
-            selectedTowerPanel.SetTowerBaseStatus(false);
-            selectedTowerPanel.SetTower(currentTower);
+            selectedTowerPanel.SetTower(tower);
+
+            return tower;
         }
 
-        public void DestroyTower(Tower tower, Action destroyAction)
+        public void DestroyTower(Tower tower, Action afterDestroyAction)
         {
-
+            UnityEngine.Object.Destroy(tower.gameObject);
+            afterDestroyAction?.Invoke();
         }
 
-        public void SetSelectedTowerPanel(TowerPanel target)
+        public void UpgradeTower(Tower tower)
         {
-            selectedTowerPanel = target;
-            SelectTowerPosition();
+            // TODO : 타워 업그레이드 짜기
         }
+
+        public void AfterTowerBaseConstructed(TowerPanel target)
+        {
+            EndTowerPanelSelect(target);
+
+            // TowerBase 건설된 TowerPanel 저장
+            selectedTowerPanel = target; 
+
+            // TowerBase 건설 성공시 라운드 시작
+            GameManager.Round.BreakState();
+        }
+
+        public void StartTowerPanelSelect(TowerPanel target) // 포커 패를 뽑기 전, Tower의 위치 선정
+        {
+            target.HighligtPanel();
+            GameManager.Round.BreakTimer(true);
+        }
+
+        public void EndTowerPanelSelect(TowerPanel target) // TowerPanel 선택이 다 됐거나 취소했을 경우
+        {
+            target.ResetPanel();
+            GameManager.Round.BreakTimer(false);
+        }
+
     }
 }

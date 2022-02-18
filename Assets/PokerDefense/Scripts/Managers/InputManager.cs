@@ -33,13 +33,20 @@ namespace PokerDefense.Managers
                 {
                     TowerPanel selectedTowerPanel = FindTowerPanel(Input.mousePosition);
 
-                    // 선택된 좌표에 TowerPanel이 없거나 TowerPanel에 이미 Tower가 있음
-                    if (selectedTowerPanel == null || selectedTowerPanel.HasTower()) return;
+                    // TowerPanel이외의 영역을 터치했을 때
+                    if (selectedTowerPanel == null) return;
 
-                    UI_TowerSelectPopup towerselect = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
-                    towerselect.SetTowerPanel(selectedTowerPanel);
-
-                    return;
+                    // TowerPanel에 이미 Tower가 있을 경우
+                    if (selectedTowerPanel.HasTower())
+                    {
+                        UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
+                        towerTouchPopup.SetTouchedTowerPanel(selectedTowerPanel);
+                    }
+                    else
+                    {
+                        UI_TowerSelectPopup towerSelectPopup = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
+                        towerSelectPopup.SetTowerPanel(selectedTowerPanel);
+                    }
                 }
             }
         }

@@ -1,8 +1,6 @@
 using PokerDefense.Managers;
 using PokerDefense.Towers;
 using PokerDefense.Utils;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -48,29 +46,39 @@ namespace PokerDefense.UI.Popup
         public void SetTowerPanel(TowerPanel target)
         {
             selectedTowerPanel = target;
-            selectedTowerPanel.HighligtPanel();
-            GameManager.Round.BreakTimer(true);
+
+            GameManager.Tower.StartTowerPanelSelect(selectedTowerPanel);
         }
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
-            GameManager.Tower.SetSelectedTowerPanel(selectedTowerPanel);
+            //속성이 없는 기본 타워 기반
+            selectedTowerPanel.SetTowerBaseStatus(true);
+            GameManager.Tower.AfterTowerBaseConstructed(selectedTowerPanel);
+
             ClosePopupUI();
-            GameManager.Round.BreakTimer(false);
         }
 
         private void OnClickCancelButton(PointerEventData evt)
         {
             selectedTowerPanel.ResetPanel();
-            GameManager.Round.BreakTimer(false);
             ClosePopupUI();
         }
 
         private void OnClickBackButton(PointerEventData evt)
         {
             selectedTowerPanel.ResetPanel();
-            GameManager.Round.BreakTimer(false);
             ClosePopupUI();
         }
+
+        public override void ClosePopupUI()
+        {
+            GameManager.Tower.EndTowerPanelSelect(selectedTowerPanel);
+
+            base.ClosePopupUI();
+        }
+
+        public TowerPanel GetTowerPanel()
+            => selectedTowerPanel;
     }
 }

@@ -5,7 +5,7 @@ using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Towers
 {
-    public class Tower : MonoBehaviour
+    public abstract class Tower : MonoBehaviour
     {
         TowerData towerData;
         // 족보로 결정되는 값들

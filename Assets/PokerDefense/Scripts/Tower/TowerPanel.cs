@@ -1,6 +1,4 @@
 using UnityEngine;
-using PokerDefense.Utils;
-using System;
 
 namespace PokerDefense.Towers
 {
@@ -32,7 +30,11 @@ namespace PokerDefense.Towers
         public void SetTower(Tower target)
         {
             tower = target;
+            SetTowerBaseStatus(false);
         }
+
+        public Tower GetTower()
+            => tower;
 
         public void OnEndPoker()
             => ResetPanel();
@@ -45,7 +47,8 @@ namespace PokerDefense.Towers
 
         public void ResetPanel()
             => spriteRenderer.color = originColor;
+
         public bool HasTower()
-            => towerBase.activeSelf;
+            => tower != null;
     }
 }
