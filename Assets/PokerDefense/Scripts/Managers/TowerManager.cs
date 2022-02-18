@@ -62,7 +62,7 @@ namespace PokerDefense.Managers
             if (selectedTowerPanel == null) return;
 
             //속성이 없는 기본 타워 기반
-            selectedTowerPanel.SetTowerBase(true);
+            selectedTowerPanel.SetTowerBaseStatus(true);
 
             // 타워 건설 성공시 라운드 시작
             GameManager.Round.BreakState();
@@ -101,7 +101,7 @@ namespace PokerDefense.Managers
             Debug.Log(currentTower);
             currentTower.InitTower(towerName);
 
-            selectedTowerPanel.SetTowerBase(false);
+            selectedTowerPanel.SetTowerBaseStatus(false);
             selectedTowerPanel.SetTower(currentTower);
         }
 

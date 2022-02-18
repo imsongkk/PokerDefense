@@ -9,18 +9,11 @@ namespace PokerDefense.Towers
         SpriteRenderer spriteRenderer;
         GameObject towerBase;
 
-        bool isInit = false;
         int xIndex, yIndex;
-        float x, y;
 
         Tower tower;
 
         Color originColor;
-
-        private void Update()
-        {
-            if (!isInit) return;
-        }
 
         public void InitTowerPanel(int x, int y)
         {
@@ -34,13 +27,6 @@ namespace PokerDefense.Towers
 
             // TODO : �ϵ��ڵ� ���� ���� �ػ� ����!
             transform.localPosition = new Vector2((float)(-3.5 + x), (float)(3.5 - y));
-
-            isInit = true;
-        }
-
-        public void SetTowerBase(bool setBase)
-        {
-            towerBase.SetActive(setBase);
         }
 
         public void SetTower(Tower target)
@@ -48,21 +34,17 @@ namespace PokerDefense.Towers
             tower = target;
         }
 
+        public void OnEndPoker()
+            => ResetPanel();
+
+        public void SetTowerBaseStatus(bool setBase)
+            => towerBase.SetActive(setBase);
+
         public void HighligtPanel()
-        {
-            spriteRenderer.color = Color.red;
-        }
+            => spriteRenderer.color = Color.red;
 
         public void ResetPanel()
-        {
-            spriteRenderer.color = originColor;
-        }
-
-        public void OnEndPoker()
-        {
-            ResetPanel();
-        }
-
+            => spriteRenderer.color = originColor;
         public bool HasTower()
             => towerBase.activeSelf;
     }
