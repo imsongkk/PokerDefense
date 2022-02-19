@@ -14,10 +14,11 @@ namespace PokerDefense.Managers
 
         public PlayerData PlayerData { get; private set; }
         public Dictionary<string, TowerData> TowerDataDict { get; private set; }
+        public List<RoundData> RoundDataList { get; private set; }
 
-        private string towerJsonLocation = "Assets/PokerDefense/Data";
+        private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerJsonFileName = "TowerDataDict";
-
+        private string roundJsonFileName = "RoundDataList";
 
         public void InitDataManager()
         {
@@ -44,7 +45,7 @@ namespace PokerDefense.Managers
             // towerData.towerName = "HighCard";
             // towerData.rareNess = 1;
 
-            TowerDataDict = LoadJsonFile<Dictionary<string, TowerData>>(towerJsonLocation, towerJsonFileName);
+            TowerDataDict = LoadJsonFile<Dictionary<string, TowerData>>(jsonLocation, towerJsonFileName);
 
             Debug.Log(TowerDataDict);
             Debug.Log(JsonConvert.SerializeObject(TowerDataDict));
@@ -53,6 +54,14 @@ namespace PokerDefense.Managers
         private void MakeTowerDataDict()
         {
 
+        }
+
+        private void InitRoundDataList()
+        {
+            RoundDataList = LoadJsonFile<List<RoundData>>(jsonLocation, roundJsonFileName);
+
+            Debug.Log(RoundDataList);
+            Debug.Log(JsonConvert.SerializeObject(RoundDataList));
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)
