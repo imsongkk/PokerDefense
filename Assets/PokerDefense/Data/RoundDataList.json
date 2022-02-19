@@ -1,0 +1,18 @@
+[
+    {
+        "stageNumber": 0,
+        "enemyDictionary": {}
+    },
+    {
+        "stageNumber": 1,
+        "enemyDictionary": {
+            "basic": 4
+        }
+    },
+    {
+        "stageNumber": 2,
+        "enemyDictionary": {
+            "basic": 10
+        }
+    }
+]
