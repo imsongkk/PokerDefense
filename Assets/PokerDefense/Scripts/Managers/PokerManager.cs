@@ -107,8 +107,10 @@ namespace PokerDefense.Managers
         {
             // if (!isCardChanged[index])
             // {
+
             if (chance <= 0) return;
             chance--;
+            // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
             var oldCard = cardList[index];
             cardList[index] = PopCard();
             deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기

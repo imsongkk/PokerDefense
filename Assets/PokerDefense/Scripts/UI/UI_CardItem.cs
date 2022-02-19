@@ -14,11 +14,13 @@ namespace PokerDefense.UI
     {
         UI_Poker ui_Poker = null;
 
+        [SerializeField]
         Image cardImage;
-
+        [SerializeField]
         int number;
+        [SerializeField]
         CardShape shape;
-
+        [SerializeField]
         int cardIndex;
 
         enum GameObjects
@@ -36,6 +38,7 @@ namespace PokerDefense.UI
 
         public override void Init()
         {
+            this.shape = CardShape.Null;
             BindObjects();
         }
 
@@ -52,7 +55,10 @@ namespace PokerDefense.UI
 
         private void OnClickCardItem(PointerEventData evt)
         {
-            //TODO 찬스 있을 경우 다시 뽑기
+            // 아직 뽑지 않은 패일 경우 시행하지 않음
+            if (shape == CardShape.Null) return;
+
+            // 찬스가 남아있을 경우 찬스를 소비하여 뽑음
             Debug.Log($"{shape.ToString()} {number} 터치 됨");
             GameManager.Poker.ChangeCard(cardIndex, (int index) =>
             {
