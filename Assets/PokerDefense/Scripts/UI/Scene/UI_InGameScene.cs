@@ -1,9 +1,9 @@
-using PokerDefense.UI.Scene;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using PokerDefense.Managers;
+using PokerDefense.Utils;
+using UnityEngine.EventSystems;
+using PokerDefense.UI.Popup;
 
 namespace PokerDefense.UI.Scene
 {
@@ -11,6 +11,7 @@ namespace PokerDefense.UI.Scene
     {
         enum GameObjects
         {
+            MenuButton,
             HeartText,
             GoldText,
             RoundText,
@@ -36,6 +37,15 @@ namespace PokerDefense.UI.Scene
             heartText = GetObject((int)GameObjects.HeartText).GetComponent<TextMeshProUGUI>();
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
+
+            GameObject menuButton = GetObject((int)GameObjects.MenuButton);
+            AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
+            AddButtonAnim(menuButton);
+        }
+
+        private void OnClickMenuButton(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
         }
 
         public void InitText(int heart, int gold, int round)

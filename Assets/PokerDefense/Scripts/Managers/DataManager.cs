@@ -16,12 +16,15 @@ namespace PokerDefense.Managers
 
         public Dictionary<string, TowerData> TowerDataDict { get; private set; }
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
+        public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerJsonFileName = "TowerDataDict";
         private string roundJsonFileName = "RoundDataDict";
+        private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
+        private string slotJsonFileName = "SlotData";
 
         public void InitDataManager()
         {
@@ -30,6 +33,7 @@ namespace PokerDefense.Managers
             InitTowerDataDict();
             InitRoundDataDict();
             InitEnemyDataDict();
+            InitHardNessDataDict();
         }
 
         private void InitPlayerData()
@@ -60,6 +64,11 @@ namespace PokerDefense.Managers
             EnemyDataDict = LoadJsonFile<Dictionary<string, EnemyData>>(jsonLocation, enemyJsonFileName);
         }
 
+        private void InitHardNessDataDict()
+        {
+            HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
+        }
+
         private T LoadJsonFile<T>(string loadPath, string fileName)
         {
             FileStream fileStream = new FileStream($"{loadPath}/{fileName}.json", FileMode.Open);
@@ -74,6 +83,37 @@ namespace PokerDefense.Managers
         private T JsonToObject<T>(string jsonData)
         {
             return JsonConvert.DeserializeObject<T>(jsonData);
+        }
+
+        private void CreateJsonFile(string createPath, string fileName, string jsonData)
+        {
+            FileStream fileStream = new FileStream($"{createPath}/{fileName}.json", FileMode.Create);
+            byte[] data = Encoding.UTF8.GetBytes(jsonData);
+            fileStream.Write(data, 0, data.Length);
+            fileStream.Close();
+        }
+
+        public void SaveSlotData()
+        {
+            SlotData newData = MakeSlotData();
+            string slotDataJson = JsonConvert.SerializeObject(newData, Formatting.Indented);
+            CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);
+        }
+
+        private SlotData MakeSlotData()
+        {
+            SlotData newSlotData = new SlotData();
+            newSlotData.heart = GameManager.Round.Heart;
+            newSlotData.gold = GameManager.Round.Gold;
+            newSlotData.stageNumber = GameManager.Round.Round;
+            newSlotData.hardNess = GameManager.Round.HardNess;
+
+            return newSlotData;
+        }
+
+        public SlotData LoadSlotData()
+        {
+            return null;
         }
     }
 }

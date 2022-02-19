@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static PokerDefense.Utils.Define;
+using PokerDefense.Data;
 
 namespace PokerDefense.Managers
 {
@@ -43,7 +44,12 @@ namespace PokerDefense.Managers
         List<Transform> wayPoints = new List<Transform>();
         UI_InGameScene ui_InGameScene;
 
-        public int Round { get; private set; } = 1;
+        public int Round { get; private set; }
+        public string HardNess { get; private set; }
+        public int Heart { get; private set; }
+        public int Gold { get; private set; }
+        public int Chance { get; private set; }
+
         private int heart = 5;
         private int gold = 10;
 
@@ -61,6 +67,23 @@ namespace PokerDefense.Managers
             InitPoints();
             StartCoroutine(SetTextUI());
             CurrentState = RoundState.READY;
+        }
+
+        public void InitRoundManager() // 처음으로 게임이 시작될 때 호출
+        {
+            /* TODO : 데이터 실체화
+             * Round와 HardNess는 MainScene에서 받아옴
+             */
+
+            Round = 1;
+            HardNess = "Easy";
+
+            HardNessData hardNessData = new HardNessData();
+            GameManager.Data.HardNessDataDict.TryGetValue(HardNess, out hardNessData);
+
+            Heart = hardNessData.heart;
+            Gold = hardNessData.gold;
+            Chance = hardNessData.chance;
         }
 
         IEnumerator SetTextUI()

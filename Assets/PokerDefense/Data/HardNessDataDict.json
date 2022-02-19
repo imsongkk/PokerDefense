@@ -1,0 +1,22 @@
+{
+  "Easy": {
+    "heart": 30,
+    "gold": 10,
+    "chance": 7
+  },
+  "Normal": {
+    "heart": 25,
+    "gold": 10,
+    "chance": 5
+  },
+  "Hard": {
+    "heart": 20,
+    "gold": 10,
+    "chance": 3
+  },
+  "Crazy": {
+    "heart": 15,
+    "gold": 10,
+    "chance": 1
+  }
+}

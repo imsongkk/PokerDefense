@@ -25,8 +25,10 @@ namespace PokerDefense.Scene
             GameManager.AddRoundManager(RoundManagerObject);
             GameManager.GetOrAddPokerManager(PokerManagerObject);
             GameManager.AddInputManager();
+
             GameManager.Tower.InitTowerManager();
             GameManager.Data.InitDataManager();
+            GameManager.Round.InitRoundManager();
 
             AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }
