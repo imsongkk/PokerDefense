@@ -13,19 +13,23 @@ namespace PokerDefense.Managers
         PlayerData playerData;
 
         public PlayerData PlayerData { get; private set; }
+
         public Dictionary<string, TowerData> TowerDataDict { get; private set; }
-        public List<RoundData> RoundDataList { get; private set; }
+        public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
+        public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerJsonFileName = "TowerDataDict";
-        private string roundJsonFileName = "RoundDataList";
+        private string roundJsonFileName = "RoundDataDict";
+        private string enemyJsonFileName = "EnemyDataDict";
 
         public void InitDataManager()
         {
             InitPlayerData();
-            InitTowerDataList();
 
-            MakeTowerDataDict();
+            InitTowerDataDict();
+            InitRoundDataDict();
+            InitEnemyDataDict();
         }
 
         private void InitPlayerData()
@@ -33,35 +37,27 @@ namespace PokerDefense.Managers
 
         }
 
-        private void InitTowerDataList()
+        private void InitTowerDataDict()
         {
-            // TODO : ����� json�� �ҷ��� TowerData�� ������
-            // TEST
-            // TowerData towerData = new TowerData();
-            // towerData.damage = 30;
-            // towerData.attackSpeed = 5;
-            // towerData.attackRange = 10;
-            // towerData.basePrice = 5;
-            // towerData.towerName = "HighCard";
-            // towerData.rareNess = 1;
 
             TowerDataDict = LoadJsonFile<Dictionary<string, TowerData>>(jsonLocation, towerJsonFileName);
 
-            Debug.Log(TowerDataDict);
-            Debug.Log(JsonConvert.SerializeObject(TowerDataDict));
+            //Debug.Log(TowerDataDict);
+            //Debug.Log(JsonConvert.SerializeObject(TowerDataDict));
         }
 
-        private void MakeTowerDataDict()
+        private void InitRoundDataDict()
         {
+            RoundDataDict = LoadJsonFile<Dictionary<string, Dictionary<string, RoundData>>>(jsonLocation, roundJsonFileName);
 
+            //Debug.Log(RoundDataList);
+            //Debug.Log(RoundDataList["Easy"]["1"].enemyName);
+            //Debug.Log(RoundDataList["Normal"]["1"].enemyName);
         }
 
-        private void InitRoundDataList()
+        private void InitEnemyDataDict()
         {
-            RoundDataList = LoadJsonFile<List<RoundData>>(jsonLocation, roundJsonFileName);
-
-            Debug.Log(RoundDataList);
-            Debug.Log(JsonConvert.SerializeObject(RoundDataList));
+            EnemyDataDict = LoadJsonFile<Dictionary<string, EnemyData>>(jsonLocation, enemyJsonFileName);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

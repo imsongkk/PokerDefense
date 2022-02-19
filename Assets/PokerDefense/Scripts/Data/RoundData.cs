@@ -6,7 +6,9 @@ namespace PokerDefense.Data
     [Serializable]
     public class RoundData
     {
-        public int stageNumber;
-        public Dictionary<string, int> enemyDictionary;
+        public string enemyName;
+        public int count;
+        public bool popup;
+        public int bonus;
     }
 }

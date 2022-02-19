@@ -1,0 +1,12 @@
+{
+  "monsterA": {
+    "moveSpeed": 5,
+    "hp": 100,
+    "boss": false
+  },
+  "monsterB": {
+    "moveSpeed": 7,
+    "hp": 400,
+    "boss": true
+  }
+}

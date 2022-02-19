@@ -1,0 +1,30 @@
+{
+  "Easy": {
+    "1": {
+      "enemyName": "monsterA",
+      "count": 5,
+      "popup": false,
+      "bonus" :  0
+    },
+    "2": {
+
+    }
+  },
+  "Normal": {
+    "1": {
+      "enemyName": "monsterB",
+      "count": 7,
+      "popup": true,
+      "bonus": 3
+    },
+    "2": {
+
+    }
+  },
+  "Hard": {
+
+  },
+  "Crazy": {
+
+  }
+}
