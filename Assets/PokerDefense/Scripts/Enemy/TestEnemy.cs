@@ -10,7 +10,7 @@ public class TestEnemy : Enemy
     protected override void Init()
     {
         enemyInfo.name = "A";
-        enemyInfo.speed = 1f;
+        enemyInfo.speed = 3f;
         enemyInfo.hp = 100;
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
@@ -43,7 +43,8 @@ public class TestEnemy : Enemy
             {
                 moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
                 transform.Translate(moveDirection * enemyInfo.speed * Time.deltaTime);
-                isInWayPoint = CheckWaypoint();
+                //isInWayPoint = CheckWaypoint();
+                /*
                 if (isInWayPoint)
                 {
                     isInWayPoint = false;
@@ -57,16 +58,17 @@ public class TestEnemy : Enemy
                     }
 
                 }
+                */
                 yield return null;
             }
         }
 
     }
-
+    /*
     private bool CheckWaypoint()
     {
         waypointDistance = Vector3.Distance(wayPoints[curIndex + 1].position, this.transform.position);
-        if (waypointDistance < 0.1f) return true;
+        if (waypointDistance < 0.05f * enemyInfo.speed) return true;
         else return false;
     }
 
@@ -91,36 +93,26 @@ public class TestEnemy : Enemy
             yield return null;
         }
     }
-
+    
     protected void RotatePath()
     {
         transform.Rotate(0, 0, -90);
     }
+    */
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("WayPoint"))
         {
-            isInWayPoint = true;
+            curIndex++;
+            //isInWayPoint = true;
         }
-        else if (collision.gameObject.CompareTag("Respawn"))
+        else if (collision.gameObject.CompareTag("EndPoint"))
         {
-            if (curIndex >= wayPoints.Count - 1) // ����
+            if (curIndex + 2 >= wayPoints.Count) 
             {
                 Die();
             }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("WayPoint"))
-        {
-            isInWayPoint = false;
-            // if (curIndex == 4) // ����
-            // {
-            //     Die();
-            // }
         }
     }
 }

@@ -40,6 +40,7 @@ namespace PokerDefense.Managers
 
         Transform startPoint, endPoint;
         Transform wayPointParent;
+        Transform enemyGroup;
 
         [SerializeField]
         List<Transform> wayPoints = new List<Transform>();
@@ -101,6 +102,8 @@ namespace PokerDefense.Managers
 
             Enemy.wayPoints = this.wayPoints;
             Enemy.endPoint = this.endPoint;
+
+            enemyGroup = GameObject.FindGameObjectWithTag("EnemyGroup").transform;
         }
 
         private void InitHardNessData()
@@ -240,13 +243,13 @@ namespace PokerDefense.Managers
         IEnumerator SpawnTestEnemy()
         {
             int remainEnemyCount = roundData.count;
-            WaitForSeconds twoSecWait = new WaitForSeconds(1f);
+            string currentEnemyName = roundData.enemyName;
+            WaitForSeconds twoSecWait = new WaitForSeconds(2f);
             GameObject enemy = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/TestEnemy");
 
             while (remainEnemyCount > 0)
             {
-                Debug.Log("A");
-                Instantiate(enemy, startPoint);
+                Instantiate(enemy, startPoint.position, Quaternion.identity, enemyGroup);
                 remainEnemyCount--;
                 yield return twoSecWait;
             }
