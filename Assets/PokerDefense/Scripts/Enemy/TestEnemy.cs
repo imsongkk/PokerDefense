@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TestEnemy : Enemy
 {
+    Vector3 moveDirection;
+
     protected override void Init()
     {
         enemyInfo.name = "A";
@@ -13,13 +15,6 @@ public class TestEnemy : Enemy
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
 
-        wayPointParent = GameObject.FindGameObjectWithTag("WayPointParent").transform;
-        wayPoints = new Transform[wayPointParent.childCount];
-        int i = 0;
-        foreach (Transform child in wayPointParent)
-        {
-            wayPoints[i++] = child;
-        }
         OnSpawn();
     }
 
@@ -41,17 +36,26 @@ public class TestEnemy : Enemy
 
     IEnumerator Move()
     {
-        if (wayPoints.Length >= 2)
+        if (wayPoints.Count >= 2)
         {
-            Vector3 moveDirection = (wayPoints[1].position - wayPoints[0].position).normalized;
-            while (curIndex < wayPoints.Length)
+
+            while (curIndex < wayPoints.Count)
             {
+                moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
                 transform.Translate(moveDirection * enemyInfo.speed * Time.deltaTime);
+                isInWayPoint = CheckWaypoint();
                 if (isInWayPoint)
                 {
                     isInWayPoint = false;
-                    curIndex++;
-                    moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Length].position - wayPoints[curIndex].position).normalized;
+                    if (curIndex == (wayPoints.Count - 1))
+                    {
+                        EndPoint();
+                    }
+                    else
+                    {
+                        curIndex++;
+                    }
+
                 }
                 yield return null;
             }
@@ -59,6 +63,21 @@ public class TestEnemy : Enemy
 
     }
 
+    private bool CheckWaypoint()
+    {
+        waypointDistance = Vector3.Distance(wayPoints[curIndex + 1].position, this.transform.position);
+        if (waypointDistance < 0.1f) return true;
+        else return false;
+    }
+
+    private void EndPoint()
+    {
+        //TODO damage to player
+        Die();
+    }
+
+
+    //* Legacy Codes
     IEnumerator MoveLegacy()
     {
         while (true)
@@ -86,7 +105,7 @@ public class TestEnemy : Enemy
         }
         else if (collision.gameObject.CompareTag("Respawn"))
         {
-            if (curIndex >= wayPoints.Length - 1) // ����
+            if (curIndex >= wayPoints.Count - 1) // ����
             {
                 Die();
             }

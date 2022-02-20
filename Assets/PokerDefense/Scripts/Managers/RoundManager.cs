@@ -12,7 +12,6 @@ namespace PokerDefense.Managers
 {
     public class RoundManager : MonoBehaviour
     {
-        [Flags]
         public enum RoundState
         {
             NONE,
@@ -40,6 +39,9 @@ namespace PokerDefense.Managers
         }
 
         Transform startPoint, endPoint;
+        Transform wayPointParent;
+
+        [SerializeField]
         List<Transform> wayPoints = new List<Transform>();
 
         UI_InGameScene ui_InGameScene;
@@ -69,7 +71,7 @@ namespace PokerDefense.Managers
             HardNess = "Easy";
 
             // 순서 주의
-            InitPoints();
+            InitWayPoints();
             InitHardNessData();
             InitRoundData();
             InitEnemyData();
@@ -79,11 +81,26 @@ namespace PokerDefense.Managers
             CurrentState = RoundState.READY;
         }
 
-        private void InitPoints()
+        // private void InitPoints()
+        // {
+        //     startPoint = GameObject.FindGameObjectWithTag("StartPoint").transform;
+        //     endPoint = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        //     GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
+        // }
+
+        public void InitWayPoints()
         {
-            startPoint = GameObject.FindGameObjectWithTag("StartPoint").transform;
-            endPoint = GameObject.FindGameObjectWithTag("EndPoint").transform;
-            GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
+            wayPointParent = GameObject.FindGameObjectWithTag("WayPointParent").transform;
+            foreach (Transform child in wayPointParent)
+            {
+                wayPoints.Add(child);
+            }
+
+            startPoint = wayPoints[0];
+            endPoint = wayPoints[wayPoints.Count - 1];
+
+            Enemy.wayPoints = this.wayPoints;
+            Enemy.endPoint = this.endPoint;
         }
 
         private void InitHardNessData()
@@ -150,8 +167,8 @@ namespace PokerDefense.Managers
                     }
                     break;
                 case RoundState.PLAY:
-                    if (stateChanged) 
-                    { 
+                    if (stateChanged)
+                    {
                         PlayStateStart();
                         StartCoroutine(SpawnTestEnemy());
                     }
@@ -226,7 +243,7 @@ namespace PokerDefense.Managers
             WaitForSeconds twoSecWait = new WaitForSeconds(1f);
             GameObject enemy = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/TestEnemy");
 
-            while(remainEnemyCount > 0)
+            while (remainEnemyCount > 0)
             {
                 Debug.Log("A");
                 Instantiate(enemy, startPoint);
