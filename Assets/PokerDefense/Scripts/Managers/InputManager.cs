@@ -1,6 +1,5 @@
 using UnityEngine;
 using static PokerDefense.Managers.RoundManager;
-using PokerDefense.UI.Popup;
 using PokerDefense.Towers;
 using UnityEngine.EventSystems;
 
@@ -17,6 +16,8 @@ namespace PokerDefense.Managers
         {
             if (Input.GetMouseButtonDown(0))
             {
+                roundState = GameManager.Round.CurrentState;
+
                 // UI 입력은 EventSystem이 따로 해주기 떄문에 무시
 #if UNITY_EDITOR
                 if (EventSystem.current.IsPointerOverGameObject())
@@ -27,27 +28,12 @@ namespace PokerDefense.Managers
                     return;
                 }
 
-                roundState = GameManager.Round.CurrentState;
+                TowerPanel selectedTowerPanel = FindTowerPanel(Input.mousePosition);
 
-                if (roundState == RoundState.TOWER)
-                {
-                    TowerPanel selectedTowerPanel = FindTowerPanel(Input.mousePosition);
+                // TowerPanel이외의 영역을 터치했을 때
+                if (selectedTowerPanel == null) return;
 
-                    // TowerPanel이외의 영역을 터치했을 때
-                    if (selectedTowerPanel == null) return;
-
-                    // TowerPanel에 이미 Tower가 있을 경우
-                    if (selectedTowerPanel.HasTower())
-                    {
-                        UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
-                        towerTouchPopup.SetTouchedTowerPanel(selectedTowerPanel);
-                    }
-                    else
-                    {
-                        UI_TowerSelectPopup towerSelectPopup = GameManager.UI.ShowPopupUI<UI_TowerSelectPopup>();
-                        towerSelectPopup.SetTowerPanel(selectedTowerPanel);
-                    }
-                }
+                selectedTowerPanel.GetTouched(roundState);  
             }
         }
 
