@@ -11,6 +11,7 @@ namespace PokerDefense.Data
         public int heart;
         public int gold;
         public int diamond;
+        public int chance;
         public List<TowerSaveData> towerSaveDataList;
     }
 
@@ -18,8 +19,7 @@ namespace PokerDefense.Data
     public class TowerSaveData
     {
         public string towerName;
-        public string towerLevel;
-        public int xIndex;
-        public int yIndex;
+        public int towerLevel;
+        public int towerIndex;
     }
 }
