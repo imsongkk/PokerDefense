@@ -58,6 +58,7 @@ namespace PokerDefense.Utils
 
         public static void Stop()
         {
+            Debug.Log("A");
             Time.timeScale = 0f;
         }
 

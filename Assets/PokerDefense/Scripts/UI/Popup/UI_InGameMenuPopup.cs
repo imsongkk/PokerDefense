@@ -19,6 +19,8 @@ namespace PokerDefense.UI.Popup
 
         public override void Init()
         {
+            isStoppable = true;
+
             base.Init();
             BindObjects();
         }
