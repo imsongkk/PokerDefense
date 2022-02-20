@@ -2,10 +2,14 @@ using PokerDefense.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TestEnemy : Enemy
 {
     Vector3 moveDirection;
+
+    [SerializeField] Transform hpBar;
+    Sprite hpBarSprite;
 
     protected override void Init()
     {
@@ -15,6 +19,7 @@ public class TestEnemy : Enemy
         enemyInfo.round = 1;
         collider = gameObject.GetComponent<BoxCollider2D>();
 
+        hpBarSprite = hpBar.GetComponent<Sprite>();
         OnSpawn();
     }
 
@@ -38,7 +43,6 @@ public class TestEnemy : Enemy
     {
         if (wayPoints.Count >= 2)
         {
-
             while (curIndex < wayPoints.Count)
             {
                 moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;

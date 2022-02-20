@@ -130,7 +130,7 @@ namespace PokerDefense.Managers
         IEnumerator InitUIText()
         {
             yield return new WaitUntil(() => ui_InGameScene != null);
-            ui_InGameScene.InitText(Heart, Gold, Round);
+            ui_InGameScene.InitText(Round, Heart, Gold, Chance);
         }
 
         private void Update()

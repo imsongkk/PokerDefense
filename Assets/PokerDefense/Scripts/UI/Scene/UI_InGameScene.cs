@@ -15,9 +15,10 @@ namespace PokerDefense.UI.Scene
             HeartText,
             GoldText,
             RoundText,
+            ChanceText,
         }
 
-        TextMeshProUGUI heartText, goldText, roundText;
+        TextMeshProUGUI heartText, goldText, roundText, chanceText;
 
         private void Start()
             => Init();
@@ -37,6 +38,7 @@ namespace PokerDefense.UI.Scene
             heartText = GetObject((int)GameObjects.HeartText).GetComponent<TextMeshProUGUI>();
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
+            chanceText = GetObject((int)GameObjects.ChanceText).GetComponent<TextMeshProUGUI>();
 
             GameObject menuButton = GetObject((int)GameObjects.MenuButton);
             AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
@@ -48,18 +50,21 @@ namespace PokerDefense.UI.Scene
             GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
         }
 
-        public void InitText(int heart, int gold, int round)
+        public void InitText(int round, int heart, int gold, int chance)
         {
-            heartText.text = heart.ToString();
-            goldText.text = gold.ToString();
-            roundText.text = round.ToString();
+            SetRoundText(round);
+            SetHeartText(heart);
+            SetGoldText(gold);
+            SetChanceText(chance);
         }
 
+        public void SetRoundText(int round)
+            => roundText.text = $"Round : {round}";
         public void SetHeartText(int count)
             => heartText.text = count.ToString();
         public void SetGoldText(int count)
             => goldText.text = count.ToString();
-        public void SetRoundText(int round)
-            => roundText.text = $"Round : {round}";
+        public void SetChanceText(int count)
+            => chanceText.text = count.ToString();
     }
 }
