@@ -7,24 +7,19 @@ namespace PokerDefense.Towers
         SpriteRenderer spriteRenderer;
         GameObject towerBase;
 
-        int xIndex, yIndex;
-
         Tower tower;
 
         Color originColor;
 
-        public void InitTowerPanel(int x, int y)
-        {
-            xIndex = x;
-            yIndex = y;
+        private void Start()
+            => Init();
 
+        private void Init()
+        {
             spriteRenderer = GetComponent<SpriteRenderer>();
             originColor = spriteRenderer.color;
             towerBase = transform.GetChild(0).gameObject;
             towerBase.SetActive(false);
-
-            // TODO : �ϵ��ڵ� ���� ���� �ػ� ����!
-            transform.localPosition = new Vector2((float)(-3.5 + x), (float)(3.5 - y));
         }
 
         public void SetTower(Tower target)

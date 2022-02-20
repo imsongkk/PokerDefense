@@ -18,10 +18,7 @@ namespace PokerDefense.Managers
             Joker
         }
 
-        readonly private int TOWER_AREA_WITDH = 8;
-        readonly private int TOWER_AREA_HEIGHT = 8;
-
-        TowerPanel[,] towerPanelArray;
+        List<TowerPanel> towerPanelList;
         TowerPanel selectedTowerPanel = null;
 
         public void InitTowerManager()
@@ -41,19 +38,13 @@ namespace PokerDefense.Managers
                 return;
             }
 
-            towerPanelArray = new TowerPanel[TOWER_AREA_HEIGHT, TOWER_AREA_WITDH];
+            towerPanelList = new List<TowerPanel>();
 
-            for (int i = 0; i < TOWER_AREA_HEIGHT; i++)
+            for(int i=0; i<towerPanelsObject.transform.childCount; i++)
             {
-                for (int j = 0; j < TOWER_AREA_WITDH; j++)
-                {
-                    GameObject towerPanelObject = GameManager.Resource.Instantiate($"Tile/TowerPanel", towerPanelsObject.transform);
-                    TowerPanel towerPanel = towerPanelObject.AddComponent<TowerPanel>();
-                    towerPanel.InitTowerPanel(j, i);
-                    towerPanelArray[i, j] = towerPanel;
-                }
+                TowerPanel towerPanel = towerPanelsObject.transform.GetChild(i).GetComponent<TowerPanel>();
+                towerPanelList.Add(towerPanel);
             }
-
         }
 
         public void ConfirmTower(Hand hand)
