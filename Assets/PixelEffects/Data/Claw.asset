@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8305e8ebeb8a744cad9cd8e05ffcbcc, type: 3}
+  m_Name: Claw
+  m_EditorClassIdentifier: 
+  Controller: {fileID: 9100000, guid: 6fc8758e382909d4a880fe19021000af, type: 2}
+  Layer: 0
+  BackLayer: 0
+  ForeLayer: 0
+  Blend: 1
+  Offset: {x: 0, y: 0}
+  BackOffset: {x: 0, y: 0}
+  ForeOffset: {x: 0, y: 0}
