@@ -9,6 +9,8 @@ TagManager:
   - TowerGrid
   - WayPointParent
   - TowerPanels
+  - EndPoint
+  - StartPoint
   layers:
   - Default
   - TransparentFX

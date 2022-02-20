@@ -1,13 +1,12 @@
-using PokerDefense.UI.Scene;
+using PokerDefense.Data;
 using PokerDefense.UI.Popup;
-using PokerDefense.Utils;
+using PokerDefense.UI.Scene;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using static PokerDefense.Utils.Define;
-using PokerDefense.Data;
 
 namespace PokerDefense.Managers
 {
@@ -40,8 +39,9 @@ namespace PokerDefense.Managers
             }
         }
 
-        Transform spawnPoint;
+        Transform startPoint, endPoint;
         List<Transform> wayPoints = new List<Transform>();
+
         UI_InGameScene ui_InGameScene;
 
         public int Round { get; private set; }
@@ -50,35 +50,44 @@ namespace PokerDefense.Managers
         public int Gold { get; private set; }
         public int Chance { get; private set; }
 
-        private int heart = 5;
-        private int gold = 10;
-
         private float timeTowerSetLimit = 8f;
         private float timeLeft = 0;
 
         private bool stateBreak = false;
         private bool timerBreak = false;        // false일때만 State 타이머가 흐르게 됨
 
-        private void Start()
-            => Init();
-
-        public void Init()
-        {
-            InitPoints();
-            StartCoroutine(SetTextUI());
-            CurrentState = RoundState.READY;
-        }
+        EnemyData enemyData;
+        RoundData roundData;
+        HardNessData hardNessData;
 
         public void InitRoundManager() // 처음으로 게임이 시작될 때 호출
         {
             /* TODO : 데이터 실체화
              * Round와 HardNess는 MainScene에서 받아옴
              */
-
             Round = 1;
             HardNess = "Easy";
 
-            HardNessData hardNessData = new HardNessData();
+            // 순서 주의
+            InitPoints();
+            InitHardNessData();
+            InitRoundData();
+            InitEnemyData();
+
+            StartCoroutine(InitUIText());
+
+            CurrentState = RoundState.READY;
+        }
+
+        private void InitPoints()
+        {
+            startPoint = GameObject.FindGameObjectWithTag("StartPoint").transform;
+            endPoint = GameObject.FindGameObjectWithTag("EndPoint").transform;
+            GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
+        }
+
+        private void InitHardNessData()
+        {
             GameManager.Data.HardNessDataDict.TryGetValue(HardNess, out hardNessData);
 
             Heart = hardNessData.heart;
@@ -86,10 +95,22 @@ namespace PokerDefense.Managers
             Chance = hardNessData.chance;
         }
 
-        IEnumerator SetTextUI()
+        private void InitRoundData()
+        {
+            Dictionary<string, RoundData> dict = new Dictionary<string, RoundData>();
+            GameManager.Data.RoundDataDict.TryGetValue(HardNess, out dict);
+            dict.TryGetValue(Round.ToString(), out roundData);
+        }
+
+        private void InitEnemyData()
+        {
+            GameManager.Data.EnemyDataDict.TryGetValue(roundData.enemyName, out enemyData);
+        }
+
+        IEnumerator InitUIText()
         {
             yield return new WaitUntil(() => ui_InGameScene != null);
-            ui_InGameScene.InitText(heart, gold, Round);
+            ui_InGameScene.InitText(Heart, Gold, Round);
         }
 
         private void Update()
@@ -129,8 +150,11 @@ namespace PokerDefense.Managers
                     }
                     break;
                 case RoundState.PLAY:
-                    if (stateChanged) { PlayStateStart(); }
-                    // SpawnTestEnemy();
+                    if (stateChanged) 
+                    { 
+                        PlayStateStart();
+                        StartCoroutine(SpawnTestEnemy());
+                    }
                     break;
             }
         }
@@ -184,19 +208,32 @@ namespace PokerDefense.Managers
 
         private void SpawnEnemy(GameObject enemy)
         {
-            Instantiate(enemy, spawnPoint.position, Quaternion.identity);
+            //Instantiate(enemy, spawnPoint.position, Quaternion.identity);
         }
 
+        /*
         private void SpawnTestEnemy()
         {
-            GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
-            SpawnEnemy(target);
+            Debug.Log("A");
+            //GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
+            //SpawnEnemy(target);
         }
+        */
 
-        private void InitPoints()
+        IEnumerator SpawnTestEnemy()
         {
-            GameObject respawn = GameObject.FindGameObjectWithTag("Respawn");
-            GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
+            int remainEnemyCount = roundData.count;
+            WaitForSeconds twoSecWait = new WaitForSeconds(1f);
+            GameObject enemy = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/TestEnemy");
+
+            while(remainEnemyCount > 0)
+            {
+                Debug.Log("A");
+                Instantiate(enemy, startPoint);
+                remainEnemyCount--;
+                yield return twoSecWait;
+            }
+            yield return null;
         }
 
         public void SetUIIngameScene(UI_InGameScene target)
