@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Data
 {
@@ -21,5 +22,8 @@ namespace PokerDefense.Data
         public string towerName;
         public int towerLevel;
         public int towerIndex;
+        public TowerData towerData;
+        public TowerType towerType;
+        public int topCard;
     }
 }

@@ -47,6 +47,8 @@ namespace PokerDefense.Managers
 
         UI_InGameScene ui_InGameScene;
 
+        public event EventHandler RoundStarted, RoundFinished;
+
         public int Round { get; private set; }
         public string HardNess { get; private set; }
         public int Heart { get; private set; }
@@ -214,6 +216,7 @@ namespace PokerDefense.Managers
         private void PlayStateStart()
         {
             Debug.Log(state.ToString());
+            RoundStarted?.Invoke(this, null);
             // SpawnTestEnemy();
             stateChanged = false;
         }
