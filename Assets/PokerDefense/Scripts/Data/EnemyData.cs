@@ -8,6 +8,7 @@ namespace PokerDefense.Data
     {
         public float moveSpeed;
         public float hp;
-        public bool boss;
+        public bool isBoss;
+        public int damage;
     }
 }
