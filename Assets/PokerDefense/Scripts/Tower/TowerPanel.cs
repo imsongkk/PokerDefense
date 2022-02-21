@@ -14,6 +14,8 @@ namespace PokerDefense.Towers
 
         Color originColor;
 
+        public int Index { get; private set; }
+
         private void Start()
             => Init();
 
@@ -23,6 +25,8 @@ namespace PokerDefense.Towers
             originColor = spriteRenderer.color;
             towerBase = transform.GetChild(0).gameObject;
             towerBase.SetActive(false);
+
+            Index = transform.GetSiblingIndex();
         }
 
         public void GetTouched(RoundState currentState) // InputManager에 의해 호출

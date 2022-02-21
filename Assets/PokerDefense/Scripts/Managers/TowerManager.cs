@@ -18,7 +18,8 @@ namespace PokerDefense.Managers
             Joker
         }
 
-        List<TowerPanel> towerPanelList;
+        List<TowerPanel> towerPanelList = new List<TowerPanel>();
+        List<Tower> userTowerList = new List<Tower> ();
         TowerPanel selectedTowerPanel = null;
 
         public void InitTowerManager()
@@ -37,8 +38,6 @@ namespace PokerDefense.Managers
                 Debug.LogError($"towerPanelsObject not found");
                 return;
             }
-
-            towerPanelList = new List<TowerPanel>();
 
             for(int i=0; i<towerPanelsObject.transform.childCount; i++)
             {
@@ -75,13 +74,32 @@ namespace PokerDefense.Managers
             }
 
             selectedTowerPanel.SetTower(tower);
-            tower.InitTower(towerName, towerType, hand.TopCard);
+            tower.InitTower(towerName, towerType, hand.TopCard, selectedTowerPanel.Index);
+
+            userTowerList.Add(tower);
         }
 
         private Tower GetTowerObject(string towerName)
         {
             GameObject towerObject = GameManager.Resource.Instantiate($"TowerPrefabs/{towerName}", selectedTowerPanel.transform);
             return towerObject.GetComponent<Tower>();
+        }
+
+        public List<Tower> GetUserTowerList()
+        {
+            RefreshUserTowerList();
+            return userTowerList;
+        }
+
+        private void RefreshUserTowerList()
+        {
+            List<Tower> ret = new List<Tower>();
+            foreach (var a in userTowerList)
+            {
+                if (a == null) continue;
+                ret.Add(a);
+            }
+            userTowerList = ret;
         }
 
         public void DestroyTower(Tower tower, Action afterDestroyAction)

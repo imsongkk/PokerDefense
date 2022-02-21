@@ -10,7 +10,7 @@ namespace PokerDefense.Towers
     public class TowerIndivData
     {
         public TowerIndivData(int topCard, float damage, float speed, float range, 
-            int rareNess, int price, bool isHidden, TowerType towerType)
+            int rareNess, int price, bool isHidden, TowerType towerType, string towerName, int index)
         {
             TopCard = topCard;
             Damage = damage;
@@ -20,6 +20,8 @@ namespace PokerDefense.Towers
             Price = price;
             IsHidden = isHidden;
             TowerType = towerType;
+            TowerName = towerName;
+            Index = index;
         }
         public int TopCard { get; private set; }
         public float Damage { get; private set; }
@@ -29,6 +31,9 @@ namespace PokerDefense.Towers
         public int Price { get; private set; }
         public bool IsHidden { get; private set; }
         public TowerType TowerType { get; private set; }
+        public string TowerName { get; private set; }
+
+        public int Index { get; private set; }
 
         internal void UpgradeDamage(int newDamage)
         {
@@ -85,20 +90,18 @@ namespace PokerDefense.Towers
             }
         }
 
-        public void InitTower(string towerName, TowerType towerType, int topCard) // lowData로 타워 처음 생성
+        public void InitTower(string towerName, TowerType towerType, int topCard, int index) // lowData로 타워 처음 생성
         {
             GameManager.Data.TowerDataDict.TryGetValue(towerName, out towerLowData);
             if (towerLowData == null) return;
-
-            InitTowerSprite(towerName);
 
             GameManager.Round.RoundStarted += StartAttacking;
             GameManager.Round.RoundFinished += StopAttacking;
 
             attackDelay = new WaitForSeconds(towerLowData.attackSpeed);
-            TowerIndivData = new TowerIndivData(topCard, towerLowData.damage, towerLowData.attackSpeed, 
-                towerLowData.attackRange, towerLowData.rareNess,
-                towerLowData.basePrice, towerLowData.isHidden, towerType);
+            TowerIndivData = new TowerIndivData(topCard, towerLowData.damage, 
+                towerLowData.attackSpeed, towerLowData.attackRange, towerLowData.rareNess,
+                towerLowData.basePrice, towerLowData.isHidden, towerType, towerName, index);
 
             SetRangeCollider();
         }
@@ -107,22 +110,16 @@ namespace PokerDefense.Towers
         {
             TowerData modifiedTowerData = towerSaveData.towerData;
 
-            InitTowerSprite(towerSaveData.towerName);
-
             GameManager.Round.RoundStarted += StartAttacking;
             GameManager.Round.RoundFinished += StopAttacking;
 
             attackDelay = new WaitForSeconds(modifiedTowerData.attackSpeed);
-            TowerIndivData = new TowerIndivData(towerSaveData.topCard, modifiedTowerData.damage, modifiedTowerData.attackSpeed,
-                modifiedTowerData.attackRange, modifiedTowerData.rareNess,
-                modifiedTowerData.basePrice, modifiedTowerData.isHidden, towerSaveData.towerType);
+            TowerIndivData = new TowerIndivData(towerSaveData.topCard, modifiedTowerData.damage, 
+                modifiedTowerData.attackSpeed, modifiedTowerData.attackRange, modifiedTowerData.rareNess,
+                modifiedTowerData.basePrice, modifiedTowerData.isHidden, towerSaveData.towerType, 
+                towerSaveData.towerName, towerSaveData.towerIndex);
 
             SetRangeCollider();
-        }
-
-        protected void InitTowerSprite(string towerName)
-        {
-            // TODO : towerName으로 Sprite 불러오기
         }
 
         protected abstract void Attack();
