@@ -10,12 +10,7 @@ namespace PokerDefense.Towers
     {
         protected override void Attack()
         {
-            Debug.Log("OnePair Attack");
-            float calculatedDamage = Define.CalculateDamage(Define.AttackType.AD, Define.EnemyType.Middle, TowerIndivData.Damage);
-            if(enemies.Count > 0)
-            {
-                enemies[0].OnDamage(calculatedDamage);
-            }
+            base.Attack();
         }
 
         protected override void DamageCalculate()

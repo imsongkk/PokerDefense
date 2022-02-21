@@ -4,6 +4,7 @@ using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
 using System.Collections;
 using System.Collections.Generic;
+using PokerDefense.Utils;
 
 namespace PokerDefense.Towers
 {
@@ -35,17 +36,17 @@ namespace PokerDefense.Towers
 
         public int Index { get; private set; }
 
-        internal void UpgradeDamage(int newDamage)
+        public void UpgradeDamage(int newDamage)
         {
             Damage = newDamage;
             UpdatePrice();
         }
-        internal void UpgradeSpeed(int newSpeed)
+        public void UpgradeSpeed(int newSpeed)
         {
             Speed = newSpeed;
             UpdatePrice();
         }
-        internal void UpgradeRange(int newRange)
+        public void UpgradeRange(int newRange)
         {
             Range = newRange;
             UpdatePrice();
@@ -60,12 +61,17 @@ namespace PokerDefense.Towers
     public abstract class Tower : MonoBehaviour
     {
         protected TowerData towerLowData; // 족보로 결정되는 값들
-        public TowerIndivData TowerIndivData { get; private set; }
+        public TowerIndivData TowerIndivData { get; private set; } // 타워 개개인이 가지고 있는 데이터
 
-        protected SpriteRenderer spriteRenderer;
         protected CircleCollider2D rangeCollider;
         protected WaitForSeconds attackDelay;
         protected List<Enemy> enemies = new List<Enemy>();
+        protected Animator animator;
+
+        private void Awake()
+        {
+            animator = transform.GetChild(0).GetComponent<Animator>();
+        }
 
         protected void StartAttacking(object sender, System.EventArgs e)
         {
@@ -122,7 +128,18 @@ namespace PokerDefense.Towers
             SetRangeCollider();
         }
 
-        protected abstract void Attack();
+        protected virtual void Attack()
+        {
+            if (enemies.Count == 0) return;
+
+            Enemy target = enemies[0];
+            Define.EnemyType enemyType = target.EnemyIndivData.EnemyType;
+            TowerType towerType = TowerIndivData.TowerType;
+            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, TowerIndivData.Damage);
+
+            enemies[0].OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
+            SetAnimAttack(); // 애니메이션 스타트
+        }
 
         // 객체마다 다른 공격 방식
 
@@ -145,6 +162,11 @@ namespace PokerDefense.Towers
             {
                 enemies.RemoveAt(0); // FIFO
             }
+        }
+
+        protected void SetAnimAttack()
+        {
+            animator.SetBool("Attack", true);
         }
 
         public void UpgradeDamage(int newDamage)

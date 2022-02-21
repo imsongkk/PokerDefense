@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Data
 {
@@ -10,5 +11,6 @@ namespace PokerDefense.Data
         public float hp;
         public bool isBoss;
         public int damage;
+        public EnemyType enemyType;
     }
 }

@@ -4,16 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static PokerDefense.Utils.Define;
 
 public class EnemyIndivData
 {
-    public EnemyIndivData(float speed, float hp, string name, bool isBoss, int damage)
+    public EnemyIndivData(float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
     {
         Speed = speed;
         Hp = hp;
         IsBoss = isBoss;
         Damage = damage;
         Name = name;
+        EnemyType = enemyType;
     }
 
     public float Speed { get; private set; }
@@ -21,6 +23,7 @@ public class EnemyIndivData
     public string Name { get; private set; }
     public bool IsBoss { get; private set; }
     public int Damage { get; private set; }
+    public EnemyType EnemyType { get; private set; }
 
     public void OnDamage(float damage)
         => Hp -= damage;
@@ -63,7 +66,7 @@ public class Enemy : MonoBehaviour
     public void InitEnemy(string enemyName, EnemyData enemyOriginData)
     {
         EnemyIndivData = new EnemyIndivData(enemyOriginData.moveSpeed, enemyOriginData.hp, 
-            enemyName, enemyOriginData.isBoss, enemyOriginData.damage);
+            enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
 
         this.enemyOriginData = enemyOriginData;
 

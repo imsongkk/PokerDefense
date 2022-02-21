@@ -31,7 +31,6 @@ public class SPUM_Prefabs : MonoBehaviour
         {
             int hash = Animator.StringToHash(clip.name);
             _nameToHashPair.Add(clip.name, hash);
-            Debug.Log(clip.name);
         }
     }
     private void Awake() {

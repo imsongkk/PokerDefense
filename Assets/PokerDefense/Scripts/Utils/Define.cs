@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Utils
 {
@@ -93,10 +94,10 @@ namespace PokerDefense.Utils
             }
         }
 
-        public static float CalculateDamage(AttackType attackType, EnemyType enemyType, float originDamage)
+        public static float CalculateDamage(TowerType towerType, EnemyType enemyType, float originDamage)
         {
             float calculatedDamage = originDamage;
-            // TODO : attackType과 enemyType에 따라 damage 증감식 적용
+            // TODO : towerType과 enemyType에 따라 damage 증감식 적용
             return calculatedDamage;
         }
     }
