@@ -67,10 +67,12 @@ namespace PokerDefense.Towers
         protected WaitForSeconds attackDelay;
         protected List<Enemy> enemies = new List<Enemy>();
         protected Animator animator;
+        protected float originScaleX;
 
         private void Awake()
         {
             animator = transform.GetChild(0).GetComponent<Animator>();
+            originScaleX = transform.localScale.x;
         }
 
         protected void StartAttacking(object sender, System.EventArgs e)
@@ -137,8 +139,8 @@ namespace PokerDefense.Towers
             TowerType towerType = TowerIndivData.TowerType;
             float calculatedDamage = Define.CalculateDamage(towerType, enemyType, TowerIndivData.Damage);
 
-            enemies[0].OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
-            SetAnimAttack(); // 애니메이션 스타트
+            target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
+            SetAnimAttack(target); // 애니메이션 스타트
         }
 
         // 객체마다 다른 공격 방식
@@ -164,8 +166,15 @@ namespace PokerDefense.Towers
             }
         }
 
-        protected void SetAnimAttack()
+        protected void SetAnimAttack(Enemy target)
         {
+            Vector2 towerDirection = Util.GetNearTwoDirection(transform.position, target.transform.position);
+
+            if (towerDirection == Vector2.right)
+                transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
+            else if (towerDirection == Vector2.left)
+                transform.localScale = new Vector2(originScaleX, transform.localScale.y);
+
             animator.SetBool("Attack", true);
         }
 

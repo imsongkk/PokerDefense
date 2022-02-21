@@ -66,6 +66,38 @@ namespace PokerDefense.Utils
             Time.timeScale = 1f;
         }
 
+        public static Vector2 GetNearFourDirection(Vector2 target)
+        {
+            float rightAngle = Vector2.SignedAngle(Vector2.right, target);
+            float leftAngle= Vector2.SignedAngle(Vector2.left, target);
+            float upAngle = Vector2.SignedAngle(Vector2.up, target);
+            float downAngle = Vector2.SignedAngle(Vector2.down, target);
+
+            if (rightAngle <= 45 && rightAngle >= -45) return Vector2.right;
+            else if (leftAngle <= 45 && leftAngle >= -45) return Vector2.left;
+            else if (upAngle <= 45 && upAngle >= -45) return Vector2.up;
+            else if (downAngle <= 45 && downAngle >= -45) return Vector2.down;
+
+            throw new Exception();
+        }
+
+        public static Vector2 GetNearFourDirection(Vector2 from, Vector2 to)
+            => GetNearFourDirection(to - from);
+
+        public static Vector2 GetNearTwoDirection(Vector2 target)
+        {
+            float rightAngle = Vector2.SignedAngle(Vector2.right, target);
+            float leftAngle = Vector2.SignedAngle(Vector2.left, target);
+
+            if (rightAngle <= 90 && rightAngle >= -90) return Vector2.right;
+            else if (leftAngle < 90 && leftAngle > -90) return Vector2.left;
+
+            throw new Exception();
+        }
+
+        public static Vector2 GetNearTwoDirection(Vector2 from, Vector2 to)
+            => GetNearTwoDirection(to - from);
+
         /*
         public static IEnumerator Fade(float fadeTime, bool isOut, Action callback)
         {
