@@ -247,12 +247,20 @@ namespace PokerDefense.Managers
         {
             int remainEnemyCount = roundData.count;
             string currentEnemyName = roundData.enemyName;
+
             WaitForSeconds twoSecWait = new WaitForSeconds(2f);
-            GameObject enemy = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/TestEnemy");
+            GameObject enemyPrefab = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/{currentEnemyName}");
+
+            EnemyData enemyOriginData;
+            GameManager.Data.EnemyDataDict.TryGetValue(currentEnemyName, out enemyOriginData);
+            if (enemyOriginData == null) yield break;
 
             while (remainEnemyCount > 0)
             {
-                Instantiate(enemy, startPoint.position, Quaternion.identity, enemyGroup);
+                GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
+                Enemy enemy = enemyObject.GetComponent<Enemy>();
+                enemy.InitEnemy(currentEnemyName, enemyOriginData);
+
                 remainEnemyCount--;
                 yield return twoSecWait;
             }

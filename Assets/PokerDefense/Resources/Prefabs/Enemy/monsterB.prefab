@@ -124,11 +124,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5921977649558414638}
   - component: {fileID: 512729897523346727}
-  - component: {fileID: 1750795329339811659}
+  - component: {fileID: -3485254734011181231}
   - component: {fileID: -1757566184796617085}
   - component: {fileID: 5589314629724302189}
   m_Layer: 0
-  m_Name: TestEnemy
+  m_Name: monsterB
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,7 +200,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1750795329339811659
+--- !u!114 &-3485254734011181231
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6116243620097488016}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40b229cd9f2c66745ba1f00a2cc91020, type: 3}
+  m_Script: {fileID: 11500000, guid: 211f7c4c565ff2a41b8078d43addfc04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 1983685819381983899}
@@ -223,7 +223,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 6116243620097488016}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 0.0001
   m_LinearDrag: 0
@@ -258,7 +258,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.2, y: 0.2}
   m_EdgeRadius: 0
 --- !u!1 &7131838410204648937
 GameObject:
