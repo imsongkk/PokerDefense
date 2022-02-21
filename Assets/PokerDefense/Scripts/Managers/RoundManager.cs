@@ -61,9 +61,20 @@ namespace PokerDefense.Managers
         private bool stateBreak = false;
         private bool timerBreak = false;        // false일때만 State 타이머가 흐르게 됨
 
-        EnemyData enemyData;
+        int enemyKillCount = 0;
+
+        EnemyData currentRoundEnemyData;
         RoundData roundData;
         HardNessData hardNessData;
+
+        private void OnChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
+        {
+            CurrentState = RoundState.READY;
+            Round = 2;
+            // TODO : currentRoundEnemyData, roundData update
+            ui_InGameScene.SetRoundText(Round);
+            enemyKillCount = 0;
+        }
 
         public void InitRoundManager() // 처음으로 게임이 시작될 때 호출
         {
@@ -83,13 +94,6 @@ namespace PokerDefense.Managers
 
             CurrentState = RoundState.READY;
         }
-
-        // private void InitPoints()
-        // {
-        //     startPoint = GameObject.FindGameObjectWithTag("StartPoint").transform;
-        //     endPoint = GameObject.FindGameObjectWithTag("EndPoint").transform;
-        //     GameObject.FindGameObjectsWithTag("WayPoint").ToList().ForEach((waypoint) => wayPoints.Add(waypoint.transform));
-        // }
 
         public void InitWayPoints()
         {
@@ -126,7 +130,7 @@ namespace PokerDefense.Managers
 
         private void InitEnemyData()
         {
-            GameManager.Data.EnemyDataDict.TryGetValue(roundData.enemyName, out enemyData);
+            GameManager.Data.EnemyDataDict.TryGetValue(roundData.enemyName, out currentRoundEnemyData);
         }
 
         IEnumerator InitUIText()
@@ -175,7 +179,7 @@ namespace PokerDefense.Managers
                     if (stateChanged)
                     {
                         PlayStateStart();
-                        StartCoroutine(SpawnTestEnemy());
+                        StartCoroutine(SpawnCurrentRoundEnemy());
                     }
                     break;
             }
@@ -229,21 +233,7 @@ namespace PokerDefense.Managers
             GameManager.Tower.ConfirmTower(roundHand);
         }
 
-        private void SpawnEnemy(GameObject enemy)
-        {
-            //Instantiate(enemy, spawnPoint.position, Quaternion.identity);
-        }
-
-        /*
-        private void SpawnTestEnemy()
-        {
-            Debug.Log("A");
-            //GameObject target = GameManager.Resource.Load<GameObject>($"Prefabs/TestEnemy");
-            //SpawnEnemy(target);
-        }
-        */
-
-        IEnumerator SpawnTestEnemy()
+        IEnumerator SpawnCurrentRoundEnemy()
         {
             int remainEnemyCount = roundData.count;
             string currentEnemyName = roundData.enemyName;
@@ -251,20 +241,43 @@ namespace PokerDefense.Managers
             WaitForSeconds twoSecWait = new WaitForSeconds(2f);
             GameObject enemyPrefab = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/{currentEnemyName}");
 
-            EnemyData enemyOriginData;
-            GameManager.Data.EnemyDataDict.TryGetValue(currentEnemyName, out enemyOriginData);
-            if (enemyOriginData == null) yield break;
-
             while (remainEnemyCount > 0)
             {
                 GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
                 Enemy enemy = enemyObject.GetComponent<Enemy>();
-                enemy.InitEnemy(currentEnemyName, enemyOriginData);
+                enemy.InitEnemy(currentEnemyName, currentRoundEnemyData);
 
                 remainEnemyCount--;
                 yield return twoSecWait;
             }
             yield return null;
+        }
+
+        public void OnEnemyGetEndPoint()
+        {
+            OnEnemyDied();
+            Heart -= 1;
+            if (Heart <= 0)
+            {
+                GameOver();
+                return;
+            }
+            ui_InGameScene.SetHeartText(Heart);
+        }
+
+        public void OnEnemyDied()
+        {
+            enemyKillCount++;
+            if (enemyKillCount == roundData.count)
+            {
+                Debug.Log("Round Clear!");
+                OnChangeRound();
+            }
+        }
+
+        private void GameOver()
+        {
+
         }
 
         public void SetUIIngameScene(UI_InGameScene target)

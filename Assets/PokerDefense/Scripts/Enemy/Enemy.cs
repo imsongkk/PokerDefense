@@ -1,4 +1,5 @@
 using PokerDefense.Data;
+using PokerDefense.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,7 +83,7 @@ public class Enemy : MonoBehaviour
         {
             // TODO : 보스 죽음 팝업
         }
-
+        GameManager.Round.OnEnemyDied();
         Destroy(gameObject);
     }
 
@@ -103,12 +104,13 @@ public class Enemy : MonoBehaviour
         else if (collision.gameObject.CompareTag("EndPoint"))
         {
             if (curIndex + 2 >= wayPoints.Count)
-                Die();
+                Destroy(gameObject);
+            GameManager.Round.OnEnemyGetEndPoint();
         }
     }
 
     private void RefreshHpBar()
     {
-        hpBar.localScale = new Vector2(EnemyIndivData.Hp > 0 ? EnemyIndivData.Hp : 0 / enemyOriginData.hp, 1);
+        hpBar.localScale = new Vector2((EnemyIndivData.Hp > 0 ? EnemyIndivData.Hp : 0) / enemyOriginData.hp, 1);
     }
 }
