@@ -2,6 +2,7 @@ using UnityEngine;
 using PokerDefense.Data;
 using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
+using PokerDefense.Utils;
 
 namespace PokerDefense.Towers
 {
@@ -9,7 +10,7 @@ namespace PokerDefense.Towers
     {
         protected override void Attack()
         {
-
+            base.Attack();
         }
 
         protected override void DamageCalculate()

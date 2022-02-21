@@ -1,12 +1,14 @@
 {
   "monsterA": {
-    "moveSpeed": 5,
-    "hp": 100,
-    "boss": false
+    "moveSpeed": 1,
+    "hp": 50,
+    "isBoss": false,
+    "damage": 1
   },
   "monsterB": {
     "moveSpeed": 7,
     "hp": 400,
-    "boss": true
+    "isBoss": true,
+    "damage": 3
   }
 }

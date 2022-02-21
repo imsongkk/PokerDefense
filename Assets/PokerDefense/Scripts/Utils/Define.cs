@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Utils
 {
@@ -33,6 +34,13 @@ namespace PokerDefense.Utils
         {
             AD,
             AP,
+        }
+
+        public enum EnemyType
+        {
+            Small,
+            Middle,
+            Large,
         }
 
         public enum CardShape
@@ -84,6 +92,13 @@ namespace PokerDefense.Utils
                 this.topCard = topCard;
                 this.topShape = topShape;
             }
+        }
+
+        public static float CalculateDamage(TowerType towerType, EnemyType enemyType, float originDamage)
+        {
+            float calculatedDamage = originDamage;
+            // TODO : towerType과 enemyType에 따라 damage 증감식 적용
+            return calculatedDamage;
         }
     }
 }

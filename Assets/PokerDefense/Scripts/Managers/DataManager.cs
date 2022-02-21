@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using PokerDefense.Towers;
 
 namespace PokerDefense.Managers
 {
@@ -105,8 +106,12 @@ namespace PokerDefense.Managers
             SlotData newSlotData = new SlotData();
             newSlotData.heart = GameManager.Round.Heart;
             newSlotData.gold = GameManager.Round.Gold;
+            newSlotData.chance = GameManager.Round.Chance;
             newSlotData.stageNumber = GameManager.Round.Round;
             newSlotData.hardNess = GameManager.Round.HardNess;
+
+            List<Tower> userTowerList = GameManager.Tower.GetUserTowerList();
+            newSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);
 
             return newSlotData;
         }
