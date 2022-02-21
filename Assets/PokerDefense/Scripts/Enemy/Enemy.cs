@@ -31,13 +31,12 @@ public abstract class Enemy : MonoBehaviour
     protected int curIndex = 0;
     protected bool isInWayPoint = false;
     protected bool isOutWayPoint = true;
-    protected new BoxCollider2D collider;
 
     public static List<Transform> wayPoints;
     public static Transform endPoint;
 
     public abstract void Die();
-    public abstract void OnDamage(Define.AttackType attackType, float damage);
+    public abstract void OnDamage(float damage);
     protected abstract void Init();
     protected abstract void OnSpawn();
 

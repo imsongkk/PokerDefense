@@ -2,7 +2,7 @@
     "HighCard": {
         "rareNess": 0,
         "damage": 5,
-        "attackSpeed": 5,
+        "attackSpeed": 0.5,
         "attackRange": 5,
         "basePrice": 5,
         "isHidden": false
@@ -10,7 +10,7 @@
     "OnePair": {
         "rareNess": 1,
         "damage": 10,
-        "attackSpeed": 7,
+        "attackSpeed": 0.7,
         "attackRange": 8,
         "basePrice": 8,
         "isHidden": false

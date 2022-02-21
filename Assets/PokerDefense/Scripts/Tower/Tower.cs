@@ -131,7 +131,7 @@ namespace PokerDefense.Towers
 
         protected virtual void DamageCalculate()
         {
-
+            // Deprecated 
         }
 
         protected void OnTriggerEnter2D(Collider2D collision)

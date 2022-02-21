@@ -35,6 +35,13 @@ namespace PokerDefense.Utils
             AP,
         }
 
+        public enum EnemyType
+        {
+            Small,
+            Middle,
+            Large,
+        }
+
         public enum CardShape
         {
             Spade,      // 0
@@ -84,6 +91,13 @@ namespace PokerDefense.Utils
                 this.topCard = topCard;
                 this.topShape = topShape;
             }
+        }
+
+        public static float CalculateDamage(AttackType attackType, EnemyType enemyType, float originDamage)
+        {
+            float calculatedDamage = originDamage;
+            // TODO : attackType과 enemyType에 따라 damage 증감식 적용
+            return calculatedDamage;
         }
     }
 }

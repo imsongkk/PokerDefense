@@ -17,7 +17,6 @@ public class TestEnemy : Enemy
         enemyInfo.speed = 3f;
         enemyInfo.hp = 100;
         enemyInfo.round = 1;
-        collider = gameObject.GetComponent<BoxCollider2D>();
 
         hpBarSprite = hpBar.GetComponent<Sprite>();
         OnSpawn();
@@ -29,9 +28,13 @@ public class TestEnemy : Enemy
         Destroy(gameObject);
     }
 
-    public override void OnDamage(Define.AttackType attackType, float damage)
+    public override void OnDamage(float damage)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"enemy got {damage}");
+        enemyInfo.hp -= damage;
+        hpBar.localScale = new Vector2(enemyInfo.hp / 100, 1);
+        
+        //throw new System.NotImplementedException();
     }
 
     protected override void OnSpawn()
