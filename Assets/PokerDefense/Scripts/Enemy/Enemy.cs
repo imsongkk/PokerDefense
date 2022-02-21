@@ -3,6 +3,7 @@ using PokerDefense.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyIndivData
 {
@@ -36,7 +37,8 @@ public class Enemy : MonoBehaviour
     EnemyData enemyOriginData;
     public EnemyIndivData EnemyIndivData { get; private set; }
 
-    [SerializeField] Transform hpBar;
+    [SerializeField] Transform hpBarGroup, hitText;
+    [SerializeField] Image hpBarImage;
 
     protected int curIndex = 0;
 
@@ -44,6 +46,12 @@ public class Enemy : MonoBehaviour
     public static Transform endPoint;
 
     Vector3 moveDirection;
+
+    private void Update()
+    {
+        hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
+        //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
+    }
 
     private void Start()
         => Init();
@@ -111,6 +119,11 @@ public class Enemy : MonoBehaviour
 
     private void RefreshHpBar()
     {
-        hpBar.localScale = new Vector2((EnemyIndivData.Hp > 0 ? EnemyIndivData.Hp : 0) / enemyOriginData.hp, 1);
+        hpBarImage.fillAmount = (EnemyIndivData.Hp > 0 ? EnemyIndivData.Hp : 0) / enemyOriginData.hp;
+    }
+
+    private void RefreshHitText()
+    {
+
     }
 }
