@@ -49,11 +49,56 @@ namespace PokerDefense.Managers
 
         public event EventHandler RoundStarted, RoundFinished;
 
-        public int Round { get; private set; }
-        public string HardNess { get; private set; }
-        public int Heart { get; private set; }
-        public int Gold { get; private set; }
-        public int Chance { get; private set; }
+        private int round;
+        private string hardNess;
+        private int heart;
+        private int gold;
+        private int chance;
+
+        public int Round
+        {
+            get { return round; }
+            set
+            {
+                round = value;
+                ui_InGameScene.SetRoundText(round);
+            }
+        }
+        public string HardNess
+        {
+            get { return hardNess; }
+            set
+            {
+                hardNess = value;
+            }
+        }
+        public int Heart
+        {
+            get { return heart; }
+            set
+            {
+                heart = value;
+                ui_InGameScene.SetHeartText(heart);
+            }
+        }
+        public int Gold
+        {
+            get { return gold; }
+            set
+            {
+                gold = value;
+                ui_InGameScene.SetGoldText(gold);
+            }
+        }
+        public int Chance
+        {
+            get { return chance; }
+            set
+            {
+                chance = value;
+                ui_InGameScene.SetChanceText(chance);
+            }
+        }
 
         private float timeTowerSetLimit = 8f;
         private float timeLeft = 0;
@@ -81,7 +126,7 @@ namespace PokerDefense.Managers
             /* TODO : 데이터 실체화
              * Round와 HardNess는 MainScene에서 받아옴
              */
-            Round = 1;
+            round = 1;
             HardNess = "Easy";
 
             // 순서 주의
@@ -116,10 +161,12 @@ namespace PokerDefense.Managers
         {
             GameManager.Data.HardNessDataDict.TryGetValue(HardNess, out hardNessData);
 
-            Heart = hardNessData.heart;
-            Gold = hardNessData.gold;
-            Chance = hardNessData.chance;
+            heart = hardNessData.heart;
+            gold = hardNessData.gold;
+            chance = hardNessData.chance;
         }
+
+
 
         private void InitRoundData()
         {
