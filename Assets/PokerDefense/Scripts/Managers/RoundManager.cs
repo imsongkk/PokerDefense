@@ -229,6 +229,7 @@ namespace PokerDefense.Managers
         {
             //TODO 손패 계산
             Hand roundHand = GameManager.Poker.CalculateMyHand();
+            Debug.Log(roundHand.Rank);
             //TODO 타워 종류 결정
             GameManager.Tower.ConfirmTower(roundHand);
         }
