@@ -276,6 +276,7 @@ namespace PokerDefense.Managers
         {
             //TODO 손패 계산
             Hand roundHand = GameManager.Poker.CalculateMyHand();
+            GameManager.Poker.ResetInitialChance(); // 라운드 찬스 초기화
             Debug.Log(roundHand.Rank);
             //TODO 타워 종류 결정
             GameManager.Tower.ConfirmTower(roundHand);
