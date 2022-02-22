@@ -67,11 +67,13 @@ namespace PokerDefense.Towers
         protected WaitForSeconds attackDelay;
         protected List<Enemy> enemies = new List<Enemy>();
         protected Animator animator;
+        protected Transform attackRangeCircle;
         protected float originScaleX;
 
         private void Awake()
         {
             animator = transform.GetChild(0).GetComponent<Animator>();
+            attackRangeCircle = transform.GetChild(1);
             originScaleX = transform.localScale.x;
         }
 
@@ -192,6 +194,13 @@ namespace PokerDefense.Towers
         {
             rangeCollider = gameObject.GetComponent<CircleCollider2D>();
             rangeCollider.radius = TowerIndivData.Range;
+            attackRangeCircle.localScale = new Vector2(TowerIndivData.Range * 2, TowerIndivData.Range * 2);
         }
+
+        public void HighlightRangeCircle()
+            => attackRangeCircle.gameObject.SetActive(true);
+
+        public void ResetRangeCircle()
+            => attackRangeCircle.gameObject.SetActive(false);
     }
 }
