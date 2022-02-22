@@ -108,11 +108,6 @@ namespace PokerDefense.Managers
             afterDestroyAction?.Invoke();
         }
 
-        public void UpgradeTower(Tower tower)
-        {
-            // TODO : 타워 업그레이드 짜기
-        }
-
         public void AfterTowerBaseConstructed(TowerPanel target)
         {
             EndTowerPanelSelect(target);

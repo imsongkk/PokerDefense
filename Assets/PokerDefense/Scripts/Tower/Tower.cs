@@ -5,63 +5,131 @@ using static PokerDefense.Managers.TowerManager;
 using System.Collections;
 using System.Collections.Generic;
 using PokerDefense.Utils;
+using System;
 
 namespace PokerDefense.Towers
 {
-    public class TowerIndivData
-    {
-        public TowerIndivData(int topCard, float damage, float speed, float range, 
-            int rareNess, int price, bool isHidden, TowerType towerType, string towerName, int index)
-        {
-            TopCard = topCard;
-            Damage = damage;
-            Speed = speed;
-            Range = range;
-            RareNess = rareNess;
-            Price = price;
-            IsHidden = isHidden;
-            TowerType = towerType;
-            TowerName = towerName;
-            Index = index;
-        }
-        public int TopCard { get; private set; }
-        public float Damage { get; private set; }
-        public float Speed { get; private set; }
-        public float Range { get; private set; }
-        public int RareNess { get; private set; }
-        public int Price { get; private set; }
-        public bool IsHidden { get; private set; }
-        public TowerType TowerType { get; private set; }
-        public string TowerName { get; private set; }
-
-        public int Index { get; private set; }
-
-        public void UpgradeDamage(int newDamage)
-        {
-            Damage = newDamage;
-            UpdatePrice();
-        }
-        public void UpgradeSpeed(int newSpeed)
-        {
-            Speed = newSpeed;
-            UpdatePrice();
-        }
-        public void UpgradeRange(int newRange)
-        {
-            Range = newRange;
-            UpdatePrice();
-        }
-
-        private void UpdatePrice()
-        {
-            // TODO : 알맞게 가격 upgrade
-        }
-    }
-
     public abstract class Tower : MonoBehaviour
     {
-        protected TowerData towerLowData; // 족보로 결정되는 값들
-        public TowerIndivData TowerIndivData { get; private set; } // 타워 개개인이 가지고 있는 데이터
+        public class TowerIndivData
+        {
+            public TowerIndivData(Tower owner, int topCard, int damageLevel, 
+                int speedLevel, int rangeLevel, int criticalLevel, int rareNess, int price, 
+                bool isHidden, TowerType towerType, string towerName, int index)
+            {
+                GameManager.Data.TowerUpgradeDataDict.TryGetValue(towerName, out towerUpgradeData);
+
+                this.owner = owner;
+                TopCard = topCard;
+                RareNess = rareNess;
+                Price = price;
+                IsHidden = isHidden;
+                TowerType = towerType;
+                TowerName = towerName;
+                Index = index;
+
+                DamageLevel = damageLevel;
+                SpeedLevel = speedLevel;
+                RangeLevel = rangeLevel;
+                CriticalLevel = criticalLevel;
+
+                owner.attackDelay = new WaitForSeconds(Speed);
+            }
+
+            Tower owner;
+            TowerUpgradeData towerUpgradeData;
+
+            int damageLevel, speedLevel, rangeLevel, criticalLevel;
+            int maxDamageLevel, maxSpeedLevel, maxRangeLevel, maxCriticalLevel;
+
+            public float Damage { get; private set; }
+            public int DamageLevel 
+            { 
+                get => damageLevel; 
+                set 
+                { 
+                    damageLevel = value;
+                    //if(damageLevel == maxDamageLevel)
+                        // TODO : UI 업데이트
+                    Damage = towerUpgradeData.attackDamageTable[damageLevel];
+                    Debug.Log(Damage);
+                    UpdatePrice();
+                } 
+            }
+            public float Speed { get; private set; }
+            public int SpeedLevel
+            {
+                get => speedLevel;
+                set
+                {
+                    speedLevel = value;
+                    // TODO
+                    Speed = towerUpgradeData.attackSpeedTable[speedLevel];
+                    UpdatePrice();
+                }
+            }
+            public float Range { get; private set; }
+            public int RangeLevel
+            {
+                get => rangeLevel;
+                set
+                {
+                    rangeLevel = value;
+                    // TODO
+                    Range = towerUpgradeData.attackRangeTable[rangeLevel];
+                    owner.rangeCollider.radius = Range; // 실제 사거리 변경
+                    owner.attackRangeCircle.localScale = new Vector2(Range * 2, Range * 2);
+                    UpdatePrice();
+                }
+            }
+            public float Critical { get; private set; }
+            public int CriticalLevel
+            {
+                get => criticalLevel;
+                set
+                {
+                    criticalLevel = value;
+                    // TODO
+                    Critical = towerUpgradeData.attackCriticalTable[criticalLevel];
+                    UpdatePrice();
+                }
+            }
+            public int TopCard { get; private set; }
+            public int RareNess { get; private set; }
+            public int Price { get; private set; }
+            public bool IsHidden { get; private set; }
+            public TowerType TowerType { get; private set; }
+            public string TowerName { get; private set; }
+            public int Index { get; private set; }
+
+            public void UpgradeDamage(int currentLevel)
+            {
+                DamageLevel = currentLevel;
+                UpdatePrice();
+            }
+            public void UpgradeSpeed(int currentLevel)
+            {
+                SpeedLevel = currentLevel;
+                UpdatePrice();
+            }
+            public void UpgradeRange(int currentLevel)
+            {
+                RangeLevel = currentLevel;
+                UpdatePrice();
+            }
+            public void UpgradeCritical(int currentLevel)
+            {
+                CriticalLevel = currentLevel;
+                UpdatePrice();
+            }
+
+            private void UpdatePrice()
+            {
+                // TODO : 알맞게 가격 upgrade
+            }
+        }
+        protected TowerUniqueData towerUniqueData; // 족보로 결정되는 불변한 수치들
+        public TowerIndivData towerIndivData { get; private set; } // 타워 개개인이 가지고 있는 데이터
 
         protected CircleCollider2D rangeCollider;
         protected WaitForSeconds attackDelay;
@@ -74,6 +142,7 @@ namespace PokerDefense.Towers
         {
             animator = transform.GetChild(0).GetComponent<Animator>();
             attackRangeCircle = transform.GetChild(1);
+            rangeCollider = gameObject.GetComponent<CircleCollider2D>();
             originScaleX = transform.localScale.x;
         }
 
@@ -100,36 +169,38 @@ namespace PokerDefense.Towers
             }
         }
 
-        public void InitTower(string towerName, TowerType towerType, int topCard, int index) // lowData로 타워 처음 생성
+        public void InitTower(string towerName, TowerType towerType, int topCard, int index) // 타워 처음 생성
         {
-            GameManager.Data.TowerDataDict.TryGetValue(towerName, out towerLowData);
-            if (towerLowData == null) return;
+            // 더미 세이브 데이터 생성
 
-            GameManager.Round.RoundStarted += StartAttacking;
-            GameManager.Round.RoundFinished += StopAttacking;
+            TowerSaveData towerSaveData = new TowerSaveData();
+            towerSaveData.towerName = towerName;
+            towerSaveData.attackDamageLevel = 0;
+            towerSaveData.attackSpeedLevel = 0;
+            towerSaveData.attackRangeLevel = 0;
+            towerSaveData.attackCriticalLevel = 0;
+            towerSaveData.towerIndex = index;
+            towerSaveData.towerType = towerType;
+            towerSaveData.topCard = topCard;
 
-            attackDelay = new WaitForSeconds(towerLowData.attackSpeed);
-            TowerIndivData = new TowerIndivData(topCard, towerLowData.damage, 
-                towerLowData.attackSpeed, towerLowData.attackRange, towerLowData.rareNess,
-                towerLowData.basePrice, towerLowData.isHidden, towerType, towerName, index);
-
-            SetRangeCollider();
+            InitTower(towerSaveData);
         }
 
         public void InitTower(TowerSaveData towerSaveData) // 세이브 된 데이터로 생성
         {
-            TowerData modifiedTowerData = towerSaveData.towerData;
+            string towerName = towerSaveData.towerName;
+            GameManager.Data.TowerUniqueDataDict.TryGetValue(towerName, out towerUniqueData);
+            if (towerUniqueData == null) return;
 
             GameManager.Round.RoundStarted += StartAttacking;
             GameManager.Round.RoundFinished += StopAttacking;
 
-            attackDelay = new WaitForSeconds(modifiedTowerData.attackSpeed);
-            TowerIndivData = new TowerIndivData(towerSaveData.topCard, modifiedTowerData.damage, 
-                modifiedTowerData.attackSpeed, modifiedTowerData.attackRange, modifiedTowerData.rareNess,
-                modifiedTowerData.basePrice, modifiedTowerData.isHidden, towerSaveData.towerType, 
+            towerIndivData = new TowerIndivData(this, towerSaveData.topCard, towerSaveData.attackDamageLevel,
+                towerSaveData.attackSpeedLevel, towerSaveData.attackRangeLevel, towerSaveData.attackCriticalLevel,
+                towerUniqueData.rareNess, towerUniqueData.basePrice, towerUniqueData.isHidden, towerSaveData.towerType, 
                 towerSaveData.towerName, towerSaveData.towerIndex);
 
-            SetRangeCollider();
+            //SetRangeCollider();
         }
 
         protected virtual void Attack()
@@ -138,8 +209,8 @@ namespace PokerDefense.Towers
 
             Enemy target = enemies[0];
             Define.EnemyType enemyType = target.EnemyIndivData.EnemyType;
-            TowerType towerType = TowerIndivData.TowerType;
-            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, TowerIndivData.Damage);
+            TowerType towerType = towerIndivData.TowerType;
+            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage);
 
             target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
             SetAnimAttack(target); // 애니메이션 스타트
@@ -180,21 +251,26 @@ namespace PokerDefense.Towers
             animator.SetBool("Attack", true);
         }
 
-        public void UpgradeDamage(int newDamage)
-            => TowerIndivData.UpgradeDamage(newDamage);
-        public void UpgradeSpeed(int newSpeed)
-            => TowerIndivData.UpgradeSpeed(newSpeed);
-        public void UpgradeRange(int newRange)
+        public void DestroyTower(Action afterDestroyAction)
         {
-            TowerIndivData.UpgradeRange(newRange);
-            rangeCollider.radius = TowerIndivData.Range;
+            UnityEngine.Object.Destroy(gameObject);
+            afterDestroyAction?.Invoke();
         }
+
+        public void UpgradeDamageLevel()
+            => towerIndivData.DamageLevel = towerIndivData.DamageLevel + 1;
+        public void UpgradeSpeedLevel()
+            => towerIndivData.SpeedLevel = towerIndivData.SpeedLevel + 1;
+        public void UpgradeRangeLevel()
+            => towerIndivData.RangeLevel = towerIndivData.RangeLevel + 1;
+        public void UpgradeCriticalLevel()
+            => towerIndivData.CriticalLevel = towerIndivData.CriticalLevel + 1;
 
         protected void SetRangeCollider()
         {
             rangeCollider = gameObject.GetComponent<CircleCollider2D>();
-            rangeCollider.radius = TowerIndivData.Range;
-            attackRangeCircle.localScale = new Vector2(TowerIndivData.Range * 2, TowerIndivData.Range * 2);
+            rangeCollider.radius = towerIndivData.Range;
+            attackRangeCircle.localScale = new Vector2(towerIndivData.Range * 2, towerIndivData.Range * 2);
         }
 
         public void HighlightRangeCircle()

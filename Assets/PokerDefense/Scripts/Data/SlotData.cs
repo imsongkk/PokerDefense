@@ -2,6 +2,7 @@ using PokerDefense.Towers;
 using System;
 using System.Collections.Generic;
 using static PokerDefense.Managers.TowerManager;
+using static PokerDefense.Towers.Tower;
 
 namespace PokerDefense.Data
 {
@@ -20,11 +21,15 @@ namespace PokerDefense.Data
     public class TowerSaveData
     {
         public string towerName;
-        //public int towerLevel;
-        public int towerIndex;
-        public TowerData towerData;
+        public int attackDamageLevel;
+        public int attackSpeedLevel;
+        public int attackRangeLevel;
+        public int attackCriticalLevel;
         public TowerType towerType;
         public int topCard;
+        public int towerIndex;
+
+        // public TowerUniqueData towerData; -> towerName으로 불러오기
 
         public static List<TowerSaveData> ConvertTowerSaveData(List<Tower> userTowerList)
         {
@@ -38,22 +43,17 @@ namespace PokerDefense.Data
 
         public static TowerSaveData ConvertTowerSaveData(Tower userTower)
         {
-            TowerIndivData towerIndivData = userTower.TowerIndivData;
-
-            TowerData towerData = new TowerData();
-            towerData.damage = towerIndivData.Damage;
-            towerData.isHidden = towerIndivData.IsHidden;
-            towerData.rareNess = towerIndivData.RareNess;
-            towerData.attackRange = towerIndivData.Range;
-            towerData.attackSpeed = towerIndivData.Speed;
-            towerData.basePrice = towerIndivData.Price;
+            TowerIndivData towerIndivData = userTower.towerIndivData;
 
             TowerSaveData towerSaveData = new TowerSaveData();
             towerSaveData.towerName = towerIndivData.TowerName;
             towerSaveData.topCard = towerIndivData.TopCard;
             towerSaveData.towerType = towerIndivData.TowerType;
             towerSaveData.towerIndex = towerIndivData.Index;
-            towerSaveData.towerData = towerData;
+            towerSaveData.attackDamageLevel = towerIndivData.DamageLevel;
+            towerSaveData.attackSpeedLevel = towerIndivData.SpeedLevel;
+            towerSaveData.attackRangeLevel = towerIndivData.RangeLevel;
+            towerSaveData.attackCriticalLevel = towerIndivData.CriticalLevel;
 
             return towerSaveData;
         }
