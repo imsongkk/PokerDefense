@@ -1,5 +1,6 @@
 using PokerDefense.Data;
 using PokerDefense.Managers;
+using PokerDefense.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,12 +49,19 @@ public class Enemy : MonoBehaviour
     public static List<Transform> wayPoints;
     public static Transform endPoint;
 
+    private float originScaleX;
+
     Vector3 moveDirection;
 
     private void Update()
     {
         hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
         //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
+    }
+
+    private void Awake()
+    {
+        originScaleX = transform.localScale.x;
     }
 
     private void Start()
@@ -80,6 +88,11 @@ public class Enemy : MonoBehaviour
             while (curIndex < wayPoints.Count)
             {
                 moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
+                if(Util.GetNearFourDirection(moveDirection) == Vector2.right)
+                    transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
+                else if (Util.GetNearFourDirection(moveDirection) == Vector2.left)
+                    transform.localScale = new Vector2(originScaleX , transform.localScale.y);
+
                 transform.Translate(moveDirection * EnemyIndivData.Speed * Time.deltaTime);
                 yield return null;
             }
