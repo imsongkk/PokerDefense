@@ -62,6 +62,7 @@ namespace PokerDefense.Managers
             {
                 round = value;
                 ui_InGameScene.SetRoundText(round);
+                //TODO 라운드 변경 시 작용
             }
         }
         public string HardNess
@@ -115,7 +116,6 @@ namespace PokerDefense.Managers
         private void OnChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
         {
             CurrentState = RoundState.READY;
-            Round = 2;
             // TODO : currentRoundEnemyData, roundData update
             ui_InGameScene.SetRoundText(Round);
             enemyKillCount = 0;

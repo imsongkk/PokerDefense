@@ -3,15 +3,15 @@
         "popup": false,
         "bonus": 0,
         "enemyDict": {
-            "enemyName1": 5
+            "enemyNameA": 5
         }
     },
     {
         "popup": false,
         "bonus": 0,
         "enemyDict": {
-            "enemyName1": 10,
-            "enemyName2": 5
+            "enemyNameA": 10,
+            "enemyNameB": 5
         }
     }
 ]
