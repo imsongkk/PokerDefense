@@ -38,7 +38,8 @@ namespace PokerDefense.Managers
         public List<Sprite> cloverSpriteList = new List<Sprite>();
         public List<Sprite> diamondSpriteList = new List<Sprite>();
         public List<Sprite> jokerSpriteList = new List<Sprite>();
-        // Joker Z카드는 존재하지 않음. 패 초기화 시 디폴트 스프라이트로 활용(덮인 카드)
+        // Joker Z카드는 존재하지 않음.
+        // 패 초기화 시 덮은 카드는 Shape를 Null로
 
         public List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
 
@@ -193,6 +194,8 @@ namespace PokerDefense.Managers
                     isFlush = false;
                 }
             }
+
+            sameNumbers.Add(sameNumber);
 
             if (sameNumber == 5)
             {
