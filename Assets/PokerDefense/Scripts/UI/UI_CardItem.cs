@@ -62,7 +62,7 @@ namespace PokerDefense.UI
             Debug.Log($"{shape.ToString()} {number} 터치 됨");
             GameManager.Poker.ChangeCard(cardIndex, (int index) =>
             {
-                ui_Poker.InstantiateCardIndex(index);
+                ui_Poker.InstantiateCardIndex(index);   //카드 뽑기에 성공할 경우 인스턴트 구현
             });
         }
 
