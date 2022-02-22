@@ -9,7 +9,7 @@ namespace PokerDefense.Towers
     {
         protected override void Attack()
         {
-
+            base.Attack();
         }
 
         protected override void DamageCalculate()
