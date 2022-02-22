@@ -15,13 +15,15 @@ namespace PokerDefense.Managers
 
         public PlayerData PlayerData { get; private set; }
 
-        public Dictionary<string, TowerData> TowerDataDict { get; private set; }
+        public Dictionary<string, TowerUniqueData> TowerUniqueDataDict { get; private set; }
+        public Dictionary<string, TowerUpgradeData> TowerUpgradeDataDict { get; private set; }
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
 
         private string jsonLocation = "Assets/PokerDefense/Data";
-        private string towerJsonFileName = "TowerDataDict";
+        private string towerUniqueDataJsonFileName = "TowerUniqueData";
+        private string towerUpgradeDataJsonFileName = "TowerUpgradeData";
         private string roundJsonFileName = "RoundDataDict";
         private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
@@ -31,7 +33,7 @@ namespace PokerDefense.Managers
         {
             InitPlayerData();
 
-            InitTowerDataDict();
+            InitTowerData();
             InitRoundDataDict();
             InitEnemyDataDict();
             InitHardNessDataDict();
@@ -42,10 +44,11 @@ namespace PokerDefense.Managers
 
         }
 
-        private void InitTowerDataDict()
+        private void InitTowerData()
         {
 
-            TowerDataDict = LoadJsonFile<Dictionary<string, TowerData>>(jsonLocation, towerJsonFileName);
+            TowerUniqueDataDict = LoadJsonFile<Dictionary<string, TowerUniqueData>>(jsonLocation, towerUniqueDataJsonFileName);
+            TowerUpgradeDataDict = LoadJsonFile<Dictionary<string, TowerUpgradeData>>(jsonLocation, towerUpgradeDataJsonFileName);
 
             //Debug.Log(TowerDataDict);
             //Debug.Log(JsonConvert.SerializeObject(TowerDataDict));

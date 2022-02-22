@@ -58,7 +58,8 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickUpgradeButton(PointerEventData evt)
         {
-            GameManager.Tower.UpgradeTower(touchedTowerPanel.GetTower());
+            Tower tower = touchedTowerPanel.GetTower();
+            tower.UpgradeDamageLevel();
         }
 
         private void OnClickDestroyButton(PointerEventData evt)

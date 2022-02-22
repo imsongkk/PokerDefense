@@ -7,17 +7,13 @@
   "towerSaveDataList": [
     {
       "towerName": "OnePair",
-      "towerIndex": 4,
-      "towerData": {
-        "damage": 10.0,
-        "attackSpeed": 0.7,
-        "attackRange": 8.0,
-        "basePrice": 8,
-        "isHidden": false,
-        "rareNess": 1
-      },
-      "towerType": 2,
-      "topCard": 0
+      "attackDamageLevel": 0,
+      "attackSpeedLevel": 0,
+      "attackRangeLevel": 0,
+      "attackCriticalLevel": 0,
+      "towerType": 1,
+      "topCard": 0,
+      "towerIndex": 52
     }
   ]
 }

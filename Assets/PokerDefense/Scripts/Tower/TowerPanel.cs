@@ -74,7 +74,7 @@ namespace PokerDefense.Towers
         public void SetTowerBaseStatus(bool setBase)
             => towerBase.SetActive(setBase);
 
-        public void HighligtPanel()
+        public void HighlightPanel()
             => spriteRenderer.color = Color.red;
 
         public void ResetPanel()

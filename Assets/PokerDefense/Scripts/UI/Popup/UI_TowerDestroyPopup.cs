@@ -43,9 +43,8 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
-            GameManager.Tower.DestroyTower(towerTouchPopup.GetTowerPanel().GetTower(), 
-                () => towerTouchPopup.ClosePopupUI(this.ClosePopupUI)
-                );
+            Tower targetTower = towerTouchPopup.GetTowerPanel().GetTower();
+            targetTower.DestroyTower(() => towerTouchPopup.ClosePopupUI(this.ClosePopupUI));
         }
 
         private void OnClickCancelButton(PointerEventData evt)
