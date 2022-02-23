@@ -286,8 +286,9 @@ namespace PokerDefense.Managers
         {
             int remainEnemyCount = roundData.count;
             string currentEnemyName = roundData.enemyName;
+            float spawnCycle = roundData.spawnCycle;
 
-            WaitForSeconds twoSecWait = new WaitForSeconds(2f);
+            WaitForSeconds spawnDelay = new WaitForSeconds(spawnCycle);
             GameObject enemyPrefab = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/{currentEnemyName}");
 
             while (remainEnemyCount > 0)
@@ -297,7 +298,7 @@ namespace PokerDefense.Managers
                 enemy.InitEnemy(currentEnemyName, currentRoundEnemyData);
 
                 remainEnemyCount--;
-                yield return twoSecWait;
+                yield return spawnDelay;
             }
             yield return null;
         }
