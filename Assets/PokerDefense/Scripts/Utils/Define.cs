@@ -94,7 +94,7 @@ namespace PokerDefense.Utils
             }
         }
 
-        public static float CalculateDamage(TowerType towerType, EnemyType enemyType, float originDamage)
+        public static float CalculateDamage(TowerType towerType, EnemyType enemyType, float originDamage, bool isCritical)
         {
             float calculatedDamage = originDamage;
             // TODO : towerType과 enemyType에 따라 damage 증감식 적용

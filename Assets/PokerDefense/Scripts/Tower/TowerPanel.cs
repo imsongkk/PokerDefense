@@ -41,7 +41,7 @@ namespace PokerDefense.Towers
                     if (HasTower()) // TowerPanel에 이미 Tower가 있을 경우
                     {
                         UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
-                        towerTouchPopup.SetTouchedTowerPanel(this);
+                        towerTouchPopup.InitUI(this);
                     }
                     else
                     {
@@ -53,7 +53,7 @@ namespace PokerDefense.Towers
                     if (HasTower()) // TowerPanel에 이미 Tower가 있을 경우
                     {
                         UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
-                        towerTouchPopup.SetTouchedTowerPanel(this);
+                        towerTouchPopup.InitUI(this);
                     }
                     break;
             }

@@ -21,7 +21,7 @@ namespace PokerDefense.Data
     public class TowerSaveData
     {
         public string towerName;
-        public int attackDamageLevel;
+        public int attackDamageLevel; // 0부터 시작
         public int attackSpeedLevel;
         public int attackRangeLevel;
         public int attackCriticalLevel;

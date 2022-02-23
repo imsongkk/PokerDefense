@@ -12,6 +12,7 @@ TagManager:
   - EndPoint
   - StartPoint
   - EnemyGroup
+  - TowerIdleArea
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - TowerIdle
   - 
   - 
   - 

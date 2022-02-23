@@ -43,7 +43,6 @@ namespace PokerDefense.Managers
 
         public List<Sprite>[] cardsSpriteList = new List<Sprite>[5];
 
-        UI_Poker ui_Poker;
         Hand myHand;
 
         // 덱
@@ -68,9 +67,6 @@ namespace PokerDefense.Managers
             cardsSpriteList[3] = cloverSpriteList;
             cardsSpriteList[4] = jokerSpriteList;
         }
-
-        public void SetUIPoker(UI_Poker target)
-            => ui_Poker = target;
 
         private void SetDeque()
         {
@@ -97,18 +93,24 @@ namespace PokerDefense.Managers
             return card;
         }
 
-        public void ChangeCard(int index, Action<int> OnChangeCardSuccess)
+        public void ChangeCard(int index, Action<(CardShape, int)> OnChangeCardSuccess)
         {
             if (isCardChanged[index])
             {
-                if (GameManager.Round.Chance <= 0) return;
+                if (GameManager.Round.Chance <= 0)
+                {
+                    GameManager.UI.ShowPopupUI<UI_ChanceErrorPopup>();
+                    return;
+                }
                 else GameManager.Round.Chance--;  // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
             }
             else isCardChanged[index] = true;
+
             var oldCard = cardList[index];
             cardList[index] = PopCard();
             deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
-            OnChangeCardSuccess?.Invoke(index);
+
+            OnChangeCardSuccess?.Invoke(cardList[index]);
         }
 
         public void ResetInitialChance()
