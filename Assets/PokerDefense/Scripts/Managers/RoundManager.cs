@@ -19,6 +19,7 @@ namespace PokerDefense.Managers
             READY,
             TOWER,
             POKER,
+            HORSE,
             PLAY
         }
 
@@ -54,6 +55,7 @@ namespace PokerDefense.Managers
         private int heart;
         private int gold;
         private int chance;
+        private int horse;
 
         public int Round
         {
@@ -97,6 +99,15 @@ namespace PokerDefense.Managers
             {
                 chance = value;
                 ui_InGameScene.SetChanceText(chance);
+            }
+        }
+        public int Horse
+        {
+            get { return horse; }
+            set
+            {
+                horse = value;
+                ui_InGameScene.SetHorseIndex(horse);
             }
         }
 
@@ -166,8 +177,6 @@ namespace PokerDefense.Managers
             chance = hardNessData.chance;
         }
 
-
-
         private void InitRoundData()
         {
             Dictionary<string, RoundData> dict = new Dictionary<string, RoundData>();
@@ -217,6 +226,15 @@ namespace PokerDefense.Managers
                     if (stateBreak)
                     {
                         PokerConfirm();
+                        CurrentState = RoundState.HORSE;
+                        stateBreak = false;
+                        break;
+                    }
+                    break;
+                case RoundState.HORSE:
+                    if (stateChanged) { HorseStateStart(); }
+                    if (stateBreak)
+                    {
                         CurrentState = RoundState.PLAY;
                         stateBreak = false;
                         break;
@@ -264,11 +282,18 @@ namespace PokerDefense.Managers
             stateChanged = false;
         }
 
+        private void HorseStateStart()
+        {
+            Debug.Log(state.ToString());
+            ui_InGameScene.ActivateBottomUI();
+            GameManager.UI.ShowPopupUI<UI_HorseSelectPopup>();
+            stateChanged = false;
+        }
+
         private void PlayStateStart()
         {
             Debug.Log(state.ToString());
             RoundStarted?.Invoke(this, null);
-            // SpawnTestEnemy();
             stateChanged = false;
         }
 
