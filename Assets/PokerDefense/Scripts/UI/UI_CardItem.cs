@@ -1,9 +1,6 @@
 using PokerDefense.Managers;
-using PokerDefense.UI.Popup;
 using PokerDefense.Utils;
 using static PokerDefense.Utils.Define;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,45 +9,24 @@ namespace PokerDefense.UI
 {
     public class UI_CardItem : UI_Base
     {
-        UI_Poker ui_Poker = null;
-
-        [SerializeField]
-        Image cardImage;
-        [SerializeField]
-        int number;
-        [SerializeField]
-        CardShape shape;
-        [SerializeField]
-        int cardIndex;
-
-        enum GameObjects
-        {
-            CardItem,
-        }
-
-        private void Awake()    // Self Component Reference
-        {
-            cardImage = gameObject.GetComponent<Image>();
-        }
+        [SerializeField] Image cardImage;
+        [SerializeField] int number;
+        [SerializeField] CardShape shape = CardShape.Null;
+        [SerializeField] int cardIndex;
+        [SerializeField] GameObject rerollButton;
+        [SerializeField] GameObject chanceButton;
 
         private void Start()
             => Init();
 
         public override void Init()
-        {
-            this.shape = CardShape.Null;
-            BindObjects();
-        }
+            => BindObjects();
 
         private void BindObjects()
         {
-            Bind<GameObject>(typeof(GameObjects));
             AddUIEvent(gameObject, OnClickCardItem, Define.UIEvent.Click);
-        }
-
-        public void SetUIPoker(UI_Poker pokerUI)
-        {
-            this.ui_Poker = pokerUI;
+            AddUIEvent(rerollButton, OnClickRerollButton, Define.UIEvent.Click);
+            AddUIEvent(chanceButton, OnClickChanceButton, Define.UIEvent.Click);
         }
 
         private void OnClickCardItem(PointerEventData evt)
@@ -58,26 +34,47 @@ namespace PokerDefense.UI
             // 아직 뽑지 않은 패일 경우 시행하지 않음
             if (shape == CardShape.Null) return;
 
-            // 찬스가 남아있을 경우 찬스를 소비하여 뽑음
-            Debug.Log($"{shape.ToString()} {number} 터치 됨");
-            GameManager.Poker.ChangeCard(cardIndex, (int index) =>
-            {
-                ui_Poker.InstantiateCardIndex(index);   //카드 뽑기에 성공할 경우 인스턴트 구현
-            });
+        }
+        
+        private void OnClickRerollButton(PointerEventData evt)
+        {
+            Debug.Log($"{shape.ToString()} {number} 터치됨");
+
+            rerollButton.SetActive(false);
+            chanceButton.SetActive(true);
+
+            GameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
         }
 
-        public void InitCard(int index, int num, CardShape shape)
+        private void OnClickChanceButton(PointerEventData evt)
+        {
+            Debug.Log($"{shape.ToString()} {number} 터치됨");
+
+            GameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
+        }
+
+        public void InitCard(int index, (CardShape shape, int number) tuple)
         {
             this.cardIndex = index;
-            this.number = num;
-            this.shape = shape;
+            SetCardInfo(tuple);
+        }
 
+        private void SetCardInfo((CardShape shape, int number) tuple)
+        {
+            shape = tuple.shape;
+            number = tuple.number;
             RefreshImage();
         }
 
-        private void RefreshImage() // Poker 패에 맞는 스프라이트 가져오기
+        public void OnPokerDrawed((CardShape shape, int number) tuple)
         {
-            cardImage.sprite = GameManager.Poker.GetSprite((shape, number));
+            // 처음 포커 Draw 됐을 때
+            // 이미 index는 초기화 완료
+            rerollButton.SetActive(true);
+            SetCardInfo(tuple);
         }
+
+        private void RefreshImage() // Poker 패에 맞는 스프라이트 가져오기
+            => cardImage.sprite = GameManager.Poker.GetSprite((shape, number));
     }
 }
