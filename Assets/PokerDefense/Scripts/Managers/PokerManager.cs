@@ -56,16 +56,9 @@ namespace PokerDefense.Managers
             get { return cardList; }
         }
 
-
-
-        // 각 카드를 라운드마다 1번씩 바꿈
-        // 카드를 바꿀때마나 chance 1씩 소모
+        // 각 라운드마다 카드 바꿀 기회 한번씩 제공
+        // 추가로 카드를 바꿀때마나 chance 1씩 소모
         private bool[] isCardChanged = { false, false, false, false, false };
-        private int chance = 5;
-        public int Chance
-        {
-            get { return chance; }
-        }
 
         private void Start()
         {
@@ -106,18 +99,24 @@ namespace PokerDefense.Managers
 
         public void ChangeCard(int index, Action<int> OnChangeCardSuccess)
         {
-            // if (!isCardChanged[index])
-            // {
-
-            if (chance <= 0) return;
-            chance--;
-            // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
+            if (isCardChanged[index])
+            {
+                if (GameManager.Round.Chance <= 0) return;
+                else GameManager.Round.Chance--;  // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
+            }
+            else isCardChanged[index] = true;
             var oldCard = cardList[index];
             cardList[index] = PopCard();
             deque.Insert(0, oldCard);      //덱의 맨 밑에 넣기
             OnChangeCardSuccess?.Invoke(index);
-            // isCardChanged[index] = true;
-            // }
+        }
+
+        public void ResetInitialChance()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                isCardChanged[i] = false;
+            }
         }
 
         public void ResetDeque(Action OnResetDequeSuccess)
