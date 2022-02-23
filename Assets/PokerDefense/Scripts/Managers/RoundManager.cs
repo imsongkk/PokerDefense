@@ -123,7 +123,7 @@ namespace PokerDefense.Managers
         RoundData roundData;
         HardNessData hardNessData;
 
-        private void OnChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
+        private void ChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
         {
             CurrentState = RoundState.READY;
             Round = 2;
@@ -345,10 +345,16 @@ namespace PokerDefense.Managers
             enemyKillCount++;
             if (enemyKillCount == roundData.count)
             {
-                Debug.Log("Round Clear!");
-                OnChangeRound();
+                RoundClear();
             }
         }
+
+        private void RoundClear()
+        {
+            Debug.Log("Round Clear!");
+            GameManager.Horse.InterruptRace(ChangeRound);
+        }
+
 
         private void GameOver()
         {

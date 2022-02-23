@@ -9,7 +9,6 @@ namespace PokerDefense.UI.Popup
     {
         enum GameObjects
         {
-            ConfirmButton,
             HorseOneButton,
             HorseTwoButton,
             HorseThreeButton,

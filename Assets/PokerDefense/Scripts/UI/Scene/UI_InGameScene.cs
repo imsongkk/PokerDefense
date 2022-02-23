@@ -57,11 +57,6 @@ namespace PokerDefense.UI.Scene
         public void ActivateBottomUI()
         {
             bottomUIObject.SetActive(true);
-            Util.RunHorse((winner, horseSum) => 
-            {
-                Debug.Log(winner);
-                Debug.Log(horseSum[winner]);
-            });
         }
 
         public void InitText(int round, int heart, int gold, int chance)
@@ -74,7 +69,8 @@ namespace PokerDefense.UI.Scene
 
         public void SetHorseIndex(int index)
         {
-            Debug.Log(index);
+            GameManager.Horse.RunHorse(index);
+            GameManager.Round.BreakState();
         }
 
         public void SetRoundText(int round)

@@ -99,33 +99,6 @@ namespace PokerDefense.Utils
         public static Vector2 GetNearTwoDirection(Vector2 from, Vector2 to)
             => GetNearTwoDirection(to - from);
 
-        public static void RunHorse(Action<int, int[]> OnMatchOver)
-        {
-            const int randomNumberCount = 120;
-            const int horseCount = 4;
-
-            int[,] horses = new int[horseCount, randomNumberCount];
-            int[] horseSum = new int[horseCount]; // [120, 1200]
-            int winnerIndex = 0;
-
-            for (int i = 0; i < horseCount; i++)
-            {
-                for (int j = 0; j < randomNumberCount; j++)
-                {
-                    horses[i, j] = Range(1, 11); // [1, 10]
-                    horseSum[i] += horses[i, j];
-                }
-            }
-
-            for (int i = 0; i < horseCount; i++)
-            {
-                if (horseSum[i] > horseSum[winnerIndex])
-                    winnerIndex = i;
-            }
-
-            OnMatchOver.Invoke(winnerIndex, horseSum);
-        }
-
         /*
         public static IEnumerator Fade(float fadeTime, bool isOut, Action callback)
         {
