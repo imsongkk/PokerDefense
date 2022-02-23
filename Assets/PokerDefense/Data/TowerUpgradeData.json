@@ -1,11 +1,95 @@
 {
   "HighCard": {
-    "attackDamageTable": [6, 7, 8, 9, 10],
-    "attackSpeedTable": [0.5, 0.55, 0.6, 0.65, 0.7],
-    "attackRangeTable": [2, 2.5, 3, 3.5, 4],
-    "attackCriticalTable": [0, 1, 2, 3, 4]
+    "attackDamageTable": [ 6, 7, 8, 9, 10 ],
+    "attackSpeedTable": [ 0.5, 0.55, 0.6, 0.65, 0.7 ],
+    "attackRangeTable": [ 2, 2.5, 3, 3.5, 4 ],
+    "attackCriticalTable": [ 0, 1, 2, 3, 4 ]
   },
   "OnePair": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "TwoPair": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "Tripple": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "Straight": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "StraightFlush": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "RoyalStraightFlush": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "FullHouse": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "FourCards": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "Flush": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "Beast": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "RoyalStraight": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "Jackpot": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "FiveCards": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "BackStraight": {
+    "attackDamageTable": [ 8, 9, 10, 11, 12 ],
+    "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
+    "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],
+    "attackCriticalTable": [ 0, 15, 30, 45, 60 ]
+  },
+  "BackStraightFlush": {
     "attackDamageTable": [ 8, 9, 10, 11, 12 ],
     "attackSpeedTable": [ 0.6, 0.65, 0.7, 0.75, 0.8 ],
     "attackRangeTable": [ 3, 3.5, 4, 4.5, 5 ],

@@ -38,8 +38,6 @@ namespace PokerDefense.Towers
                 SpeedLevel = speedLevel;
                 RangeLevel = rangeLevel;
                 CriticalLevel = criticalLevel;
-
-                owner.attackDelay = new WaitForSeconds(Speed);
             }
 
             Tower owner;
@@ -134,7 +132,7 @@ namespace PokerDefense.Towers
 
             private void OnUpdateSpeed()
             {
-                owner.attackDelay = new WaitForSeconds(Speed);
+                owner.attackDelay = new WaitForSeconds(1 / Speed);
             }
 
             private void UpdatePrice()
