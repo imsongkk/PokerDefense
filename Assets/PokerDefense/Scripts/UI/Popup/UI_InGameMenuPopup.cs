@@ -10,6 +10,7 @@ namespace PokerDefense.UI.Popup
         enum GameObjects
         {
             SaveButton,
+            HelpButton,
             QuitButton,
             BackButton,
         }
@@ -38,8 +39,12 @@ namespace PokerDefense.UI.Popup
             AddButtonAnim(quitButton);
 
             GameObject backButton = GetObject((int)GameObjects.BackButton);
-            AddUIEvent(backButton, OnClickBackButton, Define.UIEvent.Click);
+            AddUIEvent(backButton, (e)=>ClosePopupUI(), Define.UIEvent.Click);
             AddButtonAnim(backButton);
+
+            GameObject helpButton = GetObject((int)GameObjects.HelpButton);
+            AddUIEvent(helpButton, (e)=>GameManager.UI.ShowPopupUI<UI_HelpPopup>(), Define.UIEvent.Click);
+            AddButtonAnim(helpButton);
         }
 
         private void OnClickSaveButton(PointerEventData evt)
@@ -50,11 +55,6 @@ namespace PokerDefense.UI.Popup
         private void OnClickQuitButton(PointerEventData evt)
         {
 
-        }
-
-        private void OnClickBackButton(PointerEventData evt)
-        {
-            ClosePopupUI();
         }
     }
 }
