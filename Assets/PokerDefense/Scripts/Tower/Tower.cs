@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PokerDefense.Utils;
 using System;
+using PokerDefense.UI.Popup;
 
 namespace PokerDefense.Towers
 {
@@ -28,7 +29,12 @@ namespace PokerDefense.Towers
                 TowerName = towerName;
                 Index = index;
 
-                DamageLevel = damageLevel;
+                maxDamageLevel = towerUpgradeData.attackDamageTable.Count - 1; // 0부터 시작하므로 1 빼줌
+                maxSpeedLevel = towerUpgradeData.attackSpeedTable.Count - 1;
+                maxRangeLevel = towerUpgradeData.attackRangeTable.Count - 1;
+                maxCriticalLevel = towerUpgradeData.attackCriticalTable.Count - 1;
+                // 순서 주의
+                DamageLevel = damageLevel; // 0부터 시작
                 SpeedLevel = speedLevel;
                 RangeLevel = rangeLevel;
                 CriticalLevel = criticalLevel;
@@ -48,11 +54,14 @@ namespace PokerDefense.Towers
                 get => damageLevel; 
                 set 
                 { 
+                    if(damageLevel == maxDamageLevel)
+                    {
+                        GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
+                        return;
+                    }
+
                     damageLevel = value;
-                    //if(damageLevel == maxDamageLevel)
-                        // TODO : UI 업데이트
                     Damage = towerUpgradeData.attackDamageTable[damageLevel];
-                    Debug.Log(Damage);
                     UpdatePrice();
                 } 
             }
@@ -62,9 +71,15 @@ namespace PokerDefense.Towers
                 get => speedLevel;
                 set
                 {
+                    if (speedLevel == maxSpeedLevel)
+                    {
+                        GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
+                        return;
+                    }
+
                     speedLevel = value;
-                    // TODO
                     Speed = towerUpgradeData.attackSpeedTable[speedLevel];
+                    OnUpdateSpeed();
                     UpdatePrice();
                 }
             }
@@ -74,11 +89,15 @@ namespace PokerDefense.Towers
                 get => rangeLevel;
                 set
                 {
+                    if (rangeLevel == maxRangeLevel)
+                    {
+                        GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
+                        return;
+                    }
+
                     rangeLevel = value;
-                    // TODO
                     Range = towerUpgradeData.attackRangeTable[rangeLevel];
-                    owner.rangeCollider.radius = Range; // 실제 사거리 변경
-                    owner.attackRangeCircle.localScale = new Vector2(Range * 2, Range * 2);
+                    OnUpdageRange();
                     UpdatePrice();
                 }
             }
@@ -88,8 +107,13 @@ namespace PokerDefense.Towers
                 get => criticalLevel;
                 set
                 {
+                    if (criticalLevel == maxCriticalLevel)
+                    {
+                        GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
+                        return;
+                    }
+                    
                     criticalLevel = value;
-                    // TODO
                     Critical = towerUpgradeData.attackCriticalTable[criticalLevel];
                     UpdatePrice();
                 }
@@ -102,25 +126,15 @@ namespace PokerDefense.Towers
             public string TowerName { get; private set; }
             public int Index { get; private set; }
 
-            public void UpgradeDamage(int currentLevel)
+            private void OnUpdageRange()
             {
-                DamageLevel = currentLevel;
-                UpdatePrice();
+                owner.rangeCollider.radius = Range; // 실제 사거리 변경
+                owner.attackRangeCircle.localScale = new Vector2(Range * 2, Range * 2);
             }
-            public void UpgradeSpeed(int currentLevel)
+
+            private void OnUpdateSpeed()
             {
-                SpeedLevel = currentLevel;
-                UpdatePrice();
-            }
-            public void UpgradeRange(int currentLevel)
-            {
-                RangeLevel = currentLevel;
-                UpdatePrice();
-            }
-            public void UpgradeCritical(int currentLevel)
-            {
-                CriticalLevel = currentLevel;
-                UpdatePrice();
+                owner.attackDelay = new WaitForSeconds(Speed);
             }
 
             private void UpdatePrice()
@@ -210,10 +224,12 @@ namespace PokerDefense.Towers
             Enemy target = enemies[0];
             Define.EnemyType enemyType = target.EnemyIndivData.EnemyType;
             TowerType towerType = towerIndivData.TowerType;
-            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage);
+            bool isCritical = UnityEngine.Random.value <= towerIndivData.Critical / 100;
+
+            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
 
             target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
-            SetAnimAttack(target); // 애니메이션 스타트
+            SetAnimAttack(target, isCritical); // 애니메이션 스타트
         }
 
         // 객체마다 다른 공격 방식
@@ -239,7 +255,7 @@ namespace PokerDefense.Towers
             }
         }
 
-        protected void SetAnimAttack(Enemy target)
+        protected void SetAnimAttack(Enemy target, bool isCritical)
         {
             Vector2 towerDirection = Util.GetNearTwoDirection(transform.position, target.transform.position);
 
@@ -248,7 +264,10 @@ namespace PokerDefense.Towers
             else if (towerDirection == Vector2.left)
                 transform.localScale = new Vector2(originScaleX, transform.localScale.y);
 
-            animator.SetBool("Attack", true);
+            if (isCritical)
+                animator.SetTrigger("CriticalAttack");
+            else
+                animator.SetTrigger("Attack");
         }
 
         public void DestroyTower(Action afterDestroyAction)
@@ -265,13 +284,6 @@ namespace PokerDefense.Towers
             => towerIndivData.RangeLevel = towerIndivData.RangeLevel + 1;
         public void UpgradeCriticalLevel()
             => towerIndivData.CriticalLevel = towerIndivData.CriticalLevel + 1;
-
-        protected void SetRangeCollider()
-        {
-            rangeCollider = gameObject.GetComponent<CircleCollider2D>();
-            rangeCollider.radius = towerIndivData.Range;
-            attackRangeCircle.localScale = new Vector2(towerIndivData.Range * 2, towerIndivData.Range * 2);
-        }
 
         public void HighlightRangeCircle()
             => attackRangeCircle.gameObject.SetActive(true);

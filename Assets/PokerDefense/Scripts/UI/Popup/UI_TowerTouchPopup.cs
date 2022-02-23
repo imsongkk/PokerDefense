@@ -13,9 +13,11 @@ namespace PokerDefense.UI.Popup
 
         enum GameObjects
         {
-            UpgradeButton,
+            DamageUpgradeButton,
+            SpeedUpgradeButton,
+            RangeUpgradeButton,
+            CriticalUpgradeButton,
             DestroyButton,
-            CancelButton,
             BackButton,
         }
 
@@ -32,17 +34,25 @@ namespace PokerDefense.UI.Popup
 
         private void BindObjects()
         {
-            GameObject upgradeButton = GetObject((int)GameObjects.UpgradeButton);
-            AddUIEvent(upgradeButton, OnClickUpgradeButton, Define.UIEvent.Click);
-            AddButtonAnim(upgradeButton);
+            GameObject damageUpgradeButton = GetObject((int)GameObjects.DamageUpgradeButton);
+            AddUIEvent(damageUpgradeButton, OnClickDamageUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(damageUpgradeButton);
+
+            GameObject speedUpgradeButton = GetObject((int)GameObjects.SpeedUpgradeButton);
+            AddUIEvent(speedUpgradeButton, OnClickSpeedUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(speedUpgradeButton);
+
+            GameObject rangeUpgradeButton = GetObject((int)GameObjects.RangeUpgradeButton);
+            AddUIEvent(rangeUpgradeButton, OnClickRangeUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(rangeUpgradeButton);
+
+            GameObject criticalUpgradeButton = GetObject((int)GameObjects.CriticalUpgradeButton);
+            AddUIEvent(criticalUpgradeButton, OnClickCriticalUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(criticalUpgradeButton);
 
             GameObject destroyButton = GetObject((int)GameObjects.DestroyButton);
             AddUIEvent(destroyButton, OnClickDestroyButton, Define.UIEvent.Click);
             AddButtonAnim(destroyButton);
-
-            GameObject cancelButton = GetObject((int)GameObjects.CancelButton);
-            AddUIEvent(cancelButton, OnClickCancelButton, Define.UIEvent.Click);
-            AddButtonAnim(cancelButton);
 
             GameObject backButton = GetObject((int)GameObjects.BackButton);
             AddUIEvent(backButton, OnClickBackButton, Define.UIEvent.Click);
@@ -56,22 +66,34 @@ namespace PokerDefense.UI.Popup
             GameManager.Tower.StartTowerPanelSelect(touchedTowerPanel);
         }
 
-        private void OnClickUpgradeButton(PointerEventData evt)
+        private void OnClickDamageUpgradeButton(PointerEventData evt)
         {
             Tower tower = touchedTowerPanel.GetTower();
             tower.UpgradeDamageLevel();
+        }
+
+        private void OnClickSpeedUpgradeButton(PointerEventData evt)
+        {
+            Tower tower = touchedTowerPanel.GetTower();
+            tower.UpgradeSpeedLevel();
+        }
+
+        private void OnClickRangeUpgradeButton(PointerEventData evt)
+        {
+            Tower tower = touchedTowerPanel.GetTower();
+            tower.UpgradeRangeLevel();
+        }
+
+        private void OnClickCriticalUpgradeButton(PointerEventData evt)
+        {
+            Tower tower = touchedTowerPanel.GetTower();
+            tower.UpgradeCriticalLevel();
         }
 
         private void OnClickDestroyButton(PointerEventData evt)
         {
             UI_TowerDestroyPopup popup = GameManager.UI.ShowPopupUI<UI_TowerDestroyPopup>();
             popup.SetTowerTouchPopup(this);
-        }
-
-        private void OnClickCancelButton(PointerEventData evt)
-        {
-            touchedTowerPanel.ResetPanel();
-            ClosePopupUI();
         }
 
         private void OnClickBackButton(PointerEventData evt)
