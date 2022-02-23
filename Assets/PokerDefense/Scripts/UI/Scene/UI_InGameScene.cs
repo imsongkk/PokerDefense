@@ -12,6 +12,7 @@ namespace PokerDefense.UI.Scene
         enum GameObjects
         {
             MenuButton,
+            Bottom,
             HeartText,
             GoldText,
             RoundText,
@@ -19,6 +20,7 @@ namespace PokerDefense.UI.Scene
         }
 
         TextMeshProUGUI heartText, goldText, roundText, chanceText;
+        GameObject bottomUIObject;
 
         private void Start()
             => Init();
@@ -43,11 +45,18 @@ namespace PokerDefense.UI.Scene
             GameObject menuButton = GetObject((int)GameObjects.MenuButton);
             AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
             AddButtonAnim(menuButton);
+
+            bottomUIObject = GetObject((int)GameObjects.Bottom);
         }
 
         private void OnClickMenuButton(PointerEventData evt)
         {
             GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
+        }
+
+        public void ActivateBottomUI()
+        {
+            bottomUIObject.SetActive(true);
         }
 
         public void InitText(int round, int heart, int gold, int chance)
@@ -56,6 +65,12 @@ namespace PokerDefense.UI.Scene
             SetHeartText(heart);
             SetGoldText(gold);
             SetChanceText(chance);
+        }
+
+        public void SetHorseIndex(int index)
+        {
+            GameManager.Horse.RunHorse(index);
+            GameManager.Round.BreakState();
         }
 
         public void SetRoundText(int round)

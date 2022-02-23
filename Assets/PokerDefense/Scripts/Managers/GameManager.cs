@@ -15,6 +15,7 @@ namespace PokerDefense.Managers
         RoundManager roundManager = null;
         InputManager inputManager = null;
         PokerManager pokerManager = null;
+        HorseManager horseManager = null;
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
@@ -23,6 +24,7 @@ namespace PokerDefense.Managers
         public static RoundManager Round { get => Instance.roundManager; }
         public static InputManager Input { get => Instance.inputManager; }
         public static PokerManager Poker { get => Instance.pokerManager; }
+        public static HorseManager Horse { get => Instance.horseManager; }
 
         void Awake()
             => Init();
@@ -47,6 +49,13 @@ namespace PokerDefense.Managers
             if (instance.roundManager != null) return;
 
             instance.roundManager = target.AddComponent<RoundManager>();
+        }
+
+        public static void AddHorseManager(GameObject target)
+        {
+            if (instance.horseManager != null) return;
+
+            instance.horseManager = target.GetComponent<HorseManager>();
         }
 
         public static void GetOrAddPokerManager(GameObject target)

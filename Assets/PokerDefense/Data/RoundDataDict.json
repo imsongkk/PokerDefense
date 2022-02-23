@@ -3,7 +3,7 @@
     "1": {
       "enemyName": "monsterA",
       "spawnCycle": 1.5,
-      "count": 5,
+      "count": 1,
       "popup": false,
       "bonus": 0
     },
