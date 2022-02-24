@@ -51,11 +51,15 @@ namespace PokerDefense.UI.Popup
             AddUIEvent(skillRangeCircle, OnDragSkillRangeCircle, Define.UIEvent.Drag);
 
             skillRangeCircleImage = skillRangeCircle.GetComponent<Image>();
+
+            circleSpacePos = skillRangeCircle.transform.position;
         }
 
         public void InitSkillRangePopup(int skillIndex, Action<Vector2> OnConfirmButton)
         {
             GameManager.Data.SkillDataDict.TryGetValue(skillIndex, out var skillData);
+            float ratio = (Screen.width / (float)Screen.height);
+            skillRangeCircle.GetComponent<RectTransform>().sizeDelta *= ratio;
             skillRangeCircleImage.transform.localScale = new Vector3(2 * skillData.skillRange, 2 * skillData.skillRange, 0);
             this.OnConfirmButton = OnConfirmButton;
         }

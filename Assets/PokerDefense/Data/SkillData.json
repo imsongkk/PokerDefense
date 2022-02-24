@@ -13,12 +13,12 @@
   "FireHole": {
     "skillIndex" : 1,
     "skillName" : "FireHole",
-    "skillTime" : 5,
+    "skillTime" : 3,
     "coolTime" : 10,
     "slowPercent" : 0,
     "skillCost" : 5,
     "skillRange" : 4,
-    "skillDamage" : 10,
+    "skillDamage" : 20,
     "skillTic" : 1,
   },
   "EarthQuake": {

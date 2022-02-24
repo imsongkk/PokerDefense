@@ -18,6 +18,7 @@ public class SkillManager : MonoBehaviour
     public UnityEvent[] skillFinished;
 
     SkillData[] skillData;
+    [SerializeField] GameObject fireHole;
 
     int skillCount;
 
@@ -115,7 +116,11 @@ public class SkillManager : MonoBehaviour
             case 1: //FireHole
                 {
                     // TODO : 시스템 메세지
-                    // TODO : 범위 지정 UI 띄우기
+                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
+                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
+                    {
+                        StartCoroutine(SpawnFireHole(rangeScreenPos, skillData[skillIndex]));
+                    });
                 }
                 break;
             case 2: //EarthQuake
@@ -137,6 +142,33 @@ public class SkillManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    IEnumerator SpawnFireHole(Vector2 fireHoleScreenPos, SkillData fireHoleskillData)
+    {
+        float skillTime = fireHoleskillData.skillTime;
+        float skillDamage = fireHoleskillData.skillDamage;
+        float skillTic = fireHoleskillData.skillTic;
+        float skillRange = fireHoleskillData.skillRange;
+
+        float accumulatedTic = 0f;
+        WaitForSeconds skillTicDelay = new WaitForSeconds(skillTic);
+
+        fireHole.transform.position = Camera.main.ScreenToWorldPoint(new Vector2(fireHoleScreenPos.x, fireHoleScreenPos.y));
+        fireHole.transform.localScale = new Vector2(2 * skillRange, 2 * skillRange);
+        fireHole.SetActive(true);
+
+        while(accumulatedTic < skillTime)
+        {
+            var enemyList = GameManager.Round.GetEnemyInRange(fireHoleScreenPos, skillRange);
+            foreach (var enemy in enemyList)
+                enemy.OnDamage(skillDamage);
+
+            accumulatedTic += skillTic;
+            yield return skillTicDelay;
+        }
+        yield return skillTicDelay;
+        fireHole.SetActive(false);
     }
 
     private void SetCoolTime(int skillIndex, bool setCoolTime)
