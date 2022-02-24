@@ -35,7 +35,7 @@
     "skillTime" : 0,
     "coolTime" : 10,
     "skillCost" : 5,
-    "skillRange" : 8,
+    "skillRange" : 2,
     "skillDamage" : 20,
     "skillTic" : 0,
   }

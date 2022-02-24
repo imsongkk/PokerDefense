@@ -1,5 +1,6 @@
 using PokerDefense.Data;
 using PokerDefense.Managers;
+using PokerDefense.UI.Popup;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,19 +62,19 @@ public class SkillManager : MonoBehaviour
         if (skillData[skillIndex].isInCoolTime)
         {
             Debug.Log("쿨타임 입니다");
-            // TODO : 쿨타임 UI 띄우기
+            // TODO : 쿨타임 부족 시스템 메세지 띄우기
             return false;
         }
         else if(GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
         {
             Debug.Log("지금은 스킬을 사용할 수 없습니다");
-            // TODO : UI 띄우기
+            // TODO : 시스템 메세지 띄우기
             return false;
         }
         else if(skillData[skillIndex].skillCost > GameManager.Round.Gold)
         {
             Debug.Log("코스트 부족");
-            // TODO : 코스트 부족 UI 띄우기
+            // TODO : 코스트 부족 시스템 메세지 띄우기
             return false;
         }
         return true;
@@ -98,13 +99,42 @@ public class SkillManager : MonoBehaviour
         StartCoroutine(SetTimer(skillTime, skillFinished[skillIndex]));
         StartCoroutine(SetTimer(coolTime, () => { SetCoolTime(skillIndex, false); }));
 
+        ActIndivSkill(skillIndex);
+    }
 
-        switch(skillIndex)
+    private void ActIndivSkill(int skillIndex)
+    {
+        switch (skillIndex)
         {
-
+            case 0: //TimeStop
+                {
+                    // TODO : 시간이 멈추었다는 UI 작업
+                    // TODO : UI_InGameScene의 timeText 홀딩
+                }
+                break;
+            case 1: //FireHole
+                {
+                    // TODO : 범위 지정 UI 띄우기
+                }
+                break;
+            case 2: //EarthQuake
+                {
+                    // TODO : 기획
+                }
+                break;
+            case 3: //Meteo
+                {
+                    // TODO : 범위 지정 UI 띄우기
+                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
+                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) => 
+                    {
+                        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData[skillIndex].skillRange);
+                        foreach(var enemy in enemyList)
+                            enemy.OnDamage(skillData[skillIndex].skillDamage);
+                    });
+                }
+                break;
         }
-        // TODO : 시간이 멈추었다는 UI 작업
-        // TODO : UI_InGameScene의 timeText 홀딩
     }
 
     private void SetCoolTime(int skillIndex, bool setCoolTime)

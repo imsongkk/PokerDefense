@@ -349,6 +349,22 @@ namespace PokerDefense.Managers
             yield break;
         }
 
+        public List<Enemy> GetEnemyInRange(Vector2 screenSpaceRangeOffset, float range)
+        {
+            // range * 100이 screen상의 길이
+            List<Enemy> ret = new List<Enemy>();
+            for(int i=0; i<enemyGroup.childCount; i++)
+            {
+                Enemy enemy = enemyGroup.GetChild(i).GetComponent<Enemy>();
+                Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
+                float distance = Vector2.Distance(screenSpaceRangeOffset, enemyScreenPos);
+
+                if (distance <= range * 100) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
+                    ret.Add(enemy);
+            }
+            return ret;
+        }
+
         public void OnEnemyGetEndPoint()
         {
             OnEnemyDied();
