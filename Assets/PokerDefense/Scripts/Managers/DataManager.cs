@@ -20,6 +20,7 @@ namespace PokerDefense.Managers
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
+        public Dictionary<string, SkillData> SkillDataDict { get; private set; } // key : skillName
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -28,6 +29,7 @@ namespace PokerDefense.Managers
         private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
+        private string skilJsonFileName = "SkillData";
 
         public void InitDataManager()
         {
@@ -37,6 +39,7 @@ namespace PokerDefense.Managers
             InitRoundDataDict();
             InitEnemyDataDict();
             InitHardNessDataDict();
+            InitSkillDataDict();
         }
 
         private void InitPlayerData()
@@ -71,6 +74,11 @@ namespace PokerDefense.Managers
         private void InitHardNessDataDict()
         {
             HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
+        }
+
+        private void InitSkillDataDict()
+        {
+            SkillDataDict = LoadJsonFile<Dictionary<string, SkillData>>(jsonLocation, skilJsonFileName);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

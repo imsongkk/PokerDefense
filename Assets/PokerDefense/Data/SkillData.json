@@ -1,0 +1,34 @@
+{
+  "TimeStop": {
+    "skillTime" : 5,
+    "coolTime" : 10,
+    "skillCostInfo" : {
+        "skillCostTarget" : "gold",
+        "skillCost" : 5
+    }
+  },
+  "FireHole": {
+    "skillTime" : 5,
+    "coolTime" : 10,
+    "skillCostInfo" : {
+        "skillCostTarget" : "gold",
+        "skillCost" : 5
+    }
+  },
+  "EarthQuake": {
+    "skillTime" : 5,
+    "coolTime" : 10,
+    "skillCostInfo" : {
+        "skillCostTarget" : "gold",
+        "skillCost" : 5
+    }
+  },
+  "Meteo": {
+    "skillTime" : 0,
+    "coolTime" : 10,
+    "skillCostInfo" : {
+        "skillCostTarget" : "gold",
+        "skillCost" : 5
+    }
+  },
+}

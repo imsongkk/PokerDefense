@@ -1,3 +1,5 @@
+using PokerDefense.Data;
+using PokerDefense.Managers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,12 +12,28 @@ public class SkillManager : MonoBehaviour
     public UnityEvent<float, float> TimeStopStarted, EarthQuakeStarted, FireHoleStarted; // 스킬 지속시간, 스킬 쿨타임
     public UnityEvent TimeStopFinished, EarthQuakeFinished, FireHoleFinished;
 
-    public bool IsCoolTimeTimeStop { get; private set; } = false;
-    public bool IsCoolTimeEarthQuake { get; private set; } = false;
-    public bool IsCoolTimeFireHole { get; private set; } = false;
+    public bool IsCoolTimeTimeStop 
+    { 
+        get => timeStopSkillData.isInCoolTime;  
+        private set => timeStopSkillData.isInCoolTime = value; 
+    }
+    public bool IsCoolTimeEarthQuake
+    {
+        get => earthQuakeSkillData.isInCoolTime;
+        private set => earthQuakeSkillData.isInCoolTime = value;
+    }
+    public bool IsCoolTimeFireHole
+    {
+        get => fireHoleSkillData.isInCoolTime;
+        private set => fireHoleSkillData.isInCoolTime = value;
+    }
+
+    SkillData timeStopSkillData, fireHoleSkillData, earthQuakeSkillData, meteoSkillData;
 
     public void InitSkillManager()
     {
+        InitSkillData();
+
         TimeStopStarted.AddListener(StartTimeStop);
         TimeStopFinished.AddListener(FinishTimeStop);
 
@@ -26,11 +44,19 @@ public class SkillManager : MonoBehaviour
         FireHoleFinished.AddListener(FinishFireHole);
     }
 
+    private void InitSkillData()
+    {
+        GameManager.Data.SkillDataDict.TryGetValue("TimeStop", out timeStopSkillData);
+        GameManager.Data.SkillDataDict.TryGetValue("FireHole", out fireHoleSkillData);
+        GameManager.Data.SkillDataDict.TryGetValue("EarthQuake", out earthQuakeSkillData);
+        GameManager.Data.SkillDataDict.TryGetValue("Meteo", out meteoSkillData);
+    }
+
     public void UseTimeStopSkill()
     {
         // TODO : 데이터 가져오기
-        float skillTime = 5f;
-        float coolTime = 10f;
+        float skillTime = timeStopSkillData.skillTime;
+        float coolTime = timeStopSkillData.coolTime;
         TimeStopStarted.Invoke(skillTime, coolTime);
     }
 
