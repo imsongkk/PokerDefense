@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class SkillManager : MonoBehaviour
 {
-    public UnityEvent<float> TimeStopStarted, EarthQuakeStarted, FireHoleStarted;
+    public UnityEvent<float, float> TimeStopStarted, EarthQuakeStarted, FireHoleStarted; // 스킬 지속시간, 스킬 쿨타임
     public UnityEvent TimeStopFinished, EarthQuakeFinished, FireHoleFinished;
 
     public bool IsCoolTimeTimeStop { get; private set; } = false;
@@ -27,8 +29,9 @@ public class SkillManager : MonoBehaviour
     public void UseTimeStopSkill()
     {
         // TODO : 데이터 가져오기
-        float stopTime = 5f; 
-        TimeStopStarted.Invoke(stopTime);
+        float skillTime = 5f;
+        float coolTime = 10f;
+        TimeStopStarted.Invoke(skillTime, coolTime);
     }
 
     public void UseMeteoSkill()
@@ -52,9 +55,17 @@ public class SkillManager : MonoBehaviour
         FinishEvent?.Invoke();
     }
 
-    private void StartTimeStop(float time)
+    IEnumerator SetTimer(float time, Action FinishAction)
     {
-        StartCoroutine(SetTimer(time, TimeStopFinished));
+        yield return new WaitForSeconds(time);
+        FinishAction?.Invoke();
+    }
+
+    private void StartTimeStop(float skillTime, float coolTime)
+    {
+        StartCoroutine(SetTimer(skillTime, TimeStopFinished));
+        StartCoroutine(SetTimer(coolTime, () => { IsCoolTimeTimeStop = false; }));
+
         IsCoolTimeTimeStop = true;
         // TODO : 시간이 멈추었다는 UI 작업
         // TODO : UI_InGameScene의 timeText 홀딩
@@ -62,12 +73,12 @@ public class SkillManager : MonoBehaviour
 
     private void FinishTimeStop()
     {
-        IsCoolTimeTimeStop = false;
+
     }
 
-    private void StartEarthQuake(float time)
+    private void StartEarthQuake(float skillTime, float coolTime)
     {
-        StartCoroutine(SetTimer(time, EarthQuakeFinished));
+        StartCoroutine(SetTimer(skillTime, EarthQuakeFinished));
 
         // TODO : 실제 지진 처럼 grid 흔들기
         // TODO : 데이터 가져오기
@@ -79,9 +90,9 @@ public class SkillManager : MonoBehaviour
 
     }
 
-    private void StartFireHole(float time)
+    private void StartFireHole(float skillTime, float coolTime)
     {
-        StartCoroutine(SetTimer(time, FireHoleFinished));
+        StartCoroutine(SetTimer(skillTime, FireHoleFinished));
 
         // TODO : 실제 지진 처럼 grid 흔들기
         // TODO : 데이터 가져오기

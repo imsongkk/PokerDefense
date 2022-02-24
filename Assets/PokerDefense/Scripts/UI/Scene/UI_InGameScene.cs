@@ -77,8 +77,11 @@ namespace PokerDefense.UI.Scene
 
             bottomUIObject = GetObject((int)GameObjects.Bottom);
 
-            GameManager.Skill.TimeStopStarted.AddListener((a) => { ShowCoolTime(timeStopCoolTimeImage); });
-            GameManager.Skill.TimeStopStarted.AddListener((remainTime) => { ShowRemainTime(remainTime); });
+            GameManager.Skill.TimeStopStarted.AddListener((skillTime, coolTime) => 
+            { 
+                ShowRemainTime(skillTime);
+                ShowCoolTime(timeStopCoolTimeImage, coolTime);
+            });
         }
 
         private void ShowRemainTime(float targetTime)
@@ -86,10 +89,8 @@ namespace PokerDefense.UI.Scene
             // TODO : 인게임 화면에 지속시간 얼마나 남았는지 Bar형태로 조그맣게 띄우기
         }
 
-        private void ShowCoolTime(Image targetImage)
+        private void ShowCoolTime(Image targetImage, float coolTime)
         {
-            // TODO : 스킬 쿨타임 가져오기
-            float coolTime = 3f;
             StartCoroutine(StartCoolTime(targetImage, coolTime));
         }
 

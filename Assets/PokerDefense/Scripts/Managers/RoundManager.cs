@@ -154,7 +154,7 @@ namespace PokerDefense.Managers
             StartCoroutine(InitUIText());
 
             EnemySpawnCoroutine = SpawnCurrentRoundEnemy();
-            GameManager.Skill.TimeStopStarted.AddListener((a) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.TimeStopStarted.AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
             GameManager.Skill.TimeStopFinished.AddListener(() => { isStoppedEnemySpawn = false; });
 
             CurrentState = RoundState.READY;

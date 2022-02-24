@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         originScaleX = transform.localScale.x;
-        GameManager.Skill.TimeStopStarted.AddListener((stopTime) => enemyIndivData.OnSlow(stopTime, 100));
+        GameManager.Skill.TimeStopStarted.AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
         GameManager.Skill.TimeStopFinished.AddListener(()=> { enemyIndivData.OnSlowResume(); });
     }
 
