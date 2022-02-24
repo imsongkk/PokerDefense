@@ -11,6 +11,7 @@ namespace PokerDefense.Data
 
         public float skillTime;
         public float coolTime;
+        public float slowPercent;
         public int skillCost;
         public float skillRange;
         public float skillDamage;

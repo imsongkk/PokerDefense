@@ -39,6 +39,11 @@ namespace PokerDefense.Managers
             }
         }
 
+        public List<Enemy> CurrentEnemies
+        {
+            get => enemyGroup.GetComponentsInChildren<Enemy>().ToList();
+        }
+
         Transform startPoint, endPoint;
         Transform wayPointParent;
         Transform enemyGroup;

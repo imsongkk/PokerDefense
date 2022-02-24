@@ -71,9 +71,17 @@ public class Enemy : MonoBehaviour
         originScaleX = transform.localScale.x;
 
         GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-
         GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
         GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
+
+        GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
+        GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
+        {
+            GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
+            Debug.Log(skillData.slowPercent);
+            enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
+        });
+        GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
     }
 
     private void Start()

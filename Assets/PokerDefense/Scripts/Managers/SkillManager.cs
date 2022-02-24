@@ -108,23 +108,25 @@ public class SkillManager : MonoBehaviour
         {
             case 0: //TimeStop
                 {
-                    // TODO : 시간이 멈추었다는 UI 작업
+                    // TODO : 시스템 메세지
                     // TODO : UI_InGameScene의 timeText 홀딩
                 }
                 break;
             case 1: //FireHole
                 {
+                    // TODO : 시스템 메세지
                     // TODO : 범위 지정 UI 띄우기
                 }
                 break;
             case 2: //EarthQuake
                 {
-                    // TODO : 기획
+                    // TODO : 시스템 메세지
+                    // TODO : 상단에 지속시간 UI 띄우기
                 }
                 break;
             case 3: //Meteo
                 {
-                    // TODO : 범위 지정 UI 띄우기
+                    // TODO : 시스템 메세지
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) => 
                     {
