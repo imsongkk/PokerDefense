@@ -154,8 +154,10 @@ namespace PokerDefense.Managers
             StartCoroutine(InitUIText());
 
             EnemySpawnCoroutine = SpawnCurrentRoundEnemy();
-            GameManager.Skill.TimeStopStarted.AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
-            GameManager.Skill.TimeStopFinished.AddListener(() => { isStoppedEnemySpawn = false; });
+
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
 
             CurrentState = RoundState.READY;
         }

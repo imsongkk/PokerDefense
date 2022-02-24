@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using PokerDefense.UI.Popup;
 using System.Collections;
 using UnityEngine.UI;
+using PokerDefense.Data;
+using System.Collections.Generic;
 
 namespace PokerDefense.UI.Scene
 {
@@ -50,42 +52,48 @@ namespace PokerDefense.UI.Scene
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
             chanceText = GetObject((int)GameObjects.ChanceText).GetComponent<TextMeshProUGUI>();
 
+            bottomUIObject = GetObject((int)GameObjects.Bottom);
+
+            List<Image> coolTimeImageList = new List<Image>();
+
             GameObject menuButton = GetObject((int)GameObjects.MenuButton);
             AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
             AddButtonAnim(menuButton);
 
-            GameObject meteoButton = GetObject((int)GameObjects.MeteoSkillButton);
-            AddUIEvent(meteoButton, OnClickMeteoSkill, Define.UIEvent.Click);
-            AddButtonAnim(meteoButton);
-
             GameObject timeStopButton = GetObject((int)GameObjects.TimeStopSkillButton);
             AddUIEvent(timeStopButton, OnClickTimeStopSkill, Define.UIEvent.Click);
             AddButtonAnim(timeStopButton);
+            coolTimeImageList.Add(timeStopButton.transform.GetChild(1).GetComponent<Image>());
 
             GameObject fireHoleButton = GetObject((int)GameObjects.FireHoleSkillButton);
             AddUIEvent(fireHoleButton, OnClickFireHoleSkill, Define.UIEvent.Click);
             AddButtonAnim(fireHoleButton);
+            coolTimeImageList.Add(fireHoleButton.transform.GetChild(1).GetComponent<Image>());
 
             GameObject earthQuakeButton = GetObject((int)GameObjects.EarthQuakeSkillButton);
             AddUIEvent(earthQuakeButton, OnClickEarthQuakeSkill, Define.UIEvent.Click);
             AddButtonAnim(earthQuakeButton);
+            coolTimeImageList.Add(earthQuakeButton.transform.GetChild(1).GetComponent<Image>());
 
-            Image meteoCoolTimeImage = meteoButton.transform.GetChild(1).GetComponent<Image>();
-            Image timeStopCoolTimeImage = timeStopButton.transform.GetChild(1).GetComponent<Image>();
-            Image fireHoleCoolTimeImage = fireHoleButton.transform.GetChild(1).GetComponent<Image>();
-            Image earthQuakeCoolTimeImage = earthQuakeButton.transform.GetChild(1).GetComponent<Image>();
+            GameObject meteoButton = GetObject((int)GameObjects.MeteoSkillButton);
+            AddUIEvent(meteoButton, OnClickMeteoSkill, Define.UIEvent.Click);
+            AddButtonAnim(meteoButton);
+            coolTimeImageList.Add(meteoButton.transform.GetChild(1).GetComponent<Image>());
 
-            bottomUIObject = GetObject((int)GameObjects.Bottom);
-
-            GameManager.Skill.TimeStopStarted.AddListener((skillTime, coolTime) => 
-            { 
-                ShowRemainTime(skillTime);
-                ShowCoolTime(timeStopCoolTimeImage, coolTime);
-            });
+            for(int i=0; i<coolTimeImageList.Count; i++)
+            {
+                int lambdaCapture = i;
+                GameManager.Skill.skillStarted[lambdaCapture].AddListener((skillTime, coolTime) =>
+                {
+                    ShowRemainTime(skillTime);
+                    ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime);
+                });
+            }
         }
 
-        private void ShowRemainTime(float targetTime)
+        private void ShowRemainTime(float skillTime)
         {
+            if (skillTime == 0) return;
             // TODO : 인게임 화면에 지속시간 얼마나 남았는지 Bar형태로 조그맣게 띄우기
         }
 
@@ -114,49 +122,32 @@ namespace PokerDefense.UI.Scene
             GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
         }
 
-        private void OnClickMeteoSkill(PointerEventData evt)
-        {
-
-        }
-
         private void OnClickTimeStopSkill(PointerEventData evt)
         {
-            if(CheckTimeStopSkill())
-                GameManager.Skill.UseTimeStopSkill();
-        }
-
-        private bool CheckTimeStopSkill()
-        {
-            // TODO : 코스트 가져오기
-            int timeStopCost = 5;
-            if (GameManager.Round.Gold < timeStopCost)
-            {
-                Debug.Log("코스트 부족");
-                // TODO : 코스트 부족 UI 띄우기
-            }
-            else if (GameManager.Skill.IsCoolTimeTimeStop)
-            {
-                Debug.Log("쿨타임 입니다");
-                // TODO : 쿨타임 UI 띄우기
-            }
-            else if(GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
-            {
-                Debug.Log("지금은 스킬을 사용할 수 없습니다");
-                // TODO : UI 띄우기
-            }
-            else
-                return true;
-            return false;
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var skillIndex);
+            if (GameManager.Skill.CheckSkillUse(skillIndex))
+                GameManager.Skill.UseSkill(skillIndex);
         }
 
         private void OnClickFireHoleSkill(PointerEventData evt)
         {
-
+            GameManager.Data.SkillIndexDict.TryGetValue("FireHole", out var skillIndex);
+            if (GameManager.Skill.CheckSkillUse(skillIndex))
+                GameManager.Skill.UseSkill(skillIndex);
         }
 
         private void OnClickEarthQuakeSkill(PointerEventData evt)
         {
+            GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var skillIndex);
+            if (GameManager.Skill.CheckSkillUse(skillIndex))
+                GameManager.Skill.UseSkill(skillIndex);
+        }
 
+        private void OnClickMeteoSkill(PointerEventData evt)
+        {
+            GameManager.Data.SkillIndexDict.TryGetValue("Meteo", out var skillIndex);
+            if (GameManager.Skill.CheckSkillUse(skillIndex))
+                GameManager.Skill.UseSkill(skillIndex);
         }
 
         public void ActivateBottomUI()

@@ -6,16 +6,17 @@ namespace PokerDefense.Data
     [Serializable]
     public class SkillData
     {
+        public int skillIndex;
+        public string skillName;
+
         public float skillTime;
         public float coolTime;
-        public SkillCostInfo skillCostInfo;
-        public bool isInCoolTime = false;
-    }
-
-    [Serializable]
-    public class SkillCostInfo
-    {
-        public string skillCostTarget;
         public int skillCost;
+        public float skillRange;
+        public float skillDamage;
+        public float skillTic;
+
+        //public int skillLevel;
+        public bool isInCoolTime = false;
     }
 }

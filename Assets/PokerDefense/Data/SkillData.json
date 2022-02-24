@@ -1,34 +1,42 @@
 {
   "TimeStop": {
+    "skillIndex" : 0,
+    "skillName" : "TimeStop",
     "skillTime" : 5,
     "coolTime" : 10,
-    "skillCostInfo" : {
-        "skillCostTarget" : "gold",
-        "skillCost" : 5
-    }
+    "skillCost" : 5,
+    "skillRange" : 0,
+    "skillDamage" : 0,
+    "skillTic" : 0,
   },
   "FireHole": {
+    "skillIndex" : 1,
+    "skillName" : "FireHole",
     "skillTime" : 5,
     "coolTime" : 10,
-    "skillCostInfo" : {
-        "skillCostTarget" : "gold",
-        "skillCost" : 5
-    }
+    "skillCost" : 5,
+    "skillRange" : 4,
+    "skillDamage" : 10,
+    "skillTic" : 1,
   },
   "EarthQuake": {
+    "skillIndex" : 2,
+    "skillName" : "EarthQuake",
     "skillTime" : 5,
     "coolTime" : 10,
-    "skillCostInfo" : {
-        "skillCostTarget" : "gold",
-        "skillCost" : 5
-    }
+    "skillCost" : 5,
+    "skillRange" : 0,
+    "skillDamage" : 0,
+    "skillTic" : 0,
   },
   "Meteo": {
+    "skillIndex" : 3,
+    "skillName" : "Meteo",
     "skillTime" : 0,
     "coolTime" : 10,
-    "skillCostInfo" : {
-        "skillCostTarget" : "gold",
-        "skillCost" : 5
-    }
-  },
+    "skillCost" : 5,
+    "skillRange" : 8,
+    "skillDamage" : 20,
+    "skillTic" : 0,
+  }
 }
