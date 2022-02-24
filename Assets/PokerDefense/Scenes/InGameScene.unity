@@ -1083,6 +1083,7 @@ Transform:
   - {fileID: 300709225}
   - {fileID: 1504277983}
   - {fileID: 33468448}
+  - {fileID: 1604784250}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -112787,6 +112788,68 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1604784249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604784250}
+  - component: {fileID: 1604784251}
+  m_Layer: 0
+  m_Name: SkillManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604784250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604784249}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 133202867}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1604784251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604784249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437a99c536e064f4b995a6a13fb48b93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyGroup: {fileID: 1577504853}
+  TimeStopStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  EarthQuakeStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  FireHoleStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  TimeStopFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  EarthQuakeFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  FireHoleFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1622617790
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -114610,6 +114673,7 @@ MonoBehaviour:
   RoundManagerObject: {fileID: 300709223}
   PokerManagerObject: {fileID: 1504277982}
   HorseManagerObject: {fileID: 33468446}
+  SkillManagerObject: {fileID: 1604784249}
 --- !u!4 &1899421615
 Transform:
   m_ObjectHideFlags: 0

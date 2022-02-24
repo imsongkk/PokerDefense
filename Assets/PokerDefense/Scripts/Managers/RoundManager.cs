@@ -123,6 +123,11 @@ namespace PokerDefense.Managers
         RoundData roundData;
         HardNessData hardNessData;
 
+        IEnumerator EnemySpawnCoroutine;
+        bool isStoppedEnemySpawn = false;
+        float? lastSpawnTime = null;
+        float? interruptedSpawnTime = null;
+
         private void ChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
         {
             CurrentState = RoundState.READY;
@@ -147,6 +152,10 @@ namespace PokerDefense.Managers
             InitEnemyData();
 
             StartCoroutine(InitUIText());
+
+            EnemySpawnCoroutine = SpawnCurrentRoundEnemy();
+            GameManager.Skill.TimeStopStarted.AddListener((a) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.TimeStopFinished.AddListener(() => { isStoppedEnemySpawn = false; });
 
             CurrentState = RoundState.READY;
         }
@@ -244,7 +253,7 @@ namespace PokerDefense.Managers
                     if (stateChanged)
                     {
                         PlayStateStart();
-                        StartCoroutine(SpawnCurrentRoundEnemy());
+                        StartCoroutine(EnemySpawnCoroutine);
                     }
                     break;
             }
@@ -318,14 +327,24 @@ namespace PokerDefense.Managers
 
             while (remainEnemyCount > 0)
             {
+                // TimeStop Skill 때문에 작성됨
+                if (isStoppedEnemySpawn)
+                    yield return new WaitUntil(() => isStoppedEnemySpawn == false);
+                if (interruptedSpawnTime != null)
+                {
+                    yield return new WaitForSeconds(spawnCycle - (interruptedSpawnTime.Value - lastSpawnTime.Value));
+                    interruptedSpawnTime = null;
+                }
+
                 GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
                 Enemy enemy = enemyObject.GetComponent<Enemy>();
                 enemy.InitEnemy(currentEnemyName, currentRoundEnemyData);
 
                 remainEnemyCount--;
+                lastSpawnTime = Time.time;
                 yield return spawnDelay;
             }
-            yield return null;
+            yield break;
         }
 
         public void OnEnemyGetEndPoint()

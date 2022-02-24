@@ -7,39 +7,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using static PokerDefense.Utils.Define;
 
-public class EnemyIndivData
-{
-    public EnemyIndivData(float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
-    {
-        Speed = speed;
-        Hp = hp;
-        IsBoss = isBoss;
-        Damage = damage;
-        Name = name;
-        EnemyType = enemyType;
-    }
-
-    public float Speed { get; private set; }
-    public float Hp { get; private set; }
-    public string Name { get; private set; }
-    public bool IsBoss { get; private set; }
-    public int Damage { get; private set; }
-    public EnemyType EnemyType { get; private set; }
-
-    public void OnDamage(float damage)
-        => Hp -= damage;
-
-    public void OnSlow(float time, float percent)
-    {
-        // 슬로우 능력 가진 타워에게
-        Speed *= percent / 100;
-    }
-}
-
 public class Enemy : MonoBehaviour
 {
+    public class EnemyIndivData
+    {
+        public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
+        {
+            this.owner = owner;
+
+            Speed = speed;
+            Hp = hp;
+            IsBoss = isBoss;
+            Damage = damage;
+            Name = name;
+            EnemyType = enemyType;
+        }
+
+        Enemy owner;
+
+        public float Speed { get; private set; }
+        public float Hp { get; private set; }
+        public string Name { get; private set; }
+        public bool IsBoss { get; private set; }
+        public int Damage { get; private set; }
+        public EnemyType EnemyType { get; private set; }
+
+        public void OnDamage(float damage)
+            => Hp -= damage;
+
+        public void OnSlow(float time, float percent)
+        {
+            Speed *= 1 - (percent / 100);
+        }
+
+        public void OnSlowResume()
+        {
+            Speed = owner.enemyOriginData.moveSpeed;
+        }
+    }
     EnemyData enemyOriginData;
-    public EnemyIndivData EnemyIndivData { get; private set; }
+    public EnemyIndivData enemyIndivData { get; private set; }
 
     [SerializeField] Transform hpBarGroup, hitText;
     [SerializeField] Image hpBarImage;
@@ -62,6 +69,8 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         originScaleX = transform.localScale.x;
+        GameManager.Skill.TimeStopStarted.AddListener((stopTime) => enemyIndivData.OnSlow(stopTime, 100));
+        GameManager.Skill.TimeStopFinished.AddListener(()=> { enemyIndivData.OnSlowResume(); });
     }
 
     private void Start()
@@ -73,7 +82,7 @@ public class Enemy : MonoBehaviour
 
     public void InitEnemy(string enemyName, EnemyData enemyOriginData)
     {
-        EnemyIndivData = new EnemyIndivData(enemyOriginData.moveSpeed, enemyOriginData.hp, 
+        enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp, 
             enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
 
         this.enemyOriginData = enemyOriginData;
@@ -93,7 +102,7 @@ public class Enemy : MonoBehaviour
                 else if (Util.GetNearFourDirection(moveDirection) == Vector2.left)
                     transform.localScale = new Vector2(originScaleX , transform.localScale.y);
 
-                transform.Translate(moveDirection * EnemyIndivData.Speed * Time.deltaTime);
+                transform.Translate(moveDirection * enemyIndivData.Speed * Time.deltaTime);
                 yield return null;
             }
         }
@@ -101,9 +110,9 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log($"{EnemyIndivData.Name} died");
+        Debug.Log($"{enemyIndivData.Name} died");
 
-        if(EnemyIndivData.IsBoss)
+        if(enemyIndivData.IsBoss)
         {
             // TODO : 보스 죽음 팝업
         }
@@ -113,12 +122,17 @@ public class Enemy : MonoBehaviour
 
     public void OnDamage(float damage) 
     {
-        Debug.Log($"{EnemyIndivData.Name} got {damage} damaged");
+        Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
-        EnemyIndivData.OnDamage(damage);
-        if (EnemyIndivData.Hp < 0)
+        enemyIndivData.OnDamage(damage);
+        if (enemyIndivData.Hp < 0)
             Die();
         RefreshHpBar();
+    }
+
+    public void OnSlow(float time, float percent)
+    {
+        enemyIndivData.OnSlow(time, percent);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -135,7 +149,7 @@ public class Enemy : MonoBehaviour
 
     private void RefreshHpBar()
     {
-        hpBarImage.fillAmount = (EnemyIndivData.Hp > 0 ? EnemyIndivData.Hp : 0) / enemyOriginData.hp;
+        hpBarImage.fillAmount = (enemyIndivData.Hp > 0 ? enemyIndivData.Hp : 0) / enemyOriginData.hp;
     }
 
     private void RefreshHitText()
