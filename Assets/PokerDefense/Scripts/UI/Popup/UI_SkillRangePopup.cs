@@ -58,10 +58,12 @@ namespace PokerDefense.UI.Popup
         public void InitSkillRangePopup(int skillIndex, Action<Vector2> OnConfirmButton)
         {
             GameManager.Data.SkillDataDict.TryGetValue(skillIndex, out var skillData);
-            float ratio = (Screen.width / (float)Screen.height);
-            skillRangeCircle.GetComponent<RectTransform>().sizeDelta *= ratio;
-            skillRangeCircleImage.transform.localScale = new Vector3(2 * skillData.skillRange, 2 * skillData.skillRange, 0);
+            //Debug.Log(Camera.main.orthographicSize); // 16 -> Screen.Height / 2 에 대응되는 Unit
+            float unitInScreenSpace = Screen.height / (Camera.main.orthographicSize * 2); // 1920 / 32 = 60
+            skillRangeCircle.GetComponent<RectTransform>().sizeDelta = unitInScreenSpace * new Vector2(2 * skillData.skillRange, 2 * skillData.skillRange);
             this.OnConfirmButton = OnConfirmButton;
+
+
         }
 
         private void OnClickConfirmButton(PointerEventData evt)

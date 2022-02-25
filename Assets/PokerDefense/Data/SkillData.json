@@ -17,7 +17,7 @@
     "coolTime" : 10,
     "slowPercent" : 0,
     "skillCost" : 5,
-    "skillRange" : 4,
+    "skillRange" : 5,
     "skillDamage" : 20,
     "skillTic" : 1,
   },
