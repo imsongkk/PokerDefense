@@ -143,7 +143,7 @@ namespace PokerDefense.Managers
             // 순서 주의
             InitWayPoints();
             InitHardNessData();
-            InitRoundData();
+            // InitRoundData();
             InitEnemyData();
 
             StartCoroutine(InitUIText());

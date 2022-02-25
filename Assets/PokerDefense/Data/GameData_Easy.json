@@ -13,5 +13,13 @@
             "enemyNameA": 10,
             "enemyNameB": 5
         }
+    },
+    {
+        "popup": false,
+        "bonus": 0,
+        "enemyDict": {
+            "enemyNameA": 15,
+            "enemyNameB": 10
+        }
     }
 ]

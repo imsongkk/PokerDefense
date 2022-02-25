@@ -21,6 +21,8 @@ namespace PokerDefense.Managers
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
 
+        public GameData CurrentGameData { get; private set; }
+
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
         private string towerUpgradeDataJsonFileName = "TowerUpgradeData";
@@ -29,12 +31,15 @@ namespace PokerDefense.Managers
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
 
+        private string gameDataJsonFileName = "GameData_";
+
         public void InitDataManager()
         {
             InitPlayerData();
 
             InitTowerData();
-            InitRoundDataDict();
+            // InitRoundDataDict();
+            // InitGameData("Easy");
             InitEnemyDataDict();
             InitHardNessDataDict();
         }
@@ -61,6 +66,17 @@ namespace PokerDefense.Managers
             //Debug.Log(RoundDataList);
             //Debug.Log(RoundDataList["Easy"]["1"].enemyName);
             //Debug.Log(RoundDataList["Normal"]["1"].enemyName);
+        }
+
+        // ^ old rounddata
+        // v new rounddata
+
+        private void InitGameData(string difficulty)
+        {
+            // difficulty: Easy, Normal, Hard
+            CurrentGameData = new GameData(difficulty);
+            string difficultyFileName = gameDataJsonFileName + difficulty;
+            CurrentGameData.gameRounds = LoadJsonFile<List<NewRoundData>>(jsonLocation, difficultyFileName);
         }
 
         private void InitEnemyDataDict()
