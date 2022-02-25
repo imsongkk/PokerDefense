@@ -2,6 +2,7 @@ using PokerDefense.Managers;
 using PokerDefense.Towers;
 using PokerDefense.Utils;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,16 +11,26 @@ namespace PokerDefense.UI.Popup
     public class UI_TowerTouchPopup : UI_Popup
     {
         TowerPanel touchedTowerPanel;
+        Tower touchedTower;
+        TextMeshProUGUI damageText, speedText, rangeText, criticalText;
+
+        GameObject towerIdleArea;
 
         enum GameObjects
         {
-            UpgradeButton,
+            DamageUpgradeButton,
+            SpeedUpgradeButton,
+            RangeUpgradeButton,
+            CriticalUpgradeButton,
+            DamageText,
+            SpeedText,
+            RangeText,
+            CriticalText,
             DestroyButton,
-            CancelButton,
             BackButton,
         }
 
-        private void Start()
+        private void Awake()
             => Init();
 
         public override void Init()
@@ -32,46 +43,90 @@ namespace PokerDefense.UI.Popup
 
         private void BindObjects()
         {
-            GameObject upgradeButton = GetObject((int)GameObjects.UpgradeButton);
-            AddUIEvent(upgradeButton, OnClickUpgradeButton, Define.UIEvent.Click);
-            AddButtonAnim(upgradeButton);
+            GameObject damageUpgradeButton = GetObject((int)GameObjects.DamageUpgradeButton);
+            AddUIEvent(damageUpgradeButton, OnClickDamageUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(damageUpgradeButton);
+
+            GameObject speedUpgradeButton = GetObject((int)GameObjects.SpeedUpgradeButton);
+            AddUIEvent(speedUpgradeButton, OnClickSpeedUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(speedUpgradeButton);
+
+            GameObject rangeUpgradeButton = GetObject((int)GameObjects.RangeUpgradeButton);
+            AddUIEvent(rangeUpgradeButton, OnClickRangeUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(rangeUpgradeButton);
+
+            GameObject criticalUpgradeButton = GetObject((int)GameObjects.CriticalUpgradeButton);
+            AddUIEvent(criticalUpgradeButton, OnClickCriticalUpgradeButton, Define.UIEvent.Click);
+            AddButtonAnim(criticalUpgradeButton);
+
+            damageText = GetObject((int)GameObjects.DamageText).GetComponent<TextMeshProUGUI>();
+            speedText = GetObject((int)GameObjects.SpeedText).GetComponent<TextMeshProUGUI>();
+            rangeText = GetObject((int)GameObjects.RangeText).GetComponent<TextMeshProUGUI>();
+            criticalText = GetObject((int)GameObjects.CriticalText).GetComponent<TextMeshProUGUI>();
 
             GameObject destroyButton = GetObject((int)GameObjects.DestroyButton);
             AddUIEvent(destroyButton, OnClickDestroyButton, Define.UIEvent.Click);
             AddButtonAnim(destroyButton);
-
-            GameObject cancelButton = GetObject((int)GameObjects.CancelButton);
-            AddUIEvent(cancelButton, OnClickCancelButton, Define.UIEvent.Click);
-            AddButtonAnim(cancelButton);
 
             GameObject backButton = GetObject((int)GameObjects.BackButton);
             AddUIEvent(backButton, OnClickBackButton, Define.UIEvent.Click);
             AddButtonAnim(backButton);
         }
 
-        public void SetTouchedTowerPanel(TowerPanel target)
+        public void InitUI(TowerPanel target)
         {
             touchedTowerPanel = target;
+            touchedTower = touchedTowerPanel.GetTower();
+            string towerName = touchedTower.towerIndivData.TowerName;
+
+            LoadTowerIdleAnim(towerName);
+            SetUIText(touchedTower);
 
             GameManager.Tower.StartTowerPanelSelect(touchedTowerPanel);
         }
 
-        private void OnClickUpgradeButton(PointerEventData evt)
+        private void LoadTowerIdleAnim(string towerName)
         {
-            Tower tower = touchedTowerPanel.GetTower();
-            tower.UpgradeDamageLevel();
+            towerIdleArea = GameObject.FindGameObjectWithTag("TowerIdleArea");
+            GameManager.Resource.Instantiate($"TowerIdle/{towerName}", towerIdleArea.transform);
+        }
+
+        private void SetUIText(Tower tower)
+        {
+            damageText.text = $"데미지 : {tower.towerIndivData.Damage.ToString()}";
+            speedText.text = $"공속 : {tower.towerIndivData.Speed.ToString()}";
+            rangeText.text = $"사거리 : {tower.towerIndivData.Range.ToString()}";
+            criticalText.text = $"크확 : {tower.towerIndivData.Critical.ToString()}";
+        }
+
+        private void OnClickDamageUpgradeButton(PointerEventData evt)
+        {
+            touchedTower.UpgradeDamageLevel();
+            SetUIText(touchedTower);
+        }
+
+        private void OnClickSpeedUpgradeButton(PointerEventData evt)
+        {
+            touchedTower.UpgradeSpeedLevel();
+            SetUIText(touchedTower);
+        }
+
+        private void OnClickRangeUpgradeButton(PointerEventData evt)
+        {
+            touchedTower.UpgradeRangeLevel();
+            SetUIText(touchedTower);
+        }
+
+        private void OnClickCriticalUpgradeButton(PointerEventData evt)
+        {
+            touchedTower.UpgradeCriticalLevel();
+            SetUIText(touchedTower);
         }
 
         private void OnClickDestroyButton(PointerEventData evt)
         {
             UI_TowerDestroyPopup popup = GameManager.UI.ShowPopupUI<UI_TowerDestroyPopup>();
             popup.SetTowerTouchPopup(this);
-        }
-
-        private void OnClickCancelButton(PointerEventData evt)
-        {
-            touchedTowerPanel.ResetPanel();
-            ClosePopupUI();
         }
 
         private void OnClickBackButton(PointerEventData evt)

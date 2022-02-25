@@ -81,7 +81,7 @@ namespace PokerDefense.Managers
 
         private Tower GetTowerObject(string towerName)
         {
-            GameObject towerObject = GameManager.Resource.Instantiate($"TowerPrefabs/{towerName}", selectedTowerPanel.transform);
+            GameObject towerObject = GameManager.Resource.Instantiate($"Tower/{towerName}", selectedTowerPanel.transform);
             return towerObject.GetComponent<Tower>();
         }
 

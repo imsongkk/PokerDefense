@@ -1,18 +1,82 @@
 {
-    "HighCard": {
-        "rareNess": 0,
-        "damage": 4,
-        "attackSpeed": 0.5,
-        "attackRange": 2,
-        "basePrice": 5,
-        "isHidden": false
-    },
-    "OnePair": {
-        "rareNess": 1,
-        "damage": 8,
-        "attackSpeed": 0.7,
-        "attackRange": 3,
-        "basePrice": 8,
-        "isHidden": false
-    }
+  "HighCard": {
+    "rareNess": 0,
+    "basePrice": 5,
+    "isHidden": false
+  },
+  "OnePair": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "TwoPair": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "Tripple": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "Straight": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "StraightFlush": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "RoyalStraightFlush": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "FullHouse": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "FourCards": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "Flush": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "Beast": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "RoyalStraight": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "Jackpot": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "FiveCards": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "BackStraight": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  },
+  "BackStraightFlush": {
+    "rareNess": 1,
+    "basePrice": 8,
+    "isHidden": false
+  }
 }

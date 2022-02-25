@@ -2,7 +2,8 @@
   "Easy": {
     "1": {
       "enemyName": "monsterA",
-      "count": 5,
+      "spawnCycle": 1.5,
+      "count": 1,
       "popup": false,
       "bonus": 0
     },

@@ -1,6 +1,6 @@
 {
   "hardNess": "Easy",
-  "stageNumber": 1,
+  "stageNumber": 2,
   "heart": 30,
   "gold": 10,
   "chance": 7,
@@ -11,9 +11,9 @@
       "attackSpeedLevel": 0,
       "attackRangeLevel": 0,
       "attackCriticalLevel": 0,
-      "towerType": 1,
+      "towerType": 2,
       "topCard": 0,
-      "towerIndex": 52
+      "towerIndex": 66
     }
   ]
 }
