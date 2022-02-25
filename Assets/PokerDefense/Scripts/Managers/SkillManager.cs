@@ -67,16 +67,13 @@ public class SkillManager : MonoBehaviour
                 {
                     // TODO : 시스템 메세지
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
-                    bool isSetSKillRange = false;
-                    Debug.Log("A");
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
-                        StartCoroutine(SpawnFireHole(rangeScreenPos, skillData[skillIndex]));
-                        isSetSKillRange = true;
-                        Debug.Log("C");
+						skillStarted[skillIndex].AddListener((a, b)=>{ SpawnFireHole(rangeScreenPos, skillData[skillIndex]); });
+						UseSkill(skillIndex);
                     });
-                    Debug.Log("B");
                 }
+                break;
             case 2: //EarthQuake
                 {
                     UseSkill(skillIndex);
@@ -90,13 +87,24 @@ public class SkillManager : MonoBehaviour
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
-                        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData[skillIndex].skillRange);
-                        foreach (var enemy in enemyList)
-                            enemy.OnDamage(skillData[skillIndex].skillDamage);
+                        skillStarted[skillIndex].AddListener((a, b) => { SpawnMeteo(rangeScreenPos, skillData[skillIndex]); });
+                        UseSkill(skillIndex);
                     });
                 }
                 break;
         }
+    }
+
+    private void SpawnFireHole(Vector2 rangeScreenPos, SkillData skillData)
+	{
+        StartCoroutine(SpawnFireHoleCoroutine(rangeScreenPos, skillData));
+    }
+
+    private void SpawnMeteo(Vector2 rangeScreenPos, SkillData skillData)
+	{
+        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData.skillRange);
+        foreach (var enemy in enemyList)
+            enemy.OnDamage(skillData.skillDamage);
     }
 
     private void UseSkill(int skillIndex)
@@ -152,7 +160,7 @@ public class SkillManager : MonoBehaviour
         StartCoroutine(SetTimer(coolTime, () => { SetCoolTime(skillIndex, false); }));
     }
 
-    IEnumerator SpawnFireHole(Vector2 fireHoleScreenPos, SkillData fireHoleskillData)
+    IEnumerator SpawnFireHoleCoroutine(Vector2 fireHoleScreenPos, SkillData fireHoleskillData)
     {
         float skillTime = fireHoleskillData.skillTime;
         float skillDamage = fireHoleskillData.skillDamage;

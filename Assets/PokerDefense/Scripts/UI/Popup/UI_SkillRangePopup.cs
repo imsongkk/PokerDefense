@@ -62,8 +62,6 @@ namespace PokerDefense.UI.Popup
             float unitInScreenSpace = Screen.height / (Camera.main.orthographicSize * 2); // 1920 / 32 = 60
             skillRangeCircle.GetComponent<RectTransform>().sizeDelta = unitInScreenSpace * new Vector2(2 * skillData.skillRange, 2 * skillData.skillRange);
             this.OnConfirmButton = OnConfirmButton;
-
-
         }
 
         private void OnClickConfirmButton(PointerEventData evt)
