@@ -49,7 +49,57 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    public void UseSkill(int skillIndex)
+    public void SkillClicked(int skillIndex)
+    {
+        if (!CheckSkillUseable(skillIndex))
+            return;
+
+        switch (skillIndex)
+        {
+            case 0: //TimeStop
+                {
+                    UseSkill(skillIndex);
+                    // TODO : 시스템 메세지
+                    // TODO : UI_InGameScene의 timeText 홀딩
+                }
+                break;
+            case 1: //FireHole
+                {
+                    // TODO : 시스템 메세지
+                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
+                    bool isSetSKillRange = false;
+                    Debug.Log("A");
+                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
+                    {
+                        StartCoroutine(SpawnFireHole(rangeScreenPos, skillData[skillIndex]));
+                        isSetSKillRange = true;
+                        Debug.Log("C");
+                    });
+                    Debug.Log("B");
+                }
+            case 2: //EarthQuake
+                {
+                    UseSkill(skillIndex);
+                    // TODO : 시스템 메세지
+                    // TODO : 상단에 지속시간 UI 띄우기
+                }
+                break;
+            case 3: //Meteo
+                {
+                    // TODO : 시스템 메세지
+                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
+                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
+                    {
+                        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData[skillIndex].skillRange);
+                        foreach (var enemy in enemyList)
+                            enemy.OnDamage(skillData[skillIndex].skillDamage);
+                    });
+                }
+                break;
+        }
+    }
+
+    private void UseSkill(int skillIndex)
     {
         float skillTime = skillData[skillIndex].skillTime;
         float coolTime = skillData[skillIndex].coolTime;
@@ -58,7 +108,7 @@ public class SkillManager : MonoBehaviour
         skillStarted[skillIndex]?.Invoke(skillTime, coolTime);
     }
 
-    public bool CheckSkillUse(int skillIndex)
+    private bool CheckSkillUseable(int skillIndex)
     {
         if (skillData[skillIndex].isInCoolTime)
         {
@@ -66,18 +116,19 @@ public class SkillManager : MonoBehaviour
             // TODO : 쿨타임 부족 시스템 메세지 띄우기
             return false;
         }
-        else if(GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
+        else if (GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
         {
             Debug.Log("지금은 스킬을 사용할 수 없습니다");
             // TODO : 시스템 메세지 띄우기
             return false;
         }
-        else if(skillData[skillIndex].skillCost > GameManager.Round.Gold)
+        else if (skillData[skillIndex].skillCost > GameManager.Round.Gold)
         {
             Debug.Log("코스트 부족");
             // TODO : 코스트 부족 시스템 메세지 띄우기
             return false;
         }
+
         return true;
     }
 
@@ -99,49 +150,6 @@ public class SkillManager : MonoBehaviour
 
         StartCoroutine(SetTimer(skillTime, skillFinished[skillIndex]));
         StartCoroutine(SetTimer(coolTime, () => { SetCoolTime(skillIndex, false); }));
-
-        ActIndivSkill(skillIndex);
-    }
-
-    private void ActIndivSkill(int skillIndex)
-    {
-        switch (skillIndex)
-        {
-            case 0: //TimeStop
-                {
-                    // TODO : 시스템 메세지
-                    // TODO : UI_InGameScene의 timeText 홀딩
-                }
-                break;
-            case 1: //FireHole
-                {
-                    // TODO : 시스템 메세지
-                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
-                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
-                    {
-                        StartCoroutine(SpawnFireHole(rangeScreenPos, skillData[skillIndex]));
-                    });
-                }
-                break;
-            case 2: //EarthQuake
-                {
-                    // TODO : 시스템 메세지
-                    // TODO : 상단에 지속시간 UI 띄우기
-                }
-                break;
-            case 3: //Meteo
-                {
-                    // TODO : 시스템 메세지
-                    var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
-                    popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) => 
-                    {
-                        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData[skillIndex].skillRange);
-                        foreach(var enemy in enemyList)
-                            enemy.OnDamage(skillData[skillIndex].skillDamage);
-                    });
-                }
-                break;
-        }
     }
 
     IEnumerator SpawnFireHole(Vector2 fireHoleScreenPos, SkillData fireHoleskillData)

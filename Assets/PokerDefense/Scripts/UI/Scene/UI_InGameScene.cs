@@ -60,23 +60,27 @@ namespace PokerDefense.UI.Scene
             AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
             AddButtonAnim(menuButton);
 
+            // 0번 스킬
             GameObject timeStopButton = GetObject((int)GameObjects.TimeStopSkillButton);
-            AddUIEvent(timeStopButton, OnClickTimeStopSkill, Define.UIEvent.Click);
+            AddUIEvent(timeStopButton, (evt) => { OnClickSkill(0); }, Define.UIEvent.Click);
             AddButtonAnim(timeStopButton);
             coolTimeImageList.Add(timeStopButton.transform.GetChild(1).GetComponent<Image>());
 
+            // 1번 스킬
             GameObject fireHoleButton = GetObject((int)GameObjects.FireHoleSkillButton);
-            AddUIEvent(fireHoleButton, OnClickFireHoleSkill, Define.UIEvent.Click);
+            AddUIEvent(fireHoleButton, (evt) => { OnClickSkill(1); }, Define.UIEvent.Click);
             AddButtonAnim(fireHoleButton);
             coolTimeImageList.Add(fireHoleButton.transform.GetChild(1).GetComponent<Image>());
 
+            // 2번 스킬
             GameObject earthQuakeButton = GetObject((int)GameObjects.EarthQuakeSkillButton);
-            AddUIEvent(earthQuakeButton, OnClickEarthQuakeSkill, Define.UIEvent.Click);
+            AddUIEvent(earthQuakeButton, (evt) => { OnClickSkill(2); }, Define.UIEvent.Click);
             AddButtonAnim(earthQuakeButton);
             coolTimeImageList.Add(earthQuakeButton.transform.GetChild(1).GetComponent<Image>());
 
+            // 3번 스킬
             GameObject meteoButton = GetObject((int)GameObjects.MeteoSkillButton);
-            AddUIEvent(meteoButton, OnClickMeteoSkill, Define.UIEvent.Click);
+            AddUIEvent(meteoButton,  (evt) => { OnClickSkill(3); }, Define.UIEvent.Click);
             AddButtonAnim(meteoButton);
             coolTimeImageList.Add(meteoButton.transform.GetChild(1).GetComponent<Image>());
 
@@ -117,32 +121,9 @@ namespace PokerDefense.UI.Scene
             GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
         }
 
-        private void OnClickTimeStopSkill(PointerEventData evt)
+        private void OnClickSkill(int skillIndex)
         {
-            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var skillIndex);
-            if (GameManager.Skill.CheckSkillUse(skillIndex))
-                GameManager.Skill.UseSkill(skillIndex);
-        }
-
-        private void OnClickFireHoleSkill(PointerEventData evt)
-        {
-            GameManager.Data.SkillIndexDict.TryGetValue("FireHole", out var skillIndex);
-            if (GameManager.Skill.CheckSkillUse(skillIndex))
-                GameManager.Skill.UseSkill(skillIndex);
-        }
-
-        private void OnClickEarthQuakeSkill(PointerEventData evt)
-        {
-            GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var skillIndex);
-            if (GameManager.Skill.CheckSkillUse(skillIndex))
-                GameManager.Skill.UseSkill(skillIndex);
-        }
-
-        private void OnClickMeteoSkill(PointerEventData evt)
-        {
-            GameManager.Data.SkillIndexDict.TryGetValue("Meteo", out var skillIndex);
-            if (GameManager.Skill.CheckSkillUse(skillIndex))
-                GameManager.Skill.UseSkill(skillIndex);
+            GameManager.Skill.SkillClicked(skillIndex);
         }
 
         public void ActivateBottomUI()
