@@ -1083,6 +1083,7 @@ Transform:
   - {fileID: 1504277983}
   - {fileID: 33468448}
   - {fileID: 1604784250}
+  - {fileID: 1387457635}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -110595,6 +110596,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 082e0dd106ccdba45ae046e008c24c1d, type: 3}
+--- !u!1 &1387457634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1387457635}
+  - component: {fileID: 1387457636}
+  m_Layer: 0
+  m_Name: SystemMessageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1387457635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387457634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 133202867}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1387457636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387457634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7261360a5bf0b3b42ac3f6736eeb85fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1394130512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -114689,6 +114733,7 @@ MonoBehaviour:
   PokerManagerObject: {fileID: 1504277982}
   HorseManagerObject: {fileID: 33468446}
   SkillManagerObject: {fileID: 1604784249}
+  SystemMessageManagerObject: {fileID: 1387457634}
 --- !u!4 &1899421615
 Transform:
   m_ObjectHideFlags: 0

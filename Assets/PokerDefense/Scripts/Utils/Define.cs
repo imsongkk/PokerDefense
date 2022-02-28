@@ -73,6 +73,32 @@ namespace PokerDefense.Utils
             Jackpot
         }
 
+        public enum SystemMessage
+        {
+            Save,
+            
+            ReadyStateStart,
+            TowerStateStart,
+            HorseStateStart,
+            PokerStateStart,
+            PlayStateStart,
+
+            TimeStopSkillUse,
+            FireHoleSkillUse,
+            EarthQuakeSkillUse,
+            MeteoSkillUse,
+
+            IsCoolTime,
+            NotPlayState,
+            NotEnoughCost,
+
+            Item1Use,
+            Item2Use,
+            Item3Use,
+            Item4Use,
+            Item5Use,
+        }
+
         public struct Hand
         {
             private HandRank handRank;  // 패의 종류

@@ -1,6 +1,7 @@
 using PokerDefense.Data;
 using PokerDefense.Managers;
 using PokerDefense.UI.Popup;
+using PokerDefense.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,36 +59,35 @@ public class SkillManager : MonoBehaviour
         {
             case 0: //TimeStop
                 {
+                    GameManager.SystemText.SetSystemMessage(Define.SystemMessage.TimeStopSkillUse);
                     UseSkill(skillIndex);
-                    // TODO : 시스템 메세지
                     // TODO : UI_InGameScene의 timeText 홀딩
                 }
                 break;
             case 1: //FireHole
                 {
-                    // TODO : 시스템 메세지
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
 						skillStarted[skillIndex].AddListener((a, b)=>{ SpawnFireHole(rangeScreenPos, skillData[skillIndex]); });
-						UseSkill(skillIndex);
+                        GameManager.SystemText.SetSystemMessage(Define.SystemMessage.FireHoleSkillUse);
+                        UseSkill(skillIndex);
                     });
                 }
                 break;
             case 2: //EarthQuake
                 {
+                    GameManager.SystemText.SetSystemMessage(Define.SystemMessage.EarthQuakeSkillUse);
                     UseSkill(skillIndex);
-                    // TODO : 시스템 메세지
-                    // TODO : 상단에 지속시간 UI 띄우기
                 }
                 break;
             case 3: //Meteo
                 {
-                    // TODO : 시스템 메세지
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
                         skillStarted[skillIndex].AddListener((a, b) => { SpawnMeteo(rangeScreenPos, skillData[skillIndex]); });
+                        GameManager.SystemText.SetSystemMessage(Define.SystemMessage.MeteoSkillUse);
                         UseSkill(skillIndex);
                     });
                 }
@@ -120,18 +120,21 @@ public class SkillManager : MonoBehaviour
     {
         if (skillData[skillIndex].isInCoolTime)
         {
+            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.IsCoolTime);
             Debug.Log("쿨타임 입니다");
             // TODO : 쿨타임 부족 시스템 메세지 띄우기
             return false;
         }
         else if (GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
         {
+            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotPlayState);
             Debug.Log("지금은 스킬을 사용할 수 없습니다");
             // TODO : 시스템 메세지 띄우기
             return false;
         }
         else if (skillData[skillIndex].skillCost > GameManager.Round.Gold)
         {
+            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotEnoughCost);
             Debug.Log("코스트 부족");
             // TODO : 코스트 부족 시스템 메세지 띄우기
             return false;

@@ -21,7 +21,8 @@ namespace PokerDefense.Managers
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
         public Dictionary<int, SkillData> SkillDataDict { get; private set; } = new Dictionary<int, SkillData>(); // key : skillIndex
-        public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // ket : skillName
+        public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // key : skillName
+        public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -31,6 +32,7 @@ namespace PokerDefense.Managers
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
         private string skilJsonFileName = "SkillData";
+        private string systemMessageJsonFileName = "SystemMessageData";
 
         public void InitDataManager()
         {
@@ -41,6 +43,7 @@ namespace PokerDefense.Managers
             InitEnemyDataDict();
             InitHardNessDataDict();
             InitSkillDataDict();
+            InitSystemMessageDict();
         }
 
         private void InitPlayerData()
@@ -86,6 +89,11 @@ namespace PokerDefense.Managers
                 SkillDataDict.Add(skill.Value.skillIndex, skill.Value);
                 SkillIndexDict.Add(skill.Value.skillName, skill.Value.skillIndex);
             }
+        }
+
+        private void InitSystemMessageDict()
+        {
+            SystemMessageDict = LoadJsonFile<Dictionary<string, string>>(jsonLocation, systemMessageJsonFileName);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

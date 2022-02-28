@@ -278,6 +278,7 @@ namespace PokerDefense.Managers
 
         private void ReadyStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
             Debug.Log(state.ToString());
             timeLeft = 2f;
             stateChanged = false;
@@ -285,6 +286,7 @@ namespace PokerDefense.Managers
 
         private void TowerStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.TowerStateStart);
             Debug.Log(state.ToString());
             timeLeft = timeTowerSetLimit;
             stateChanged = false;
@@ -292,6 +294,7 @@ namespace PokerDefense.Managers
 
         private void PokerStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.PokerStateStart);
             Debug.Log(state.ToString());
             GameManager.UI.ShowPopupUI<UI_Poker>();
             GameManager.Poker.PokerStart();
@@ -300,6 +303,7 @@ namespace PokerDefense.Managers
 
         private void HorseStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.HorseStateStart);
             Debug.Log(state.ToString());
             ui_InGameScene.ActivateBottomUI();
             GameManager.UI.ShowPopupUI<UI_HorseSelectPopup>();
@@ -308,6 +312,7 @@ namespace PokerDefense.Managers
 
         private void PlayStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.PlayStateStart);
             Debug.Log(state.ToString());
             RoundStarted?.Invoke(this, null);
             stateChanged = false;

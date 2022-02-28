@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 using PokerDefense.UI.Popup;
 using System.Collections;
 using UnityEngine.UI;
-using PokerDefense.Data;
 using System.Collections.Generic;
 
 namespace PokerDefense.UI.Scene
@@ -18,6 +17,7 @@ namespace PokerDefense.UI.Scene
             MenuButton,
             Bottom,
             RemainUI,
+            SystemMessageUI,
 
             MeteoSkillButton,
             TimeStopSkillButton,
@@ -32,7 +32,7 @@ namespace PokerDefense.UI.Scene
 
         TextMeshProUGUI heartText, goldText, roundText, chanceText;
         GameObject bottomUIObject;
-        Transform remainUiObject;
+        Transform remainUiObject, systemMessageUIObject;
 
         private void Start()
             => Init();
@@ -45,6 +45,7 @@ namespace PokerDefense.UI.Scene
             BindObject();
 
             GameManager.Round.SetUIIngameScene(this);
+            GameManager.SystemText.InitSystemTextManager(systemMessageUIObject);
         }
 
         private void BindObject()
@@ -56,6 +57,7 @@ namespace PokerDefense.UI.Scene
 
             bottomUIObject = GetObject((int)GameObjects.Bottom);
             remainUiObject = GetObject((int)GameObjects.RemainUI).transform;
+            systemMessageUIObject = GetObject((int)GameObjects.SystemMessageUI).transform;
 
             List<Image> coolTimeImageList = new List<Image>();
 
