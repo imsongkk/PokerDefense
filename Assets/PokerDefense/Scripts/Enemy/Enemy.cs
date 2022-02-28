@@ -62,7 +62,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
+        //MoveHpBar();
         //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
     }
 
@@ -87,14 +87,15 @@ public class Enemy : MonoBehaviour
         => Init();
 
     private void Init()
-        => StartCoroutine(Move());
-    
+    {
+        MoveHpBar(); // 1프레임 방지
+        StartCoroutine(Move());
+    }
 
     public void InitEnemy(string enemyName, EnemyData enemyOriginData)
     {
         enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp, 
             enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
-
         this.enemyOriginData = enemyOriginData;
 
         RefreshHpBar();
@@ -106,6 +107,8 @@ public class Enemy : MonoBehaviour
         {
             while (curIndex < wayPoints.Count)
             {
+                MoveHpBar();
+
                 moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
                 if(Util.GetNearFourDirection(moveDirection) == Vector2.right)
                     transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
@@ -155,6 +158,11 @@ public class Enemy : MonoBehaviour
                 Destroy(gameObject);
             GameManager.Round.OnEnemyGetEndPoint();
         }
+    }
+
+    private void MoveHpBar()
+    {
+        hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
     }
 
     private void RefreshHpBar()

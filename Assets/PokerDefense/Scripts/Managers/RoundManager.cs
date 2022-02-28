@@ -336,7 +336,6 @@ namespace PokerDefense.Managers
             float spawnCycle = roundData.spawnCycle;
 
             WaitForSeconds spawnDelay = new WaitForSeconds(spawnCycle);
-            GameObject enemyPrefab = GameManager.Resource.Load<GameObject>($"Prefabs/Enemy/{currentEnemyName}");
 
             while (remainEnemyCount > 0)
             {
@@ -349,7 +348,9 @@ namespace PokerDefense.Managers
                     interruptedSpawnTime = null;
                 }
 
-                GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
+                GameObject enemyObject = GameManager.Resource.Instantiate($"Enemy/{currentEnemyName}", enemyGroup);
+                enemyObject.transform.position = startPoint.position;
+
                 Enemy enemy = enemyObject.GetComponent<Enemy>();
                 enemy.InitEnemy(currentEnemyName, currentRoundEnemyData);
 
