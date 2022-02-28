@@ -183,7 +183,6 @@ public class SkillManager : MonoBehaviour
             accumulatedTic += skillTic;
             yield return skillTicDelay;
         }
-        yield return skillTicDelay;
         fireHole.SetActive(false);
     }
 

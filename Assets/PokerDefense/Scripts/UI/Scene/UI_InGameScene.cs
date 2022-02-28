@@ -17,6 +17,7 @@ namespace PokerDefense.UI.Scene
         {
             MenuButton,
             Bottom,
+            RemainUI,
 
             MeteoSkillButton,
             TimeStopSkillButton,
@@ -31,6 +32,7 @@ namespace PokerDefense.UI.Scene
 
         TextMeshProUGUI heartText, goldText, roundText, chanceText;
         GameObject bottomUIObject;
+        Transform remainUiObject;
 
         private void Start()
             => Init();
@@ -53,6 +55,7 @@ namespace PokerDefense.UI.Scene
             chanceText = GetObject((int)GameObjects.ChanceText).GetComponent<TextMeshProUGUI>();
 
             bottomUIObject = GetObject((int)GameObjects.Bottom);
+            remainUiObject = GetObject((int)GameObjects.RemainUI).transform;
 
             List<Image> coolTimeImageList = new List<Image>();
 
@@ -87,18 +90,23 @@ namespace PokerDefense.UI.Scene
             for(int i=0; i<coolTimeImageList.Count; i++)
             {
                 int lambdaCapture = i;
-                GameManager.Skill.skillStarted[lambdaCapture].AddListener((skillTime, coolTime) =>
+                GameManager.Skill.skillStarted[lambdaCapture].AddListener((remainTime, coolTime) =>
                 {
-                    ShowRemainTime(skillTime);
+                    ShowRemainTime(remainTime);
                     StartCoroutine(ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime));
                 });
             }
         }
 
-        private void ShowRemainTime(float skillTime)
+        private void ShowRemainTime(float remainTime)
         {
-            if (skillTime == 0) return;
-            // TODO : 인게임 화면에 지속시간 얼마나 남았는지 Bar형태로 조그맣게 띄우기
+            if (remainTime == 0) return;
+            GameObject remainItem = GameManager.Resource.Instantiate("UI/UI_RemainItem");
+            remainItem.transform.SetParent(remainUiObject);
+
+            UI_RemainItem uI_RemainItem = remainItem.GetComponent<UI_RemainItem>();
+            // TODO : skill 혹은 유저 아이템에 맞는 Image 전달해주기
+            uI_RemainItem.InitUI(remainTime, null);
         }
 
         IEnumerator ShowCoolTime(Image targetImage, float coolTime)
