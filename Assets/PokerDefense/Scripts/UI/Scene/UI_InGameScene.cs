@@ -28,9 +28,10 @@ namespace PokerDefense.UI.Scene
             GoldText,
             RoundText,
             ChanceText,
+            DiedEnemyCountText,
         }
 
-        TextMeshProUGUI heartText, goldText, roundText, chanceText;
+        TextMeshProUGUI heartText, goldText, roundText, chanceText, diedEnemyCountText;
         GameObject bottomUIObject;
         Transform remainUiObject, systemMessageUIObject;
 
@@ -54,6 +55,7 @@ namespace PokerDefense.UI.Scene
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
             chanceText = GetObject((int)GameObjects.ChanceText).GetComponent<TextMeshProUGUI>();
+            diedEnemyCountText = GetObject((int)GameObjects.DiedEnemyCountText).GetComponent<TextMeshProUGUI>();
 
             bottomUIObject = GetObject((int)GameObjects.Bottom);
             remainUiObject = GetObject((int)GameObjects.RemainUI).transform;
@@ -163,5 +165,7 @@ namespace PokerDefense.UI.Scene
             => goldText.text = count.ToString();
         public void SetChanceText(int count)
             => chanceText.text = count.ToString();
+        public void SetDiedEnemyCountText(int count, int entireCount)
+            => diedEnemyCountText.text = $"처치한 몬스터 : {count.ToString()} / {entireCount.ToString()}";
     }
 }

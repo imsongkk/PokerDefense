@@ -139,6 +139,7 @@ namespace PokerDefense.Managers
             Round = 2;
             // TODO : currentRoundEnemyData, roundData update
             ui_InGameScene.SetRoundText(Round);
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, roundData.count);
             enemyKillCount = 0;
         }
 
@@ -391,6 +392,7 @@ namespace PokerDefense.Managers
         public void OnEnemyDied()
         {
             enemyKillCount++;
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, roundData.count);
             if (enemyKillCount == roundData.count)
             {
                 RoundClear();
@@ -410,6 +412,9 @@ namespace PokerDefense.Managers
         }
 
         public void SetUIIngameScene(UI_InGameScene target)
-            => ui_InGameScene = target;
+        {
+            ui_InGameScene = target;
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, roundData.count);
+        }
     }
 }
