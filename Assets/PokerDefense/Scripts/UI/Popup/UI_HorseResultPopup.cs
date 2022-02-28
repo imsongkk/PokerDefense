@@ -12,10 +12,11 @@ namespace PokerDefense.UI.Popup
         {
             ConfirmButton,
             ResultText,
+            PriceText,
         }
 
-        TextMeshProUGUI resultText;
-        Action OnConfirm;
+        TextMeshProUGUI resultText, priceText;
+        Action OnConfirmAction;
 
         private void Awake()
             => Init();
@@ -32,20 +33,23 @@ namespace PokerDefense.UI.Popup
             Bind<GameObject>(typeof(GameObjects));
 
             resultText = GetObject((int)GameObjects.ResultText).GetComponent<TextMeshProUGUI>();
+            priceText = GetObject((int)GameObjects.PriceText).GetComponent<TextMeshProUGUI>();
 
             GameObject confirmButton = GetObject((int)GameObjects.ConfirmButton);
             AddUIEvent(confirmButton, OnClickConfirmButton, Define.UIEvent.Click);
             AddButtonAnim(confirmButton);
         }
 
-        public void InitUI(int rank, Action OnConfirm)
+        public void InitUI(int rank, int price, Action OnConfirmAction)
         {
+            this.OnConfirmAction = OnConfirmAction;
+
             if (rank == 1)
                 RefreshResultText("¿ì½Â!");
             else
                 RefreshResultText($"¾Æ½±°Ô {rank}µî");
 
-            this.OnConfirm = OnConfirm;
+            priceText.text = $"¿ì½Â »ó±Ý : {price}";
         }
 
         private void RefreshResultText(string text)
@@ -53,7 +57,7 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
-            OnConfirm?.Invoke();
+            OnConfirmAction?.Invoke();
             ClosePopupUI();
         }
     }

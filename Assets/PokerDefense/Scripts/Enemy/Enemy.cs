@@ -60,6 +60,8 @@ public class Enemy : MonoBehaviour
 
     Vector3 moveDirection;
 
+    bool died = false;
+
     private void Update()
     {
         //MoveHpBar();
@@ -123,6 +125,8 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
+        died = true;
+
         Debug.Log($"{enemyIndivData.Name} died");
 
         if(enemyIndivData.IsBoss)
@@ -138,7 +142,7 @@ public class Enemy : MonoBehaviour
         Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
         enemyIndivData.OnDamage(damage);
-        if (enemyIndivData.Hp < 0)
+        if (enemyIndivData.Hp < 0 && !died)
             Die();
         RefreshHpBar();
     }

@@ -158,12 +158,12 @@ namespace PokerDefense.Towers
             originScaleX = transform.localScale.x;
         }
 
-        protected void StartAttacking(object sender, System.EventArgs e)
+        protected void StartAttacking()
         {
             StartCoroutine(Attacking());
         }
 
-        protected void StopAttacking(object sender, System.EventArgs e)
+        protected void StopAttacking()
         {
             StopCoroutine(Attacking());
         }
@@ -204,8 +204,8 @@ namespace PokerDefense.Towers
             GameManager.Data.TowerUniqueDataDict.TryGetValue(towerName, out towerUniqueData);
             if (towerUniqueData == null) return;
 
-            GameManager.Round.RoundStarted += StartAttacking;
-            GameManager.Round.RoundFinished += StopAttacking;
+            GameManager.Round.RoundStarted.AddListener(StartAttacking);
+            GameManager.Round.RoundFinished.AddListener(StopAttacking);
 
             towerIndivData = new TowerIndivData(this, towerSaveData.topCard, towerSaveData.attackDamageLevel,
                 towerSaveData.attackSpeedLevel, towerSaveData.attackRangeLevel, towerSaveData.attackCriticalLevel,

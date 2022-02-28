@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Managers
@@ -53,14 +54,14 @@ namespace PokerDefense.Managers
 
         UI_InGameScene ui_InGameScene;
 
-        public event EventHandler RoundStarted, RoundFinished;
+        public UnityEvent RoundStarted = new UnityEvent();
+        public UnityEvent RoundFinished = new UnityEvent();
 
         private int round;
         private string hardNess;
         private int heart;
         private int gold;
         private int chance;
-        private int horse;
 
         public int Round
         {
@@ -104,15 +105,6 @@ namespace PokerDefense.Managers
             {
                 chance = value;
                 ui_InGameScene.SetChanceText(chance);
-            }
-        }
-        public int Horse
-        {
-            get { return horse; }
-            set
-            {
-                horse = value;
-                ui_InGameScene.SetHorseIndex(horse);
             }
         }
 
@@ -263,6 +255,13 @@ namespace PokerDefense.Managers
                         PlayStateStart();
                         StartCoroutine(EnemySpawnCoroutine);
                     }
+                    if (stateBreak)
+                    {
+                        CurrentState = RoundState.READY;
+                        stateBreak = false;
+                        ChangeRound();
+                        break;
+                    }
                     break;
             }
         }
@@ -315,7 +314,7 @@ namespace PokerDefense.Managers
         {
             GameManager.SystemText.SetSystemMessage(SystemMessage.PlayStateStart);
             Debug.Log(state.ToString());
-            RoundStarted?.Invoke(this, null);
+            RoundStarted?.Invoke();
             stateChanged = false;
         }
 
@@ -403,7 +402,9 @@ namespace PokerDefense.Managers
         private void RoundClear()
         {
             Debug.Log("Round Clear!");
-            GameManager.Horse.InterruptRace(ChangeRound);
+            RoundFinished?.Invoke();
+            BreakState();
+            //GameManager.Horse.InterruptRace(ChangeRound);
         }
 
 

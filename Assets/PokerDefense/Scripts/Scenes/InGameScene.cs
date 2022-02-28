@@ -33,6 +33,7 @@ namespace PokerDefense.Scene
             GameManager.Data.InitDataManager();
             GameManager.Skill.InitSkillManager();
             GameManager.Round.InitRoundManager();
+            GameManager.Horse.InitHorseManager();
 
             AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }

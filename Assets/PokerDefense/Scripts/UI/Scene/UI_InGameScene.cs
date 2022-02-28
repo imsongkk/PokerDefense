@@ -151,12 +151,6 @@ namespace PokerDefense.UI.Scene
             SetChanceText(chance);
         }
 
-        public void SetHorseIndex(int index)
-        {
-            GameManager.Horse.RunHorse(index);
-            GameManager.Round.BreakState();
-        }
-
         public void SetRoundText(int round)
             => roundText.text = $"Round : {round}";
         public void SetHeartText(int count)

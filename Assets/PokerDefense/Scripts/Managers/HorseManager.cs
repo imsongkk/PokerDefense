@@ -14,32 +14,81 @@ public class HorseManager : MonoBehaviour
     [SerializeField] Transform endLine;
 
     const float updateInterval = 0.5f;
-    const int randomNumberCount = 120;
+    const int randomNumberCount = 60;
     const int horseCount = 4;
     
     WaitForSeconds updateDelay;
 
     int[,] horseSnapshots = new int[horseCount, randomNumberCount];
-    int[] horseSum = new int[horseCount]; // [120, 1200]
-    int winnerHorseIndex = 0;
-    int playerHorseIndex;
+    int[,] horseSnapshotSum = new int[horseCount, randomNumberCount]; // [60, 1200], 말이 달린 거리의 누적합
     float originHorsePositionX;
-    float ratio;
+    int winnerHorseIndex = 0;
 
-    private void Start()
+    int? playerHorseIndex = null;
+    int? lastSnapShotIndex = null;
+
+    private int? PlayerHorseIndex
     {
-        originHorsePositionX = horseList[0].position.x;
+        get => playerHorseIndex;
+        set
+        {
+            playerHorseIndex = value;
+            if(playerHorseIndex != null)
+                RunHorse();
+
+            GameManager.Round.BreakState();
+        }
     }
 
-    public void RunHorse(int playerHorseIndex)
+    private int? BettingPrice { get; set; } = null;
+
+    public int HorseCount => horseCount;
+
+    public void InitHorseManager()
     {
-        this.playerHorseIndex = playerHorseIndex;
-
-        CalculateWinner();
-        ActivePlayerHorsePointer();
-
+        originHorsePositionX = horseList[0].position.x;
         updateDelay = new WaitForSeconds(updateInterval);
 
+        GameManager.Round.RoundFinished.AddListener(OnRoundFinished);
+    }
+
+    private void ResetHorseAndPrice()
+    {
+        ResetHorse();
+        BettingPrice = null;
+    }
+
+    private void ResetHorse()
+    {
+        lastSnapShotIndex = null;
+
+        for (int i = 0; i < horseCount; i++)
+            horseList[i].position = new Vector3(originHorsePositionX, horseList[i].position.y, horseList[i].position.z);
+
+        ResetPlayerHorsePointer();
+    }
+
+    public void OnBettingFinished(int? playerHorseIndex, int? bettingPrice)
+    {
+        PlayerHorseIndex = playerHorseIndex;
+        BettingPrice = bettingPrice;
+    }
+
+    private void OnRoundFinished()
+    {
+        StopHorse();
+
+        var popup = GameManager.UI.ShowPopupUI<UI_HorseResultPopup>();
+        int playerRank = GetPlayerRank();
+        int price = GetPlayerPrice(playerRank);
+        popup.InitUI(playerRank, price, ResetHorseAndPrice);
+        // TODO : 보상 지급 Action에 태우기
+    }
+
+    public void RunHorse()
+    {
+        CalculateWinnerInAdvance();
+        ActivePlayerHorsePointer();
         StartCoroutine("Run");
     }
 
@@ -49,18 +98,20 @@ public class HorseManager : MonoBehaviour
             horseAnimatorList[i].SetBool("IsRunning", true);
 
         float distance = Vector3.Distance(startLine.position, endLine.position);
-        ratio = distance / horseSum[winnerHorseIndex];
-        int snapshotIndex = 0;
+        float ratio = distance / horseSnapshotSum[winnerHorseIndex, randomNumberCount - 1];
+        
+        lastSnapShotIndex = 0;
 
-        while(snapshotIndex < randomNumberCount)
+        while(lastSnapShotIndex < randomNumberCount)
         {
             for(int i=0; i<horseCount; i++)
             {
-                horseList[i].position += ratio * new Vector3(horseSnapshots[i, snapshotIndex], 0, 0);
+                horseList[i].position += ratio * new Vector3(horseSnapshots[i, lastSnapShotIndex.Value], 0, 0);
             }
-            snapshotIndex++;
             yield return updateDelay;
+            lastSnapShotIndex++;
         }
+        lastSnapShotIndex--;
 
         StopHorse();
     }
@@ -73,70 +124,56 @@ public class HorseManager : MonoBehaviour
             horseAnimatorList[i].SetBool("IsRunning", false);
     }
 
-    private void SetHorseLastSnapShot()
-    {
-        for (int i = 0; i < horseCount; i++)
-            horseList[i].position = new Vector3(originHorsePositionX + ratio * horseSum[i], horseList[i].position.y, horseList[i].position.z);
-    }
-
-    public void InterruptRace(Action OnConfirm) // 경주가 다 끝나기 전에 라운드 종료 됐을 때 호출
-    {
-        StopHorse();
-        SetHorseLastSnapShot();
-
-        var popup = GameManager.UI.ShowPopupUI<UI_HorseResultPopup>();
-        int playerRank = GetPlayerRank();
-
-        OnConfirm += ResetHorse;
-
-        popup.InitUI(playerRank, OnConfirm);
-    }
-
-    private void ResetHorse() // 경주 결과 확인 창이 닫힐 때 호출
-    {
-        ResetPlayerHorsePointer();
-
-        Debug.Log("Horse Reset");
-        for (int i = 0; i < horseCount; i++)
-            horseList[i].position = new Vector3(originHorsePositionX, horseList[i].position.y, horseList[i].position.z);
-    }
-
-    private void CalculateWinner()
+    private void CalculateWinnerInAdvance()
     {
         for (int i = 0; i < horseCount; i++)
         {
+            horseSnapshotSum[i, 0] = 0;
+
             for (int j = 0; j < randomNumberCount; j++)
             {
-                horseSnapshots[i, j] = Range(1, 11); // [1, 10]
-                horseSum[i] += horseSnapshots[i, j];
+                horseSnapshots[i, j] = Range(1, 21); // [1, 20]
+                if (j == 0)
+                    horseSnapshotSum[i, j] = horseSnapshots[i, j];
+                else
+                    horseSnapshotSum[i, j] = horseSnapshotSum[i, j - 1] + horseSnapshots[i, j];
             }
         }
 
         for (int i = 0; i < horseCount; i++)
         {
-            if (horseSum[i] > horseSum[winnerHorseIndex])
+            if (horseSnapshotSum[i, randomNumberCount - 1] > horseSnapshotSum[winnerHorseIndex, randomNumberCount - 1])
                 winnerHorseIndex = i;
         }
     }
 
     private void ActivePlayerHorsePointer()
-        => horseList[playerHorseIndex].GetChild(1).gameObject.SetActive(true);
+        => horseList[playerHorseIndex.Value].GetChild(1).gameObject.SetActive(true);
 
     private void ResetPlayerHorsePointer()
-        => horseList[playerHorseIndex].GetChild(1).gameObject.SetActive(false);
+        => horseList[playerHorseIndex.Value].GetChild(1).gameObject.SetActive(false);
 
     private int GetPlayerRank()
     {
         List<int> list = new List<int>();
         for (int i = 0; i < horseCount; i++)
-            list.Add(horseSum[i]);
+            list.Add(horseSnapshotSum[i, lastSnapShotIndex.Value]);
         list.Sort();
 
-        for(int i = horseCount - 1; i >= 0; i--)
+        for (int i = horseCount - 1; i >= 0; i--)
         {
-            if (list[i] == horseSum[playerHorseIndex])
+            if (list[i] == horseSnapshotSum[playerHorseIndex.Value, lastSnapShotIndex.Value])
                 return horseCount - i;
         }
+        return 0;
+    }
+
+    private int GetPlayerPrice(int playerRank)
+    {
+        // TODO : 임시
+        if (playerRank != 1) return 0;
+        if(BettingPrice.HasValue)
+            return BettingPrice.Value * 2;
         return 0;
     }
 }
