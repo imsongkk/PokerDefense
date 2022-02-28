@@ -357,6 +357,7 @@ namespace PokerDefense.Managers
         public List<Enemy> GetEnemyInRange(Vector2 screenSpaceRangeOffset, float range)
         {
             // range * 100이 screen상의 길이
+            float pixelsPerUnitInScreenSpace = Utils.Util.GetPixelsPerUnitInScreenSpace();
             List<Enemy> ret = new List<Enemy>();
             for(int i=0; i<enemyGroup.childCount; i++)
             {
@@ -364,7 +365,7 @@ namespace PokerDefense.Managers
                 Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
                 float distance = Vector2.Distance(screenSpaceRangeOffset, enemyScreenPos);
 
-                if (distance <= range * 100) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
+                if (distance <= range * pixelsPerUnitInScreenSpace) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
                     ret.Add(enemy);
             }
             return ret;

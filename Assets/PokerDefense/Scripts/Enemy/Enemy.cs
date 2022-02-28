@@ -78,7 +78,6 @@ public class Enemy : MonoBehaviour
         GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
         {
             GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
-            Debug.Log(skillData.slowPercent);
             enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
         });
         GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
