@@ -220,7 +220,7 @@ namespace PokerDefense.Towers
             if (enemies.Count == 0) return;
 
             Enemy target = enemies[0];
-            Define.EnemyType enemyType = target.EnemyIndivData.EnemyType;
+            Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
             TowerType towerType = towerIndivData.TowerType;
             bool isCritical = UnityEngine.Random.value <= towerIndivData.Critical / 100;
 

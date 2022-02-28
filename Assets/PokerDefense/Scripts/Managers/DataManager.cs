@@ -20,6 +20,8 @@ namespace PokerDefense.Managers
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
+        public Dictionary<int, SkillData> SkillDataDict { get; private set; } = new Dictionary<int, SkillData>(); // key : skillIndex
+        public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // ket : skillName
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -28,6 +30,7 @@ namespace PokerDefense.Managers
         private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
+        private string skilJsonFileName = "SkillData";
 
         public void InitDataManager()
         {
@@ -37,6 +40,7 @@ namespace PokerDefense.Managers
             InitRoundDataDict();
             InitEnemyDataDict();
             InitHardNessDataDict();
+            InitSkillDataDict();
         }
 
         private void InitPlayerData()
@@ -71,6 +75,17 @@ namespace PokerDefense.Managers
         private void InitHardNessDataDict()
         {
             HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
+        }
+
+        private void InitSkillDataDict()
+        {
+            var skillDataDict = LoadJsonFile<Dictionary<string, SkillData>>(jsonLocation, skilJsonFileName);
+
+            foreach (var skill in skillDataDict)
+            {
+                SkillDataDict.Add(skill.Value.skillIndex, skill.Value);
+                SkillIndexDict.Add(skill.Value.skillName, skill.Value.skillIndex);
+            }
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

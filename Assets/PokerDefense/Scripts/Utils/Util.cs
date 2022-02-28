@@ -99,6 +99,9 @@ namespace PokerDefense.Utils
         public static Vector2 GetNearTwoDirection(Vector2 from, Vector2 to)
             => GetNearTwoDirection(to - from);
 
+        public static float GetPixelsPerUnitInScreenSpace()
+            => Screen.height / (Camera.main.orthographicSize * 2);
+
         /*
         public static IEnumerator Fade(float fadeTime, bool isOut, Action callback)
         {

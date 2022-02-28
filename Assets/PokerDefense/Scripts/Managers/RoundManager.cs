@@ -39,6 +39,11 @@ namespace PokerDefense.Managers
             }
         }
 
+        public List<Enemy> CurrentEnemies
+        {
+            get => enemyGroup.GetComponentsInChildren<Enemy>().ToList();
+        }
+
         Transform startPoint, endPoint;
         Transform wayPointParent;
         Transform enemyGroup;
@@ -123,6 +128,11 @@ namespace PokerDefense.Managers
         RoundData roundData;
         HardNessData hardNessData;
 
+        IEnumerator EnemySpawnCoroutine;
+        bool isStoppedEnemySpawn = false;
+        float? lastSpawnTime = null;
+        float? interruptedSpawnTime = null;
+
         private void ChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
         {
             CurrentState = RoundState.READY;
@@ -147,6 +157,12 @@ namespace PokerDefense.Managers
             InitEnemyData();
 
             StartCoroutine(InitUIText());
+
+            EnemySpawnCoroutine = SpawnCurrentRoundEnemy();
+
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
 
             CurrentState = RoundState.READY;
         }
@@ -244,7 +260,7 @@ namespace PokerDefense.Managers
                     if (stateChanged)
                     {
                         PlayStateStart();
-                        StartCoroutine(SpawnCurrentRoundEnemy());
+                        StartCoroutine(EnemySpawnCoroutine);
                     }
                     break;
             }
@@ -318,14 +334,41 @@ namespace PokerDefense.Managers
 
             while (remainEnemyCount > 0)
             {
+                // TimeStop Skill 때문에 작성됨
+                if (isStoppedEnemySpawn)
+                    yield return new WaitUntil(() => isStoppedEnemySpawn == false);
+                if (interruptedSpawnTime != null)
+                {
+                    yield return new WaitForSeconds(spawnCycle - (interruptedSpawnTime.Value - lastSpawnTime.Value));
+                    interruptedSpawnTime = null;
+                }
+
                 GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
                 Enemy enemy = enemyObject.GetComponent<Enemy>();
                 enemy.InitEnemy(currentEnemyName, currentRoundEnemyData);
 
                 remainEnemyCount--;
+                lastSpawnTime = Time.time;
                 yield return spawnDelay;
             }
-            yield return null;
+            yield break;
+        }
+
+        public List<Enemy> GetEnemyInRange(Vector2 screenSpaceRangeOffset, float range)
+        {
+            // range * 100이 screen상의 길이
+            float pixelsPerUnitInScreenSpace = Utils.Util.GetPixelsPerUnitInScreenSpace();
+            List<Enemy> ret = new List<Enemy>();
+            for(int i=0; i<enemyGroup.childCount; i++)
+            {
+                Enemy enemy = enemyGroup.GetChild(i).GetComponent<Enemy>();
+                Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
+                float distance = Vector2.Distance(screenSpaceRangeOffset, enemyScreenPos);
+
+                if (distance <= range * pixelsPerUnitInScreenSpace) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
+                    ret.Add(enemy);
+            }
+            return ret;
         }
 
         public void OnEnemyGetEndPoint()
