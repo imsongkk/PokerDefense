@@ -72,6 +72,8 @@ public class HorseManager : MonoBehaviour
     {
         PlayerHorseIndex = playerHorseIndex;
         BettingPrice = bettingPrice;
+        if (BettingPrice.HasValue)
+            GameManager.Round.Gold -= BettingPrice.Value;
     }
 
     private void OnRoundFinished()
@@ -81,8 +83,11 @@ public class HorseManager : MonoBehaviour
         var popup = GameManager.UI.ShowPopupUI<UI_HorseResultPopup>();
         int playerRank = GetPlayerRank();
         int price = GetPlayerPrice(playerRank);
-        popup.InitUI(playerRank, price, ResetHorseAndPrice);
-        // TODO : 보상 지급 Action에 태우기
+        popup.InitUI(playerRank, price, ()=>
+        {
+            GameManager.Round.Gold += price;
+            ResetHorseAndPrice();
+        });
     }
 
     public void RunHorse()
@@ -148,10 +153,10 @@ public class HorseManager : MonoBehaviour
     }
 
     private void ActivePlayerHorsePointer()
-        => horseList[playerHorseIndex.Value].GetChild(1).gameObject.SetActive(true);
+        => horseList[PlayerHorseIndex.Value].GetChild(1).gameObject.SetActive(true);
 
     private void ResetPlayerHorsePointer()
-        => horseList[playerHorseIndex.Value].GetChild(1).gameObject.SetActive(false);
+        => horseList[PlayerHorseIndex.Value].GetChild(1).gameObject.SetActive(false);
 
     private int GetPlayerRank()
     {
@@ -162,7 +167,7 @@ public class HorseManager : MonoBehaviour
 
         for (int i = horseCount - 1; i >= 0; i--)
         {
-            if (list[i] == horseSnapshotSum[playerHorseIndex.Value, lastSnapShotIndex.Value])
+            if (list[i] == horseSnapshotSum[PlayerHorseIndex.Value, lastSnapShotIndex.Value])
                 return horseCount - i;
         }
         return 0;
