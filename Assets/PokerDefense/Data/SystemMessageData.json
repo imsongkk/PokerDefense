@@ -1,16 +1,14 @@
 {
-  "ReadyStateStart" : "준비",
-  "TowerStateStart" : "타워를 건설하세요",
-  "PokerStateStart" : "포커 패를 뽑으세요",
-  "HorseStateStart" : "경주마를 선택하세요",
-  "PlayStateStart" : "라운드가 시작되었습니다",
-
-  "TimeStopSkillUse" : "타임스탑 사용",
-  "FireHoleSkillUse" : "불구덩이 사용",
-  "EarthQuakeSkillUse" : "지진 사용",
-  "MeteoSkillUse" : "메테오 사용",
-
-  "IsCoolTime" : "쿨타임 입니다!",
-  "NotPlayState" : "지금은 스킬을 사용할 수 없습니다!",
-  "NotEnoughCost" : "코스트가 부족합니다!",
+  "ReadyStateStart": "준비",
+  "TowerStateStart": "타워를 건설하세요",
+  "PokerStateStart": "포커 패를 뽑으세요",
+  "HorseStateStart": "경주마를 선택하세요",
+  "PlayStateStart": "라운드가 시작되었습니다",
+  "TimeStopSkillUse": "타임스탑 사용",
+  "FireHoleSkillUse": "불구덩이 사용",
+  "EarthQuakeSkillUse": "지진 사용",
+  "MeteoSkillUse": "메테오 사용",
+  "IsCoolTime": "쿨타임 입니다!",
+  "NotPlayState": "지금은 스킬을 사용할 수 없습니다!",
+  "NotEnoughCost": "코스트가 부족합니다!"
 }
