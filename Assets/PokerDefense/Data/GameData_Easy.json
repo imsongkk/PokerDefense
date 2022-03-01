@@ -1,0 +1,29 @@
+[
+    {
+        "popup": false,
+        "bonus": 0,
+        "enemyList": [
+            {
+                "enemyName": "monsterA",
+                "enemyNumber": 3,
+                "spawnCycle": 1.5
+            }
+        ]
+    },
+    {
+        "popup": false,
+        "bonus": 0,
+        "enemyList": [
+            {
+                "enemyName": "monsterA",
+                "enemyNumber": 5,
+                "spawnCycle": 1.5
+            },
+            {
+                "enemyName": "monsterB",
+                "enemyNumber": 2,
+                "spawnCycle": 2.0
+            }
+        ]
+    }
+]
