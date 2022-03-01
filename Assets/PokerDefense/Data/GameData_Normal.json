@@ -4,8 +4,8 @@
         "bonus": 0,
         "enemyList": [
             {
-                "enemyName": "monsterA",
-                "enemyNumber": 3,
+                "enemyName": "enemyNameA",
+                "enemyNumber": 5,
                 "spawnCycle": 1.5
             }
         ]
@@ -15,13 +15,13 @@
         "bonus": 0,
         "enemyList": [
             {
-                "enemyName": "monsterA",
-                "enemyNumber": 5,
+                "enemyName": "enemyNameA",
+                "enemyNumber": 10,
                 "spawnCycle": 1.5
             },
             {
-                "enemyName": "monsterB",
-                "enemyNumber": 2,
+                "enemyName": "enemyNameB",
+                "enemyNumber": 5,
                 "spawnCycle": 2.0
             }
         ]

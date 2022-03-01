@@ -6,7 +6,14 @@ namespace PokerDefense.Data
     [Serializable]
     public class NewRoundData
     {
-        public Dictionary<string, int> enemyDict;
+        public struct EnemySpawn
+        {
+            public string enemyName;
+            public int enemyNumber;
+            public float spawnCycle;
+        }
+
+        public List<EnemySpawn> enemyList;
         public bool popup;
         public int bonus;
     }

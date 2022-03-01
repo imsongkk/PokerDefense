@@ -21,6 +21,7 @@ namespace PokerDefense.Managers
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
 
+        public Dictionary<string, GameData> GameDataDict { get; private set; }
         public GameData CurrentGameData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
@@ -39,9 +40,9 @@ namespace PokerDefense.Managers
 
             InitTowerData();
             // InitRoundDataDict();
-            // InitGameData("Easy");
-            InitEnemyDataDict();
             InitHardNessDataDict();
+            InitGameDataDict();
+            InitEnemyDataDict();
         }
 
         private void InitPlayerData()
@@ -59,6 +60,16 @@ namespace PokerDefense.Managers
             //Debug.Log(JsonConvert.SerializeObject(TowerDataDict));
         }
 
+        private void InitEnemyDataDict()
+        {
+            EnemyDataDict = LoadJsonFile<Dictionary<string, EnemyData>>(jsonLocation, enemyJsonFileName);
+        }
+
+        private void InitHardNessDataDict()
+        {
+            HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
+        }
+
         private void InitRoundDataDict()
         {
             RoundDataDict = LoadJsonFile<Dictionary<string, Dictionary<string, RoundData>>>(jsonLocation, roundJsonFileName);
@@ -71,22 +82,23 @@ namespace PokerDefense.Managers
         // ^ old rounddata
         // v new rounddata
 
-        private void InitGameData(string difficulty)
+        private void InitGameDataDict()
         {
-            // difficulty: Easy, Normal, Hard
-            CurrentGameData = new GameData(difficulty);
-            string difficultyFileName = gameDataJsonFileName + difficulty;
-            CurrentGameData.gameRounds = LoadJsonFile<List<NewRoundData>>(jsonLocation, difficultyFileName);
+            GameDataDict = new Dictionary<string, GameData>();
+            //* After HardnessData init
+            foreach (var difficulty in HardNessDataDict.Keys)
+            {
+                GameData gameData = new GameData(difficulty);
+                string difficultyFileName = gameDataJsonFileName + difficulty;
+                gameData.gameRounds = LoadJsonFile<List<NewRoundData>>(jsonLocation, difficultyFileName);
+                GameDataDict.Add(difficulty, gameData);
+            }
         }
 
-        private void InitEnemyDataDict()
+        public void SelectGameData(string difficulty)
         {
-            EnemyDataDict = LoadJsonFile<Dictionary<string, EnemyData>>(jsonLocation, enemyJsonFileName);
-        }
-
-        private void InitHardNessDataDict()
-        {
-            HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
+            // difficulty: Easy, Normal, Hard, Crazy
+            CurrentGameData = GameDataDict[difficulty];
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

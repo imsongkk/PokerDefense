@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+//! Deprecated
+
 namespace PokerDefense.Data
 {
     [Serializable]
