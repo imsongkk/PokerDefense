@@ -12,10 +12,13 @@ namespace PokerDefense.Managers
         ResourceManager resourceManager = new ResourceManager();
         TowerManager towerManager = new TowerManager();
         DataManager dataManager = new DataManager();
+
+        SystemMessageManager systemMessageManager = null;
         RoundManager roundManager = null;
         InputManager inputManager = null;
         PokerManager pokerManager = null;
         HorseManager horseManager = null;
+        SkillManager skillManager = null;
 
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
@@ -25,7 +28,8 @@ namespace PokerDefense.Managers
         public static InputManager Input { get => Instance.inputManager; }
         public static PokerManager Poker { get => Instance.pokerManager; }
         public static HorseManager Horse { get => Instance.horseManager; }
-
+        public static SkillManager Skill { get => Instance.skillManager; }
+        public static SystemMessageManager SystemText { get => Instance.systemMessageManager; }
         void Awake()
             => Init();
 
@@ -56,6 +60,20 @@ namespace PokerDefense.Managers
             if (instance.horseManager != null) return;
 
             instance.horseManager = target.GetComponent<HorseManager>();
+        }
+
+        public static void AddSkillManager(GameObject target)
+        {
+            if (instance.skillManager != null) return;
+
+            instance.skillManager = target.GetComponent<SkillManager>();
+        }
+
+        public static void AddSystemMessageManager(GameObject target)
+        {
+            if (instance.systemMessageManager != null) return;
+
+            instance.systemMessageManager = target.GetComponent<SystemMessageManager>();
         }
 
         public static void GetOrAddPokerManager(GameObject target)

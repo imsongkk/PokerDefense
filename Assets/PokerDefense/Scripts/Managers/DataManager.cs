@@ -20,6 +20,9 @@ namespace PokerDefense.Managers
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
         public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
+        public Dictionary<int, SkillData> SkillDataDict { get; private set; } = new Dictionary<int, SkillData>(); // key : skillIndex
+        public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // key : skillName
+        public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
 
         public Dictionary<string, GameData> GameDataDict { get; private set; }
         public GameData CurrentGameData { get; private set; }
@@ -31,6 +34,8 @@ namespace PokerDefense.Managers
         private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
+        private string skilJsonFileName = "SkillData";
+        private string systemMessageJsonFileName = "SystemMessageData";
 
         private string gameDataJsonFileName = "GameData_";
 
@@ -39,10 +44,11 @@ namespace PokerDefense.Managers
             InitPlayerData();
 
             InitTowerData();
-            // InitRoundDataDict();
             InitHardNessDataDict();
             InitGameDataDict();
             InitEnemyDataDict();
+            InitSkillDataDict();
+            InitSystemMessageDict();
         }
 
         private void InitPlayerData()
@@ -99,6 +105,22 @@ namespace PokerDefense.Managers
         {
             // difficulty: Easy, Normal, Hard, Crazy
             CurrentGameData = GameDataDict[difficulty];
+        }
+
+        private void InitSkillDataDict()
+        {
+            var skillDataDict = LoadJsonFile<Dictionary<string, SkillData>>(jsonLocation, skilJsonFileName);
+
+            foreach (var skill in skillDataDict)
+            {
+                SkillDataDict.Add(skill.Value.skillIndex, skill.Value);
+                SkillIndexDict.Add(skill.Value.skillName, skill.Value.skillIndex);
+            }
+        }
+
+        private void InitSystemMessageDict()
+        {
+            SystemMessageDict = LoadJsonFile<Dictionary<string, string>>(jsonLocation, systemMessageJsonFileName);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

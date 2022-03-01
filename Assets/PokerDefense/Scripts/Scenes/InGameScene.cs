@@ -7,7 +7,7 @@ namespace PokerDefense.Scene
 {
     public class InGameScene : BaseScene
     {
-        [SerializeField] private GameObject RoundManagerObject, PokerManagerObject, HorseManagerObject;
+        [SerializeField] private GameObject RoundManagerObject, PokerManagerObject, HorseManagerObject, SkillManagerObject, SystemMessageManagerObject;
 
         private void Start()
             => Init();
@@ -25,11 +25,15 @@ namespace PokerDefense.Scene
             GameManager.AddRoundManager(RoundManagerObject);
             GameManager.GetOrAddPokerManager(PokerManagerObject);
             GameManager.AddHorseManager(HorseManagerObject);
+            GameManager.AddSkillManager(SkillManagerObject);
+            GameManager.AddSystemMessageManager(SystemMessageManagerObject);
             GameManager.AddInputManager();
 
             GameManager.Tower.InitTowerManager();
             GameManager.Data.InitDataManager();
+            GameManager.Skill.InitSkillManager();
             GameManager.Round.InitRoundManager();
+            GameManager.Horse.InitHorseManager();
 
             AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }

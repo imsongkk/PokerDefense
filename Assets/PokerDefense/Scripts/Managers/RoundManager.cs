@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Managers
@@ -39,6 +40,11 @@ namespace PokerDefense.Managers
             }
         }
 
+        public List<Enemy> CurrentEnemies
+        {
+            get => enemyGroup.GetComponentsInChildren<Enemy>().ToList();
+        }
+
         Transform startPoint, endPoint;
         Transform wayPointParent;
         Transform enemyGroup;
@@ -48,14 +54,14 @@ namespace PokerDefense.Managers
 
         UI_InGameScene ui_InGameScene;
 
-        public event EventHandler RoundStarted, RoundFinished;
+        public UnityEvent RoundStarted = new UnityEvent();
+        public UnityEvent RoundFinished = new UnityEvent();
 
         private int round;
         private string hardNess;
         private int heart;
         private int gold;
         private int chance;
-        private int horse;
 
         public int Round
         {
@@ -103,15 +109,6 @@ namespace PokerDefense.Managers
                 ui_InGameScene.SetChanceText(chance);
             }
         }
-        public int Horse
-        {
-            get { return horse; }
-            set
-            {
-                horse = value;
-                ui_InGameScene.SetHorseIndex(horse);
-            }
-        }
 
         private float timeTowerSetLimit = 8f;
         private float timeLeft = 0;
@@ -127,6 +124,11 @@ namespace PokerDefense.Managers
         NewRoundData currentRoundData;
         HardNessData hardNessData;
 
+        IEnumerator EnemySpawnCoroutine;
+        bool isStoppedEnemySpawn = false;
+        float? lastSpawnTime = null;
+        float? interruptedSpawnTime = null;
+
         private void ChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
         {
             CurrentState = RoundState.READY;
@@ -134,6 +136,7 @@ namespace PokerDefense.Managers
             currentRoundData = roundDataList[++Round - 1];
             totalEnemyNumber = CountRoundEnemy();
             ui_InGameScene.SetRoundText(Round);
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
             enemyKillCount = 0;
         }
 
@@ -142,7 +145,7 @@ namespace PokerDefense.Managers
             /* TODO : 데이터 실체화
              * Round와 HardNess는 MainScene에서 받아옴
              */
-            round = 2;
+            round = 1;
             HardNess = "Easy";
 
             // 순서 주의
@@ -153,6 +156,12 @@ namespace PokerDefense.Managers
 
 
             StartCoroutine(InitUIText());
+
+            EnemySpawnCoroutine = SpawnRoundEnemy();
+
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
 
             CurrentState = RoundState.READY;
         }
@@ -247,6 +256,13 @@ namespace PokerDefense.Managers
                     {
                         PlayStateStart();
                     }
+                    if (stateBreak)
+                    {
+                        CurrentState = RoundState.READY;
+                        stateBreak = false;
+                        ChangeRound();
+                        break;
+                    }
                     break;
             }
         }
@@ -263,6 +279,7 @@ namespace PokerDefense.Managers
 
         private void ReadyStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
             Debug.Log(state.ToString());
             timeLeft = 2f;
 
@@ -271,6 +288,7 @@ namespace PokerDefense.Managers
 
         private void TowerStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.TowerStateStart);
             Debug.Log(state.ToString());
             timeLeft = timeTowerSetLimit;
             stateChanged = false;
@@ -278,6 +296,7 @@ namespace PokerDefense.Managers
 
         private void PokerStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.PokerStateStart);
             Debug.Log(state.ToString());
             GameManager.UI.ShowPopupUI<UI_Poker>();
             GameManager.Poker.PokerStart();
@@ -286,6 +305,7 @@ namespace PokerDefense.Managers
 
         private void HorseStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.HorseStateStart);
             Debug.Log(state.ToString());
             ui_InGameScene.ActivateBottomUI();
             GameManager.UI.ShowPopupUI<UI_HorseSelectPopup>();
@@ -294,9 +314,10 @@ namespace PokerDefense.Managers
 
         private void PlayStateStart()
         {
+            GameManager.SystemText.SetSystemMessage(SystemMessage.PlayStateStart);
             Debug.Log(state.ToString());
-            RoundStarted?.Invoke(this, null);
-            StartCoroutine(SpawnRoundEnemy());
+            RoundStarted?.Invoke();
+            StartCoroutine(EnemySpawnCoroutine);
             stateChanged = false;
         }
 
@@ -340,6 +361,15 @@ namespace PokerDefense.Managers
 
                 while (remainEnemyNumber > 0)
                 {
+                    if (isStoppedEnemySpawn)
+                        yield return new WaitUntil(() => isStoppedEnemySpawn == false);
+                    if (interruptedSpawnTime != null)
+                    {
+                        yield return new WaitForSeconds(spawn.spawnCycle - (interruptedSpawnTime.Value - lastSpawnTime.Value));
+                        interruptedSpawnTime = null;
+                    }
+                    lastSpawnTime = Time.time;
+
                     GameObject enemyObject = Instantiate(enemyPrefab, startPoint.position, Quaternion.identity, enemyGroup);
                     Enemy enemy = enemyObject.GetComponent<Enemy>();
                     GameManager.Data.EnemyDataDict.TryGetValue(currentEnemyName, out currentEnemyData);
@@ -350,7 +380,24 @@ namespace PokerDefense.Managers
                 }
                 yield return null;
             }
-            yield return null;
+            yield break;
+        }
+
+        public List<Enemy> GetEnemyInRange(Vector2 screenSpaceRangeOffset, float range)
+        {
+            // range * 100이 screen상의 길이
+            float pixelsPerUnitInScreenSpace = Utils.Util.GetPixelsPerUnitInScreenSpace();
+            List<Enemy> ret = new List<Enemy>();
+            for (int i = 0; i < enemyGroup.childCount; i++)
+            {
+                Enemy enemy = enemyGroup.GetChild(i).GetComponent<Enemy>();
+                Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
+                float distance = Vector2.Distance(screenSpaceRangeOffset, enemyScreenPos);
+
+                if (distance <= range * pixelsPerUnitInScreenSpace) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
+                    ret.Add(enemy);
+            }
+            return ret;
         }
 
         public void OnEnemyGetEndPoint()
@@ -368,6 +415,7 @@ namespace PokerDefense.Managers
         public void OnEnemyDied()
         {
             enemyKillCount++;
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
             if (enemyKillCount >= totalEnemyNumber)
             {
                 RoundClear();
@@ -377,7 +425,9 @@ namespace PokerDefense.Managers
         private void RoundClear()
         {
             Debug.Log("Round Clear!");
-            GameManager.Horse.InterruptRace(ChangeRound);
+            RoundFinished?.Invoke();
+            BreakState();
+            //GameManager.Horse.InterruptRace(ChangeRound);
         }
 
 
@@ -387,6 +437,9 @@ namespace PokerDefense.Managers
         }
 
         public void SetUIIngameScene(UI_InGameScene target)
-            => ui_InGameScene = target;
+        {
+            ui_InGameScene = target;
+            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
+        }
     }
 }
