@@ -1,6 +1,5 @@
 using PokerDefense.Managers;
 using PokerDefense.UI.Scene;
-using PokerDefense.UI.Popup;
 using UnityEngine;
 
 namespace PokerDefense.Scene
@@ -8,6 +7,7 @@ namespace PokerDefense.Scene
     public class InGameScene : BaseScene
     {
         [SerializeField] private GameObject RoundManagerObject, PokerManagerObject, HorseManagerObject, SkillManagerObject, SystemMessageManagerObject;
+        UI_InGameScene uI_InGameScene;
 
         private void Start()
             => Init();
@@ -15,7 +15,7 @@ namespace PokerDefense.Scene
         protected override void Init()
         {
             base.Init();
-            GameManager.UI.ShowSceneUI<UI_InGameScene>();
+            uI_InGameScene = GameManager.UI.ShowSceneUI<UI_InGameScene>();
 
             InitManagers();
         }
@@ -32,8 +32,9 @@ namespace PokerDefense.Scene
             GameManager.Tower.InitTowerManager();
             GameManager.Data.InitDataManager();
             GameManager.Skill.InitSkillManager();
-            GameManager.Round.InitRoundManager();
+            GameManager.Round.InitRoundManager(uI_InGameScene);
             GameManager.Horse.InitHorseManager();
+            GameManager.SystemText.InitSystemTextManager(uI_InGameScene);
 
             AddOnDestroyAction(() => GameManager.DeleteInputManager());
         }

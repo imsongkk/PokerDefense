@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour
         {
             // TODO : 보스 죽음 팝업
         }
-        GameManager.Round.OnEnemyDied();
+        GameManager.Round.EnemyKillCount++;
         Destroy(gameObject);
     }
 
@@ -160,8 +160,19 @@ public class Enemy : MonoBehaviour
         {
             if (curIndex + 2 >= wayPoints.Count)
                 Destroy(gameObject);
-            GameManager.Round.OnEnemyGetEndPoint();
+            GameManager.Round.EnemyEndPointCount++;
         }
+    }
+
+    public bool IsInRange(Vector2 screenSpaceOffset, float range)
+    {
+        float pixelsPerUnitInScreenSpace = Util.GetPixelsPerUnitInScreenSpace();
+        Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        float distance = Vector2.Distance(screenSpaceOffset, enemyScreenPos);
+
+        if (distance <= range * pixelsPerUnitInScreenSpace)
+            return true;
+        return false;
     }
 
     private void MoveHpBar()
