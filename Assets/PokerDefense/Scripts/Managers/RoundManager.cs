@@ -77,7 +77,8 @@ namespace PokerDefense.Managers
                 round = value;
                 if (round == roundDataList.Count + 1)
                     GameClear();
-                ui_InGameScene.SetRoundText(round);
+                ui_InGameScene.SetCurrentRoundCountText(round, roundDataList.Count);
+                //ui_InGameScene.SetRoundText(round);
                 InitCurrentRound();
             }
         }
@@ -161,6 +162,7 @@ namespace PokerDefense.Managers
             InitWayPoints();
             InitTimeStopSkill();
             InitEnemySpawner();
+            InitTimer();
 
             HardNess = "Easy";
             Round = 1;
@@ -206,7 +208,18 @@ namespace PokerDefense.Managers
         private void InitEnemySpawner()
         {
             EnemySpawnCoroutine = SpawnRoundEnemy();
-            RoundStarted.AddListener(() => StartCoroutine(EnemySpawnCoroutine)); ;
+            RoundStarted.AddListener(() => StartCoroutine(EnemySpawnCoroutine));
+        }
+
+        private void InitTimer()
+        {
+            TimerCoroutine = Timer();
+            RoundStarted.AddListener(() => StartCoroutine(TimerCoroutine));
+            RoundFinished.AddListener(() =>
+            {
+                StopCoroutine(TimerCoroutine);
+                ui_InGameScene.SetElapsedTimeCountText(0);
+            });
         }
 
         private void Update()
@@ -405,6 +418,21 @@ namespace PokerDefense.Managers
                 return;
             CurrentState = RoundState.PLAY;
             stateChanged = true;
+        }
+
+
+        IEnumerator TimerCoroutine;
+
+        IEnumerator Timer()
+        {
+            int elapsedTime = 0;
+            WaitForSeconds timeDelay = new WaitForSeconds(1f);
+            while(true)
+            {
+                elapsedTime++;
+                yield return timeDelay;
+                ui_InGameScene.SetElapsedTimeCountText(elapsedTime);
+            }
         }
     }
 }

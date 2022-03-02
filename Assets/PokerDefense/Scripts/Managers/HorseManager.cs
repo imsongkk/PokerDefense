@@ -78,16 +78,19 @@ public class HorseManager : MonoBehaviour
 
     private void OnRoundFinished()
     {
-        StopHorse();
-
-        var popup = GameManager.UI.ShowPopupUI<UI_HorseResultPopup>();
-        int playerRank = GetPlayerRank();
-        int price = GetPlayerPrice(playerRank);
-        popup.InitUI(playerRank, price, ()=>
+        if (PlayerHorseIndex.HasValue)
         {
-            GameManager.Round.Gold += price;
-            ResetHorseAndPrice();
-        });
+            StopHorse();
+
+            var popup = GameManager.UI.ShowPopupUI<UI_HorseResultPopup>();
+            int playerRank = GetPlayerRank();
+            int price = GetPlayerPrice(playerRank);
+            popup.InitUI(playerRank, price, () =>
+            {
+                GameManager.Round.Gold += price;
+                ResetHorseAndPrice();
+            });
+        }
     }
 
     public void RunHorse()

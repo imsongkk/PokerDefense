@@ -7,6 +7,7 @@ using PokerDefense.UI.Popup;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 namespace PokerDefense.UI.Scene
 {
@@ -29,10 +30,12 @@ namespace PokerDefense.UI.Scene
             GoldText,
             RoundText,
             ChanceText,
+            CurrentRoundCountText,
             DiedEnemyCountText,
+            ElapsedTimeCountText,
         }
 
-        TextMeshProUGUI heartText, goldText, roundText, chanceText, diedEnemyCountText;
+        TextMeshProUGUI heartText, goldText, roundText, chanceText, currentRoundCountText, diedEnemyCountText, elapsedTimeCountText;
         GameObject bottomUIObject;
         Transform remainUiObject, systemMessageUIObject;
 
@@ -77,7 +80,9 @@ namespace PokerDefense.UI.Scene
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
             chanceText = GetObject((int)GameObjects.ChanceText).GetComponent<TextMeshProUGUI>();
+            currentRoundCountText = GetObject((int)GameObjects.CurrentRoundCountText).GetComponent<TextMeshProUGUI>();
             diedEnemyCountText = GetObject((int)GameObjects.DiedEnemyCountText).GetComponent<TextMeshProUGUI>();
+            elapsedTimeCountText = GetObject((int)GameObjects.ElapsedTimeCountText).GetComponent<TextMeshProUGUI>();
 
             bottomUIObject = GetObject((int)GameObjects.Bottom);
             remainUiObject = GetObject((int)GameObjects.RemainUI).transform;
@@ -173,7 +178,16 @@ namespace PokerDefense.UI.Scene
             => goldText.text = count.ToString();
         public void SetChanceText(int count)
             => chanceText.text = count.ToString();
+        public void SetCurrentRoundCountText(int count, int entireCount)
+            => currentRoundCountText.text = $"현재 웨이브 : {count} / {entireCount}";
         public void SetDiedEnemyCountText(int count, int entireCount)
-            => diedEnemyCountText.text = $"처치한 몬스터 : {count.ToString()} / {entireCount.ToString()}";
+            => diedEnemyCountText.text = $"처치한 몬스터 : {count} / {entireCount}";
+
+        TimeSpan time;
+        public void SetElapsedTimeCountText(int sec) // 라운드 시작 기준
+        {
+            time = TimeSpan.FromSeconds(sec);
+            elapsedTimeCountText.text = $"라운드 경과 : {time.Minutes:D2}:{time.Seconds:D2}";
+        }
     }
 }
