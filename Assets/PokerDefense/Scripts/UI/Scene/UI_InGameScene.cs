@@ -23,6 +23,7 @@ namespace PokerDefense.UI.Scene
             TimeStopSkillButton,
             FireHoleSkillButton,
             EarthQuakeSkillButton,
+            ReadyButton,
 
             HeartText,
             GoldText,
@@ -35,22 +36,43 @@ namespace PokerDefense.UI.Scene
         GameObject bottomUIObject;
         Transform remainUiObject, systemMessageUIObject;
 
-        private void Start()
+        List<Image> coolTimeImageList = new List<Image>();
+
+        private void Awake()
             => Init();
+
+        private void Start()
+            => InitUI();
 
         public override void Init()
         {
             base.Init();
 
-            Bind<GameObject>(typeof(GameObjects));
             BindObject();
+        }
 
-            GameManager.Round.SetUIIngameScene(this);
-            GameManager.SystemText.InitSystemTextManager(systemMessageUIObject);
+        private void InitUI()
+        {
+            InitCoolTimeImage();
+        }
+
+        private void InitCoolTimeImage()
+        {
+            for (int i = 0; i < coolTimeImageList.Count; i++)
+            {
+                int lambdaCapture = i;
+                GameManager.Skill.skillStarted[lambdaCapture].AddListener((remainTime, coolTime) =>
+                {
+                    ShowRemainTime(remainTime);
+                    StartCoroutine(ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime));
+                });
+            }
         }
 
         private void BindObject()
         {
+            Bind<GameObject>(typeof(GameObjects));
+
             heartText = GetObject((int)GameObjects.HeartText).GetComponent<TextMeshProUGUI>();
             goldText = GetObject((int)GameObjects.GoldText).GetComponent<TextMeshProUGUI>();
             roundText = GetObject((int)GameObjects.RoundText).GetComponent<TextMeshProUGUI>();
@@ -61,11 +83,13 @@ namespace PokerDefense.UI.Scene
             remainUiObject = GetObject((int)GameObjects.RemainUI).transform;
             systemMessageUIObject = GetObject((int)GameObjects.SystemMessageUI).transform;
 
-            List<Image> coolTimeImageList = new List<Image>();
-
             GameObject menuButton = GetObject((int)GameObjects.MenuButton);
             AddUIEvent(menuButton, OnClickMenuButton, Define.UIEvent.Click);
             AddButtonAnim(menuButton);
+
+            GameObject readyButton = GetObject((int)GameObjects.ReadyButton);
+            AddUIEvent(readyButton, OnClickReadyButton, Define.UIEvent.Click);
+            AddButtonAnim(readyButton);
 
             // 0¹ø ½ºÅ³
             GameObject timeStopButton = GetObject((int)GameObjects.TimeStopSkillButton);
@@ -90,16 +114,6 @@ namespace PokerDefense.UI.Scene
             AddUIEvent(meteoButton,  (evt) => { OnClickSkill(3); }, Define.UIEvent.Click);
             AddButtonAnim(meteoButton);
             coolTimeImageList.Add(meteoButton.transform.GetChild(1).GetComponent<Image>());
-
-            for(int i=0; i<coolTimeImageList.Count; i++)
-            {
-                int lambdaCapture = i;
-                GameManager.Skill.skillStarted[lambdaCapture].AddListener((remainTime, coolTime) =>
-                {
-                    ShowRemainTime(remainTime);
-                    StartCoroutine(ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime));
-                });
-            }
         }
 
         private void ShowRemainTime(float remainTime)
@@ -133,6 +147,11 @@ namespace PokerDefense.UI.Scene
             GameManager.UI.ShowPopupUI<UI_InGameMenuPopup>();
         }
 
+        private void OnClickReadyButton(PointerEventData evt)
+        {
+            GameManager.Round.OnClickReadyButton();
+        }
+
         private void OnClickSkill(int skillIndex)
         {
             GameManager.Skill.SkillClicked(skillIndex);
@@ -143,13 +162,8 @@ namespace PokerDefense.UI.Scene
             bottomUIObject.SetActive(true);
         }
 
-        public void InitText(int round, int heart, int gold, int chance)
-        {
-            SetRoundText(round);
-            SetHeartText(heart);
-            SetGoldText(gold);
-            SetChanceText(chance);
-        }
+        public Transform GetSystemMessageUIObject()
+            => systemMessageUIObject;
 
         public void SetRoundText(int round)
             => roundText.text = $"Round : {round}";

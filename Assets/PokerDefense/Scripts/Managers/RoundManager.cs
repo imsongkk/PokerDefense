@@ -1,10 +1,8 @@
 using PokerDefense.Data;
 using PokerDefense.UI.Popup;
 using PokerDefense.UI.Scene;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using static PokerDefense.Utils.Define;
@@ -40,11 +38,6 @@ namespace PokerDefense.Managers
             }
         }
 
-        public List<Enemy> CurrentEnemies
-        {
-            get => enemyGroup.GetComponentsInChildren<Enemy>().ToList();
-        }
-
         Transform startPoint, endPoint;
         Transform wayPointParent;
         Transform enemyGroup;
@@ -57,43 +50,51 @@ namespace PokerDefense.Managers
         public UnityEvent RoundStarted = new UnityEvent();
         public UnityEvent RoundFinished = new UnityEvent();
 
-        private int round;
         private string hardNess;
+        private int round;
         private int heart;
         private int gold;
         private int chance;
-
-        public int Round
-        {
-            get { return round; }
-            set
-            {
-                round = value;
-                ui_InGameScene.SetRoundText(round);
-                //TODO 라운드 변경 시 작용
-            }
-        }
+        private int enemyKillCount;
+        private int enemyEndPointCount;
 
         public string HardNess
         {
-            get { return hardNess; }
-            set
+            get => hardNess;
+            private set
             {
                 hardNess = value;
+                // 순서 주의
+                InitHardNessData();
+                InitGameRoundData();
+            }
+        }
+        public int Round
+        {
+            get => round;
+            private set
+            {
+                round = value;
+                if (round == roundDataList.Count + 1)
+                    GameClear();
+                ui_InGameScene.SetRoundText(round);
+                InitCurrentRound();
             }
         }
         public int Heart
         {
-            get { return heart; }
-            set
+            get => heart;
+            private set
             {
                 heart = value;
                 ui_InGameScene.SetHeartText(heart);
+                if (heart <= 0)
+                    GameOver();
             }
         }
         public int Gold
         {
-            get { return gold; }
+            get => gold;
             set
             {
                 gold = value;
@@ -102,77 +103,74 @@ namespace PokerDefense.Managers
         }
         public int Chance
         {
-            get { return chance; }
+            get => chance;
             set
             {
                 chance = value;
                 ui_InGameScene.SetChanceText(chance);
             }
         }
-
-        private float timeTowerSetLimit = 8f;
-        private float timeLeft = 0;
+        public int EnemyKillCount // 플레이어에게 죽은 에너미 수
+        {
+            get => enemyKillCount;
+            set
+            {
+                enemyKillCount = value;
+                ui_InGameScene.SetDiedEnemyCountText(EnemyKillCount, EnemyEntireCount);
+                if (EnemyKillCount >= EnemyEntireCount)
+                    RoundClear();
+            }
+        }
+        public int EnemyEndPointCount // 엔드포인트에 도달한 에너미 수
+        {
+            get => enemyEndPointCount;
+            set
+            {
+                if (value != 0) // 라운드 별 초기화가 아닌 실제 에너미가 엔드포인트에 닿을 때
+                    Heart--;
+                enemyEndPointCount = value;
+            }
+        } 
+        public int EnemyEntireCount { get; private set; } // 라운드 종결 판정
 
         private bool stateBreak = false;
-        private bool timerBreak = false;        // false일때만 State 타이머가 흐르게 됨
 
-        int enemyKillCount = 0;
-
-        EnemyData currentRoundEnemyData;
-        int totalEnemyNumber = 0;   // 라운드 종결 판정
         List<NewRoundData> roundDataList;
         NewRoundData currentRoundData;
         HardNessData hardNessData;
 
-        IEnumerator EnemySpawnCoroutine;
-        bool isStoppedEnemySpawn = false;
-        float? lastSpawnTime = null;
-        float? interruptedSpawnTime = null;
-
-        private void ChangeRound() // Round가 바뀔 때 마다 해줘야 하는 작업들
+        private void InitCurrentRound()
         {
+            currentRoundData = roundDataList[Round - 1];
+            EnemyEntireCount = CountRoundEnemy();
+            // 순서 주의
+            EnemyKillCount = 0;
+
             CurrentState = RoundState.READY;
-            // TODO : 라운드가 더 이상 없을 경우 게임 클리어
-            currentRoundData = roundDataList[++Round - 1];
-            totalEnemyNumber = CountRoundEnemy();
-            ui_InGameScene.SetRoundText(Round);
-            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
-            enemyKillCount = 0;
+            BreakState();
         }
 
-        public void InitRoundManager() // 처음으로 게임이 시작될 때 호출
+        public void InitRoundManager(UI_InGameScene ui_InGameScene) // 처음으로 게임이 시작될 때 호출
         {
             /* TODO : 데이터 실체화
              * Round와 HardNess는 MainScene에서 받아옴
+             * Round는 초기값이 1이 아닐 수 있음(세이브 데이터)
              */
-            round = 1;
-            HardNess = "Easy";
+            this.ui_InGameScene = ui_InGameScene;
 
-            // 순서 주의
             InitWayPoints();
-            InitHardNessData();
+            InitTimeStopSkill();
+            InitEnemySpawner();
 
-            InitGameData();
-
-
-            StartCoroutine(InitUIText());
-
-            EnemySpawnCoroutine = SpawnRoundEnemy();
-
-            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
-            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
-
-            CurrentState = RoundState.READY;
+            HardNess = "Easy";
+            Round = 1;
         }
 
         public void InitWayPoints()
         {
             wayPointParent = GameObject.FindGameObjectWithTag("WayPointParent").transform;
             foreach (Transform child in wayPointParent)
-            {
                 wayPoints.Add(child);
-            }
 
             startPoint = wayPoints[0];
             endPoint = wayPoints[wayPoints.Count - 1];
@@ -187,28 +185,32 @@ namespace PokerDefense.Managers
         {
             GameManager.Data.HardNessDataDict.TryGetValue(HardNess, out hardNessData);
 
-            heart = hardNessData.heart;
-            gold = hardNessData.gold;
-            chance = hardNessData.chance;
+            Heart = hardNessData.heart;
+            Gold = hardNessData.gold;
+            Chance = hardNessData.chance;
         }
 
-        private void InitGameData()
+        private void InitGameRoundData()
         {
             GameManager.Data.SelectGameData(HardNess);
             roundDataList = GameManager.Data.CurrentGameData.gameRounds;
-            currentRoundData = roundDataList[Round - 1];
-            totalEnemyNumber = CountRoundEnemy();
         }
 
-        IEnumerator InitUIText()
+        private void InitTimeStopSkill()
         {
-            yield return new WaitUntil(() => ui_InGameScene != null);
-            ui_InGameScene.InitText(Round, Heart, Gold, Chance);
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
+        }
+
+        private void InitEnemySpawner()
+        {
+            EnemySpawnCoroutine = SpawnRoundEnemy();
+            RoundStarted.AddListener(() => StartCoroutine(EnemySpawnCoroutine)); ;
         }
 
         private void Update()
         {
-            // Debug.Log(state.ToString());
             switch (state)
             {
                 case RoundState.NONE:
@@ -216,21 +218,19 @@ namespace PokerDefense.Managers
                     break;
                 case RoundState.READY:
                     if (stateChanged) { ReadyStateStart(); }
-                    //TODO  Ready Animaiton
-                    timeLeft -= Time.deltaTime;
-                    if (timeLeft <= 0) CurrentState = RoundState.TOWER;
+                    if(stateBreak)
+                    {
+                        CurrentState = RoundState.TOWER;
+                        stateBreak = false;
+                    }
                     break;
                 case RoundState.TOWER:
                     if (stateChanged) { TowerStateStart(); }
-                    //set position or wait 2min
-                    if (!timerBreak) { timeLeft -= Time.deltaTime; }
                     if (stateBreak)
                     {
                         CurrentState = RoundState.POKER;
                         stateBreak = false;
-                        break;
                     }
-                    if (timeLeft <= 0) CurrentState = RoundState.PLAY;
                     break;
                 case RoundState.POKER:
                     if (stateChanged) { PokerStateStart(); }
@@ -239,7 +239,6 @@ namespace PokerDefense.Managers
                         PokerConfirm();
                         CurrentState = RoundState.HORSE;
                         stateBreak = false;
-                        break;
                     }
                     break;
                 case RoundState.HORSE:
@@ -248,20 +247,14 @@ namespace PokerDefense.Managers
                     {
                         CurrentState = RoundState.PLAY;
                         stateBreak = false;
-                        break;
                     }
                     break;
                 case RoundState.PLAY:
-                    if (stateChanged)
-                    {
-                        PlayStateStart();
-                    }
+                    if (stateChanged) { PlayStateStart(); }
                     if (stateBreak)
                     {
-                        CurrentState = RoundState.READY;
+                        Round++;
                         stateBreak = false;
-                        ChangeRound();
-                        break;
                     }
                     break;
             }
@@ -272,41 +265,34 @@ namespace PokerDefense.Managers
             stateBreak = true;
         }
 
-        public void BreakTimer(bool b)
-        {
-            timerBreak = b;
-        }
-
         private void ReadyStateStart()
         {
-            GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
-            Debug.Log(state.ToString());
-            timeLeft = 2f;
-
+            /* ReadyState 일단 기능 없앰
+             * 추후 필요에 의하면 사용
+             */
+            
+            //GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
+            BreakState();
             stateChanged = false;
         }
 
         private void TowerStateStart()
         {
             GameManager.SystemText.SetSystemMessage(SystemMessage.TowerStateStart);
-            Debug.Log(state.ToString());
-            timeLeft = timeTowerSetLimit;
             stateChanged = false;
         }
 
         private void PokerStateStart()
         {
             GameManager.SystemText.SetSystemMessage(SystemMessage.PokerStateStart);
-            Debug.Log(state.ToString());
-            GameManager.UI.ShowPopupUI<UI_Poker>();
             GameManager.Poker.PokerStart();
+            GameManager.UI.ShowPopupUI<UI_Poker>();
             stateChanged = false;
         }
 
         private void HorseStateStart()
         {
             GameManager.SystemText.SetSystemMessage(SystemMessage.HorseStateStart);
-            Debug.Log(state.ToString());
             ui_InGameScene.ActivateBottomUI();
             GameManager.UI.ShowPopupUI<UI_HorseSelectPopup>();
             stateChanged = false;
@@ -315,9 +301,7 @@ namespace PokerDefense.Managers
         private void PlayStateStart()
         {
             GameManager.SystemText.SetSystemMessage(SystemMessage.PlayStateStart);
-            Debug.Log(state.ToString());
             RoundStarted?.Invoke();
-            StartCoroutine(EnemySpawnCoroutine);
             stateChanged = false;
         }
 
@@ -335,15 +319,17 @@ namespace PokerDefense.Managers
         {
             int enemyCount = 0;
             foreach (var spawn in currentRoundData.enemyList)
-            {
                 enemyCount += spawn.enemyNumber;
-            }
             return enemyCount;
         }
 
+        IEnumerator EnemySpawnCoroutine;
+        bool isStoppedEnemySpawn = false;
+        float? lastSpawnTime = null;
+        float? interruptedSpawnTime = null;
+
         IEnumerator SpawnRoundEnemy()
         {
-            // Debug.Log(totalEnemyNumber);
             List<NewRoundData.EnemySpawn> enemyList = currentRoundData.enemyList;
 
             string currentEnemyName;
@@ -385,61 +371,40 @@ namespace PokerDefense.Managers
 
         public List<Enemy> GetEnemyInRange(Vector2 screenSpaceRangeOffset, float range)
         {
-            // range * 100이 screen상의 길이
-            float pixelsPerUnitInScreenSpace = Utils.Util.GetPixelsPerUnitInScreenSpace();
             List<Enemy> ret = new List<Enemy>();
             for (int i = 0; i < enemyGroup.childCount; i++)
             {
                 Enemy enemy = enemyGroup.GetChild(i).GetComponent<Enemy>();
-                Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
-                float distance = Vector2.Distance(screenSpaceRangeOffset, enemyScreenPos);
-
-                if (distance <= range * pixelsPerUnitInScreenSpace) // TODO : 왜 100을 곱해줘야할까 PixelsPerUnit도 아닌데 뭐지
+                if(enemy.IsInRange(screenSpaceRangeOffset, range))
                     ret.Add(enemy);
             }
             return ret;
-        }
-
-        public void OnEnemyGetEndPoint()
-        {
-            OnEnemyDied();
-            Heart -= 1;
-            if (Heart <= 0)
-            {
-                GameOver();
-                return;
-            }
-            ui_InGameScene.SetHeartText(Heart);
-        }
-
-        public void OnEnemyDied()
-        {
-            enemyKillCount++;
-            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
-            if (enemyKillCount >= totalEnemyNumber)
-            {
-                RoundClear();
-            }
         }
 
         private void RoundClear()
         {
             Debug.Log("Round Clear!");
             RoundFinished?.Invoke();
-            BreakState();
-            //GameManager.Horse.InterruptRace(ChangeRound);
-        }
 
+            Round++;
+        }
 
         private void GameOver()
         {
 
         }
 
-        public void SetUIIngameScene(UI_InGameScene target)
+        private void GameClear()
         {
-            ui_InGameScene = target;
-            ui_InGameScene.SetDiedEnemyCountText(enemyKillCount, totalEnemyNumber);
+            // TODO : 라운드가 더 이상 없을 경우 게임 클리어
+        }
+
+        public void OnClickReadyButton()
+        {
+            if (CurrentState == RoundState.PLAY)
+                return;
+            CurrentState = RoundState.PLAY;
+            stateChanged = true;
         }
     }
 }

@@ -124,8 +124,6 @@ namespace PokerDefense.Managers
             Tower tower = target.GetTower();
             tower?.HighlightRangeCircle();
             target.HighlightPanel();
-
-            GameManager.Round.BreakTimer(true);
         }
 
         public void EndTowerPanelSelect(TowerPanel target) // TowerPanel 선택이 다 됐거나 취소했을 경우
@@ -133,8 +131,6 @@ namespace PokerDefense.Managers
             Tower tower = target.GetTower();
             tower?.ResetRangeCircle();
             target.ResetPanel();
-
-            GameManager.Round.BreakTimer(false);
         }
 
     }

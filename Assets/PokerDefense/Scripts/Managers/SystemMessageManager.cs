@@ -1,3 +1,4 @@
+using PokerDefense.UI.Scene;
 using PokerDefense.Utils;
 using System.Collections;
 using TMPro;
@@ -20,8 +21,9 @@ namespace PokerDefense.Managers
 
         }
 
-        public void InitSystemTextManager(Transform systemMessageUIObject)
+        public void InitSystemTextManager(UI_InGameScene uI_InGameScene)
         {
+            Transform systemMessageUIObject = uI_InGameScene.GetSystemMessageUIObject();
             isInit = true;
             messageUI = systemMessageUIObject;
         }
