@@ -24,7 +24,9 @@ namespace PokerDefense.UI.Scene
             TimeStopSkillButton,
             FireHoleSkillButton,
             EarthQuakeSkillButton,
+
             ReadyButton,
+            ShopButton,
 
             HeartText,
             GoldText,
@@ -96,6 +98,10 @@ namespace PokerDefense.UI.Scene
             AddUIEvent(readyButton, OnClickReadyButton, Define.UIEvent.Click);
             AddButtonAnim(readyButton);
 
+            GameObject shopButton = GetObject((int)GameObjects.ShopButton);
+            AddUIEvent(shopButton, OnClickShopButton, Define.UIEvent.Click);
+            AddButtonAnim(shopButton);
+
             // 0¹ø ½ºÅ³
             GameObject timeStopButton = GetObject((int)GameObjects.TimeStopSkillButton);
             AddUIEvent(timeStopButton, (evt) => { OnClickSkill(0); }, Define.UIEvent.Click);
@@ -155,6 +161,11 @@ namespace PokerDefense.UI.Scene
         private void OnClickReadyButton(PointerEventData evt)
         {
             GameManager.Round.OnClickReadyButton();
+        }
+
+        private void OnClickShopButton(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopupUI<UI_ShopPopup>();
         }
 
         private void OnClickSkill(int skillIndex)
