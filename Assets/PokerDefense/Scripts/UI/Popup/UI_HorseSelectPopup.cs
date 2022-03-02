@@ -131,16 +131,15 @@ namespace PokerDefense.UI.Popup
                 GameManager.UI.ShowPopupUI<UI_BettingErrorPopup>();
                 return;
             }
+
+            GameManager.Horse.OnBettingFinished(horseIndex, bettingPrice);
             ClosePopupUI();
         }
 
         private void OnClickCancelButton(PointerEventData evt)
-            => ClosePopupUI();
-
-        public override void ClosePopupUI()
         {
-            GameManager.Horse.OnBettingFinished(horseIndex, bettingPrice);
-            base.ClosePopupUI();
+            GameManager.Horse.OnBettingFinished(null, null);
+            ClosePopupUI();
         }
 
         private void CheckBettingPrice(string priceText)
