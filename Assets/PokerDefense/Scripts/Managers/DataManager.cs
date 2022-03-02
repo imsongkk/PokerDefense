@@ -19,23 +19,22 @@ namespace PokerDefense.Managers
         public Dictionary<string, TowerUpgradeData> TowerUpgradeDataDict { get; private set; }
         public Dictionary<string, EnemyData> EnemyDataDict { get; private set; }
         public Dictionary<string, HardNessData> HardNessDataDict { get; private set; }
-        public Dictionary<string, Dictionary<string, RoundData>> RoundDataDict { get; private set; } // outter key : 난이도, inner key : stage number
         public Dictionary<int, SkillData> SkillDataDict { get; private set; } = new Dictionary<int, SkillData>(); // key : skillIndex
         public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // key : skillName
         public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
-
+        public Dictionary<string, int> ShopDataDict { get; private set; } = new Dictionary<string, int>();
         public Dictionary<string, GameData> GameDataDict { get; private set; }
         public GameData CurrentGameData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
         private string towerUpgradeDataJsonFileName = "TowerUpgradeData";
-        private string roundJsonFileName = "RoundDataDict";
         private string hardNessJsonFileName = "HardNessDataDict";
         private string enemyJsonFileName = "EnemyDataDict";
         private string slotJsonFileName = "SlotData";
         private string skilJsonFileName = "SkillData";
         private string systemMessageJsonFileName = "SystemMessageData";
+        private string shopJsonFileName = "ShopData";
 
         private string gameDataJsonFileName = "GameData_";
 
@@ -49,6 +48,7 @@ namespace PokerDefense.Managers
             InitEnemyDataDict();
             InitSkillDataDict();
             InitSystemMessageDict();
+            InitShopDataDict();
         }
 
         private void InitPlayerData()
@@ -74,15 +74,6 @@ namespace PokerDefense.Managers
         private void InitHardNessDataDict()
         {
             HardNessDataDict = LoadJsonFile<Dictionary<string, HardNessData>>(jsonLocation, hardNessJsonFileName);
-        }
-
-        private void InitRoundDataDict()
-        {
-            RoundDataDict = LoadJsonFile<Dictionary<string, Dictionary<string, RoundData>>>(jsonLocation, roundJsonFileName);
-
-            //Debug.Log(RoundDataList);
-            //Debug.Log(RoundDataList["Easy"]["1"].enemyName);
-            //Debug.Log(RoundDataList["Normal"]["1"].enemyName);
         }
 
         // ^ old rounddata
@@ -121,6 +112,11 @@ namespace PokerDefense.Managers
         private void InitSystemMessageDict()
         {
             SystemMessageDict = LoadJsonFile<Dictionary<string, string>>(jsonLocation, systemMessageJsonFileName);
+        }
+
+        private void InitShopDataDict()
+        {
+            ShopDataDict = LoadJsonFile<Dictionary<string, int>>(jsonLocation, shopJsonFileName);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)
