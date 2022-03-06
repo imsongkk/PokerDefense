@@ -10,13 +10,14 @@ namespace PokerDefense.UI.Popup
     {
         public class Item
         {
-            public Item(string itemName, int price)
+            public Item(string itemName, int price, int uid)
             {
                 ItemName = itemName;
                 Price = price;
             }
             public string ItemName { get; private set; }
             public int Price { get; private set; }
+            public int Uid { get; private set; }
         }
 
         enum GameObjects
@@ -42,6 +43,7 @@ namespace PokerDefense.UI.Popup
         private void InitShopData()
         {
             // TODO : 아이템 데이터 테이블에 맞게 초기화
+            // TODO : 아이템 uid에 맞는 스프라이트 리소스 가져오기
         }
 
         private void BindObjects()
@@ -61,7 +63,6 @@ namespace PokerDefense.UI.Popup
         {
             GameManager.Data.ShopDataDict.TryGetValue(nameof(GameManager.Round.Chance), out var price);
 
-            // TODO : 아이템 데이터 테이블에 맞게 초기화
             if (GameManager.Round.Gold >= price)
             {
                 GameManager.Round.Chance++;
