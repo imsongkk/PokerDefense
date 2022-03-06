@@ -69,7 +69,7 @@ namespace PokerDefense.UI.Popup
             }
             else
             {
-                // TODO : µ· ºÎÁ· ÆË¾÷
+                GameManager.UI.ShowPopupUI<UI_ShopErrorPopup>();
             }
         }
     }
