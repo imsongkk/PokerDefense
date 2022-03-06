@@ -12,6 +12,7 @@ namespace PokerDefense.Managers
         ResourceManager resourceManager = new ResourceManager();
         TowerManager towerManager = new TowerManager();
         DataManager dataManager = new DataManager();
+        InventoryManager inventoryManager = new InventoryManager();
 
         SystemMessageManager systemMessageManager = null;
         RoundManager roundManager = null;
@@ -30,6 +31,7 @@ namespace PokerDefense.Managers
         public static HorseManager Horse { get => Instance.horseManager; }
         public static SkillManager Skill { get => Instance.skillManager; }
         public static SystemMessageManager SystemText { get => Instance.systemMessageManager; }
+        public static InventoryManager Inventory { get => Instance.inventoryManager; }
         void Awake()
             => Init();
 

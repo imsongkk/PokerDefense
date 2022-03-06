@@ -61,7 +61,14 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickChancePurchaseButton(PointerEventData evt)
         {
-            GameManager.Data.ShopDataDict.TryGetValue(nameof(GameManager.Round.Chance), out var price);
+            // TODO : 리팩토링 필요
+            //GameManager.Data.ShopDataDict.TryGetValue(nameof(GameManager.Round.Chance), out var price);
+
+            string itemName = "chance";
+            GameManager.Data.ItemIndexDict.TryGetValue(itemName, out int itemId);
+            GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
+
+            int price = itemData.price;
 
             if (GameManager.Round.Gold >= price)
             {

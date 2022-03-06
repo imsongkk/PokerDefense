@@ -1,0 +1,34 @@
+{
+  [
+    {
+      "itemName" : "attackDamageUp",
+      "price" : 5,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "attackSpeedUp",
+      "price" : 5,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "attackBossDamageUp",
+      "price" : 5,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "enemySlowDown",
+      "price" : 5,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "heart",
+      "price" : 5,
+      "hasSlot" : false
+    },
+    {
+      "itemName" : "chance",
+      "price" : 3,
+      "hasSlot" : false
+    },
+  ]
+}

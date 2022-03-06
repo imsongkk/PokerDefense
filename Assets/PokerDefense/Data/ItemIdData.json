@@ -1,0 +1,8 @@
+{
+  "attackDamageUp" : 0,
+  "attackSpeedUp" : 1,
+  "attackBossDamageUp" : 2,
+  "enemySlowDown" : 3,
+  "heart" : 4,
+  "chance" : 5
+}
