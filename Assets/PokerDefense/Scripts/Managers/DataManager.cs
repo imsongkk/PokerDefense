@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 using PokerDefense.Towers;
+using UnityEngine.Events;
 
 namespace PokerDefense.Managers
 {
@@ -24,9 +25,16 @@ namespace PokerDefense.Managers
         public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
         public List<string> ShopItemList { get; private set; } = new List<string>();
         public Dictionary<string, GameData> GameDataDict { get; private set; } = new Dictionary<string, GameData>();
+
+
+
         public Dictionary<int, ItemData> ItemDataDict { get; private set; } = new Dictionary<int, ItemData>(); // key : itemId
         public Dictionary<string, int> ItemIndexDict { get; private set; } = new Dictionary<string, int>(); // key : itemName
+        public Dictionary<int, string> ItemNameDict { get; private set; } = new Dictionary<int, string>(); // key : itemId
+
+
         public GameData CurrentGameData { get; private set; }
+        public SlotData SlotData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -43,9 +51,11 @@ namespace PokerDefense.Managers
 
         private string gameDataJsonFileName = "GameData_";
 
+        public UnityEvent OnSave = new UnityEvent(); 
+
         public void InitDataManager()
         {
-            InitPlayerData();
+            InitPlayerData();            
 
             InitTowerData();
             InitHardNessDataDict();
@@ -137,6 +147,14 @@ namespace PokerDefense.Managers
                 item.itemId = itemId;
                 ItemDataDict.Add(itemId, item);
             }
+
+            InitItemNameDict();
+        }
+
+        private void InitItemNameDict()
+        {
+            foreach(var item in ItemIndexDict)
+                ItemNameDict.Add(item.Value, item.Key);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)
@@ -165,6 +183,9 @@ namespace PokerDefense.Managers
 
         public void SaveSlotData()
         {
+            // TODO : SlotData 리스너화
+            OnSave?.Invoke();
+
             SlotData newData = MakeSlotData();
             string slotDataJson = JsonConvert.SerializeObject(newData, Formatting.Indented);
             CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);
@@ -173,11 +194,9 @@ namespace PokerDefense.Managers
         private SlotData MakeSlotData()
         {
             SlotData newSlotData = new SlotData();
-            newSlotData.heart = GameManager.Round.Heart;
-            newSlotData.gold = GameManager.Round.Gold;
-            newSlotData.chance = GameManager.Round.Chance;
             newSlotData.stageNumber = GameManager.Round.Round;
             newSlotData.hardNess = GameManager.Round.HardNess;
+            newSlotData.inventory = GameManager.Inventory.GetSaveData();
 
             List<Tower> userTowerList = GameManager.Tower.GetUserTowerList();
             newSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);

@@ -1,19 +1,11 @@
 {
   "hardNess": "Easy",
-  "stageNumber": 2,
-  "heart": 30,
-  "gold": 10,
-  "chance": 7,
-  "towerSaveDataList": [
-    {
-      "towerName": "OnePair",
-      "attackDamageLevel": 0,
-      "attackSpeedLevel": 0,
-      "attackRangeLevel": 0,
-      "attackCriticalLevel": 0,
-      "towerType": 2,
-      "topCard": 0,
-      "towerIndex": 66
-    }
-  ]
+  "stageNumber": 1,
+  "inventory": {
+    "heart": 30,
+    "gold": 7,
+    "chance": 8,
+    "itemHave": {}
+  },
+  "towerSaveDataList": []
 }

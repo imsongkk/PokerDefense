@@ -70,10 +70,11 @@ namespace PokerDefense.UI.Popup
 
             int price = itemData.price;
 
-            if (GameManager.Round.Gold >= price)
+            if (GameManager.Inventory.Gold >= price)
             {
-                GameManager.Round.Chance++;
-                GameManager.Round.Gold -= price;
+                GameManager.Inventory.AddItem(itemId, 1);
+                GameManager.Inventory.Chance++;
+                GameManager.Inventory.Gold -= price;
             }
             else
             {

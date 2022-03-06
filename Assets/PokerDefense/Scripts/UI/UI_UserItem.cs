@@ -25,11 +25,26 @@ namespace PokerDefense.UI
             AddUIEvent(gameObject, OnClickItem, Define.UIEvent.Click);
         }
 
-        public void InitItem(UI_UserItemSlots _userItemSlots)
+        public void InitItem(UI_UserItemSlots _userItemSlots, int itemId)
         {
             IsInit = true;
 
             userItemSlots = _userItemSlots;
+        }
+
+        public void ItemAdded(int count)
+        {
+
+        }
+
+        public void ItemUsed()
+        {
+
+        }
+
+        public void ItemDeleted()
+        {
+
         }
 
         private void OnClickItem(PointerEventData evt)

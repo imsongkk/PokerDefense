@@ -97,12 +97,12 @@ namespace PokerDefense.Managers
         {
             if (isCardChanged[index])
             {
-                if (GameManager.Round.Chance <= 0)
+                if (GameManager.Inventory.Chance <= 0)
                 {
                     GameManager.UI.ShowPopupUI<UI_ChanceErrorPopup>();
                     return;
                 }
-                else GameManager.Round.Chance--;  // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
+                else GameManager.Inventory.Chance--;  // TODO: 찬스 개수 변할 경우 UI 업데이트 콜
             }
             else isCardChanged[index] = true;
 

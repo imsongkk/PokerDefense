@@ -80,7 +80,7 @@ namespace PokerDefense.UI.Scene
 
         private void InitUserItemSlots()
         {
-            userItemSlots.InitItemSlots();
+            userItemSlots.InitItemSlotsUI();
         }
 
         private void BindObject()
