@@ -21,7 +21,7 @@ namespace PokerDefense.Data
         public int heart;
         public int gold;
         public int chance;
-        public Dictionary<int, int> itemHave = new Dictionary<int, int>(); // key : itemId, value : count
+        public Dictionary<string, int> itemHave = new Dictionary<string, int>(); // key : itemId, value : count
     }
 
     [Serializable]

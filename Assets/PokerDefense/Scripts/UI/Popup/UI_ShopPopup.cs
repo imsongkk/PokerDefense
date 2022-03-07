@@ -31,9 +31,8 @@ namespace PokerDefense.UI.Popup
         private void InitShopData()
         {
             var list = GameManager.Data.ShopItemList;
-            foreach (var item in list)
+            foreach (var itemId in list)
             {
-                GameManager.Data.ItemIndexDict.TryGetValue(item, out var itemId);
                 GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
                 UI_ShopItem shopItem = GameManager.Resource.Instantiate("UI/UI_ShopItem", content).GetComponent<UI_ShopItem>();
                 shopItem.InitItem(this, itemData);

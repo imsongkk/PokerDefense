@@ -14,7 +14,7 @@ namespace PokerDefense.UI
 
         UI_UserItemSlots userItemSlots;
         ScrollRect scrollRect;
-        int itemId;
+        string itemId;
 
         private void Start()
             => Init();
@@ -27,7 +27,7 @@ namespace PokerDefense.UI
             AddUIEvent(gameObject, OnClickItem, Define.UIEvent.Click);
         }
 
-        public void InitItem(UI_UserItemSlots _userItemSlots, int _itemId)
+        public void InitItem(UI_UserItemSlots _userItemSlots, string _itemId)
         {
             userItemSlots = _userItemSlots;
             scrollRect = userItemSlots.GetComponentInChildren<ScrollRect>();

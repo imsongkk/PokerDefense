@@ -40,11 +40,11 @@ public class InventoryManager
     }
 
 
-    public Dictionary<int, int> ItemDict { get; private set; } = new Dictionary<int, int> (); // key : itemId, value : count
+    public Dictionary<string, int> ItemDict { get; private set; } = new Dictionary<string, int> (); // key : itemId, value : count
 
-    public UnityEvent<int, int> ItemPurchased = new UnityEvent<int, int>(); // itemId, count
-    public UnityEvent<int> ItemUsed = new UnityEvent<int>(); // itemId
-    public UnityEvent<int> ItemDeleted = new UnityEvent<int>(); // itemId
+    public UnityEvent<string, int> ItemPurchased = new UnityEvent<string, int>(); // itemId, count
+    public UnityEvent<string> ItemUsed = new UnityEvent<string>(); // itemId
+    public UnityEvent<string> ItemDeleted = new UnityEvent<string>(); // itemId
 
     public InventoryData InventoryData { get; private set; }
 
@@ -62,7 +62,7 @@ public class InventoryManager
         InitItemDict();
     }
 
-    private void OnItemPurchased(int itemId, int count)
+    private void OnItemPurchased(string itemId, int count)
     {
         if (ItemDict.ContainsKey(itemId))
             ItemDict[itemId] += count;
@@ -70,7 +70,7 @@ public class InventoryManager
             ItemDict.Add(itemId, count);
     }
 
-    private void OnItemUsed(int itemId)
+    private void OnItemUsed(string itemId)
     {
         if (ItemDict.ContainsKey(itemId))
         {
@@ -80,7 +80,7 @@ public class InventoryManager
             return;
     }
 
-    private void OnItemDeleted(int itemId)
+    private void OnItemDeleted(string itemId)
     {
         if (ItemDict.ContainsKey(itemId))
             ItemDict.Remove(itemId);
@@ -109,7 +109,7 @@ public class InventoryManager
             ItemDict.Add(item.Key, item.Value);
     }
 
-    public void OnClickPuchase(int itemId, int count)
+    public void OnClickPuchase(string itemId, int count)
     {
         GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
 
@@ -117,12 +117,9 @@ public class InventoryManager
         {
             Gold -= itemData.price;
 
-            // TODO : 리팩토링 필요
-            GameManager.Data.ItemNameDict.TryGetValue(itemId, out var itemName);
-
-            if (itemName == "heart")
+            if (itemId == "heart")
                 Heart += count;
-            else if (itemName == "chance")
+            else if (itemId == "chance")
                 Chance += count;
 
             ItemPurchased?.Invoke(itemId, count);
@@ -131,7 +128,7 @@ public class InventoryManager
             GameManager.UI.ShowPopupUI<UI_ShopErrorPopup>();
     }
 
-    public void OnClickUse(int itemId)
+    public void OnClickUse(string itemId)
     {
         ItemUsed?.Invoke(itemId);
 

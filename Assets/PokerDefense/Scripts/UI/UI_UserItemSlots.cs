@@ -10,7 +10,7 @@ namespace PokerDefense.UI
         [SerializeField] Transform content;
         [SerializeField] ScrollRect scrollRect;
 
-        Dictionary<int, UI_UserItem> userItemDict = new Dictionary<int, UI_UserItem>(); // key : itemId
+        Dictionary<string, UI_UserItem> userItemDict = new Dictionary<string, UI_UserItem>(); // key : itemId
 
         public override void Init() { }
 
@@ -39,14 +39,14 @@ namespace PokerDefense.UI
             }
         }
 
-        private void MakeUserItemUI(int itemId)
+        private void MakeUserItemUI(string itemId)
         {
             UI_UserItem userItem = GameManager.Resource.Instantiate("UI/UI_UserItem", content).GetComponent<UI_UserItem>();
             userItemDict.Add(itemId, userItem);
             userItem.InitItem(this, itemId);
         }
 
-        private void ItemDeleted(int itemId)
+        private void ItemDeleted(string itemId)
         {
             GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
 
@@ -58,7 +58,7 @@ namespace PokerDefense.UI
             }
         }
 
-        private void ItemPurchased(int itemId, int count)
+        private void ItemPurchased(string itemId, int count)
         {
             GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
 
@@ -73,7 +73,7 @@ namespace PokerDefense.UI
             }
         }
 
-        private void ItemUsed(int itemId)
+        private void ItemUsed(string itemId)
         {
             GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
 

@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 using PokerDefense.Towers;
 using UnityEngine.Events;
 
@@ -25,12 +24,7 @@ namespace PokerDefense.Managers
         public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
         public List<string> ShopItemList { get; private set; } = new List<string>();
         public Dictionary<string, GameData> GameDataDict { get; private set; } = new Dictionary<string, GameData>();
-
-
-
-        public Dictionary<int, ItemData> ItemDataDict { get; private set; } = new Dictionary<int, ItemData>(); // key : itemId
-        public Dictionary<string, int> ItemIndexDict { get; private set; } = new Dictionary<string, int>(); // key : itemName
-        public Dictionary<int, string> ItemNameDict { get; private set; } = new Dictionary<int, string>(); // key : itemId
+        public Dictionary<string, ItemData> ItemDataDict { get; private set; } = new Dictionary<string, ItemData>(); // key : itemId
 
 
         public GameData CurrentGameData { get; private set; }
@@ -137,24 +131,10 @@ namespace PokerDefense.Managers
 
         private void InitItemDataDict()
         {
-            ItemIndexDict = LoadJsonFile<Dictionary<string, int>>(jsonLocation, ItemIdJsonFileName);
-
             var itemList = LoadJsonFile<List<ItemData>>(jsonLocation, ItemJsonFileName);
 
             foreach(var item in itemList)
-            {
-                ItemIndexDict.TryGetValue(item.itemName, out int itemId);
-                item.itemId = itemId;
-                ItemDataDict.Add(itemId, item);
-            }
-
-            InitItemNameDict();
-        }
-
-        private void InitItemNameDict()
-        {
-            foreach(var item in ItemIndexDict)
-                ItemNameDict.Add(item.Value, item.Key);
+                ItemDataDict.Add(item.itemId, item);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)

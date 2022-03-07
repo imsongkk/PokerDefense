@@ -1,71 +1,71 @@
   [
-     {
-      "itemName" : "heart",
+    {
+      "itemId" : "heart",
       "price" : 1,
       "hasSlot" : false
     },
     {
-      "itemName" : "chance",
+      "itemId" : "chance",
       "price" : 2,
       "hasSlot" : false
     },
     {
-      "itemName" : "attackDamageUp",
+      "itemId" : "attackDamageUp",
       "price" : 3,
       "hasSlot" : true
     },
     {
-      "itemName" : "attackSpeedUp",
+      "itemId" : "attackSpeedUp",
       "price" : 4,
       "hasSlot" : true
     },
     {
-      "itemName" : "attackBossDamageUp",
+      "itemId" : "attackBossDamageUp",
       "price" : 5,
       "hasSlot" : true
     },
     {
-      "itemName" : "enemySlowDown",
+      "itemId" : "enemySlowDown",
       "price" : 6,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem1",
+      "itemId" : "someItem1",
       "price" : 7,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem2",
+      "itemId" : "someItem2",
       "price" : 8,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem3",
+      "itemId" : "someItem3",
       "price" : 9,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem4",
+      "itemId" : "someItem4",
       "price" : 10,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem5",
+      "itemId" : "someItem5",
       "price" : 11,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem6",
+      "itemId" : "someItem6",
       "price" : 12,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem7",
+      "itemId" : "someItem7",
       "price" : 13,
       "hasSlot" : true
     },
     {
-      "itemName" : "someItem8",
+      "itemId" : "someItem8",
       "price" : 14,
       "hasSlot" : true
     }
