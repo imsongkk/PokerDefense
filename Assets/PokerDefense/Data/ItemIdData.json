@@ -4,5 +4,13 @@
   "attackBossDamageUp" : 2,
   "enemySlowDown" : 3,
   "heart" : 4,
-  "chance" : 5
+  "chance" : 5,
+  "someItem1" : 6,
+  "someItem2" : 7,
+  "someItem3" : 8,
+  "someItem4" : 9,
+  "someItem5" : 10,
+  "someItem6" : 11,
+  "someItem7" : 12,
+  "someItem8" : 13,
 }

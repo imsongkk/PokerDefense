@@ -1,12 +1,14 @@
 using PokerDefense.Managers;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace PokerDefense.UI
 {
     public class UI_UserItemSlots : UI_Base
     {
         [SerializeField] Transform content;
+        [SerializeField] ScrollRect scrollRect;
 
         Dictionary<int, UI_UserItem> userItemDict = new Dictionary<int, UI_UserItem>(); // key : itemId
 
@@ -16,7 +18,7 @@ namespace PokerDefense.UI
         {
             InitUserItemsUI();
 
-            GameManager.Inventory.ItemAdded.AddListener(ItemAdded);
+            GameManager.Inventory.ItemPurchased.AddListener(ItemPurchased);
             GameManager.Inventory.ItemUsed.AddListener(ItemUsed);
             GameManager.Inventory.ItemDeleted.AddListener(ItemDeleted);
         }
@@ -50,16 +52,13 @@ namespace PokerDefense.UI
 
             if(itemData.hasSlot) // Heart, Gold, Chance Á¦¿Ü
             {
-                if (!userItemDict.TryGetValue(itemId, out var uI_UserItem))
-                {
-                    MakeUserItemUI(itemId);
-                    uI_UserItem = userItemDict[itemId];
-                }
+                userItemDict.TryGetValue(itemId, out var uI_UserItem);
                 uI_UserItem.ItemDeleted();
+                userItemDict.Remove(itemId);
             }
         }
 
-        private void ItemAdded(int itemId, int count)
+        private void ItemPurchased(int itemId, int count)
         {
             GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
 
@@ -70,7 +69,7 @@ namespace PokerDefense.UI
                     MakeUserItemUI(itemId);
                     uI_UserItem = userItemDict[itemId];
                 }
-                uI_UserItem.ItemAdded(count);
+                uI_UserItem.ItemPurchased(count);
             }
         }
 

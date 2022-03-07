@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 namespace PokerDefense.UI
 {
-    public class UI_UserItem : UI_Base
+    public class UI_UserItem : UI_Base, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField] Image itemImage;
         [SerializeField] Image backgroundImage;
 
         UI_UserItemSlots userItemSlots;
+        ScrollRect scrollRect;
+        int itemId;
 
         private void Start()
             => Init();
@@ -25,14 +27,14 @@ namespace PokerDefense.UI
             AddUIEvent(gameObject, OnClickItem, Define.UIEvent.Click);
         }
 
-        public void InitItem(UI_UserItemSlots _userItemSlots, int itemId)
+        public void InitItem(UI_UserItemSlots _userItemSlots, int _itemId)
         {
-            IsInit = true;
-
             userItemSlots = _userItemSlots;
+            scrollRect = userItemSlots.GetComponentInChildren<ScrollRect>();
+            itemId = _itemId;
         }
 
-        public void ItemAdded(int count)
+        public void ItemPurchased(int count)
         {
 
         }
@@ -44,17 +46,28 @@ namespace PokerDefense.UI
 
         public void ItemDeleted()
         {
-
+            GameManager.Resource.Destroy(gameObject);
         }
 
         private void OnClickItem(PointerEventData evt)
         {
-            if (!IsInit)
-                return;
+            GameManager.Inventory.OnClickUse(itemId);
+            scrollRect.OnBeginDrag(evt);
+        }
 
+        public void OnDrag(PointerEventData eventData)
+        {
+            ((IDragHandler)scrollRect).OnDrag(eventData);
+        }
 
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            ((IBeginDragHandler)scrollRect).OnBeginDrag(eventData);
+        }
 
-            Debug.Log("A");
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            ((IEndDragHandler)scrollRect).OnEndDrag(eventData);
         }
     }
 }

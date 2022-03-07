@@ -1,7 +1,7 @@
 {
   "Easy": {
     "heart": 30,
-    "gold": 10,
+    "gold": 1000,
     "chance": 7
   },
   "Normal": {

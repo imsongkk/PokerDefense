@@ -1,12 +1,22 @@
   [
+     {
+      "itemName" : "heart",
+      "price" : 1,
+      "hasSlot" : false
+    },
+    {
+      "itemName" : "chance",
+      "price" : 2,
+      "hasSlot" : false
+    },
     {
       "itemName" : "attackDamageUp",
-      "price" : 5,
+      "price" : 3,
       "hasSlot" : true
     },
     {
       "itemName" : "attackSpeedUp",
-      "price" : 5,
+      "price" : 4,
       "hasSlot" : true
     },
     {
@@ -16,17 +26,47 @@
     },
     {
       "itemName" : "enemySlowDown",
-      "price" : 5,
+      "price" : 6,
       "hasSlot" : true
     },
     {
-      "itemName" : "heart",
-      "price" : 5,
-      "hasSlot" : false
+      "itemName" : "someItem1",
+      "price" : 7,
+      "hasSlot" : true
     },
     {
-      "itemName" : "chance",
-      "price" : 3,
-      "hasSlot" : false
+      "itemName" : "someItem2",
+      "price" : 8,
+      "hasSlot" : true
     },
+    {
+      "itemName" : "someItem3",
+      "price" : 9,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "someItem4",
+      "price" : 10,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "someItem5",
+      "price" : 11,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "someItem6",
+      "price" : 12,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "someItem7",
+      "price" : 13,
+      "hasSlot" : true
+    },
+    {
+      "itemName" : "someItem8",
+      "price" : 14,
+      "hasSlot" : true
+    }
   ]
