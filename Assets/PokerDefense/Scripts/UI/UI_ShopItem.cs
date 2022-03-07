@@ -40,11 +40,12 @@ namespace PokerDefense.UI
 
         public void InitItem(UI_ShopPopup _ui_ShopPopup, ItemData _itemData)
         {
-            // TODO : 아이템 uid에 맞는 스프라이트 리소스 가져오기
+            // TODO : 스프라이트 가져오는거 리팩토링 필요(임시)
             itemData = _itemData;
             ui_ShopPopup = _ui_ShopPopup;
             scrollRect = ui_ShopPopup.GetScrollRect();
 
+            itemImage.sprite = GameManager.Resource.Load<GameObject>($"Prefabs/Item/{itemData.itemId}").GetComponent<SpriteRenderer>().sprite;
             goldCountText.text = itemData.price.ToString();
         }
 
