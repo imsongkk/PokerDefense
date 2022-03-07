@@ -40,12 +40,7 @@ namespace PokerDefense.Managers
         private string systemMessageJsonFileName = "SystemMessageData";
         private string shopJsonFileName = "ShopData";
         private string ItemJsonFileName = "ItemData";
-        private string ItemIdJsonFileName = "ItemIdData";
-        private string inventoryJsonFileName = "InventoryData";
-
         private string gameDataJsonFileName = "GameData_";
-
-        public UnityEvent OnSave = new UnityEvent(); 
 
         public void InitDataManager()
         {
@@ -163,9 +158,6 @@ namespace PokerDefense.Managers
 
         public void SaveSlotData()
         {
-            // TODO : SlotData 리스너화
-            OnSave?.Invoke();
-
             SlotData newData = MakeSlotData();
             string slotDataJson = JsonConvert.SerializeObject(newData, Formatting.Indented);
             CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);

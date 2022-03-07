@@ -32,6 +32,9 @@ namespace PokerDefense.UI
             userItemSlots = _userItemSlots;
             scrollRect = userItemSlots.GetComponentInChildren<ScrollRect>();
             itemId = _itemId;
+
+            // Todo : hasSlot에 따라 스프라이트 초기화
+            itemImage.sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/{itemId}");
         }
 
         public void ItemPurchased(int count)
