@@ -33,6 +33,7 @@ namespace PokerDefense.Scene
             GameManager.Data.InitDataManager();
             GameManager.Skill.InitSkillManager();
             GameManager.Round.InitRoundManager(uI_InGameScene);
+            GameManager.Inventory.InitInventoryManager(uI_InGameScene);
             GameManager.Horse.InitHorseManager();
             GameManager.SystemText.InitSystemTextManager(uI_InGameScene);
 

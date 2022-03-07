@@ -52,9 +52,6 @@ namespace PokerDefense.Managers
 
         private string hardNess;
         private int round;
-        private int heart;
-        private int gold;
-        private int chance;
         private int enemyKillCount;
         private int enemyEndPointCount;
 
@@ -82,35 +79,6 @@ namespace PokerDefense.Managers
                 InitCurrentRound();
             }
         }
-        public int Heart
-        {
-            get => heart;
-            private set
-            {
-                heart = value;
-                ui_InGameScene.SetHeartText(heart);
-                if (heart <= 0)
-                    GameOver();
-            }
-        }
-        public int Gold
-        {
-            get => gold;
-            set
-            {
-                gold = value;
-                ui_InGameScene.SetGoldText(gold);
-            }
-        }
-        public int Chance
-        {
-            get => chance;
-            set
-            {
-                chance = value;
-                ui_InGameScene.SetChanceText(chance);
-            }
-        }
         public int EnemyKillCount // 플레이어에게 죽은 에너미 수
         {
             get => enemyKillCount;
@@ -128,7 +96,7 @@ namespace PokerDefense.Managers
             set
             {
                 if (value != 0) // 라운드 별 초기화가 아닌 실제 에너미가 엔드포인트에 닿을 때
-                    Heart--;
+                    GameManager.Inventory.Heart--;
                 enemyEndPointCount = value;
             }
         } 
@@ -186,10 +154,6 @@ namespace PokerDefense.Managers
         private void InitHardNessData()
         {
             GameManager.Data.HardNessDataDict.TryGetValue(HardNess, out hardNessData);
-
-            Heart = hardNessData.heart;
-            Gold = hardNessData.gold;
-            Chance = hardNessData.chance;
         }
 
         private void InitGameRoundData()
@@ -402,7 +366,7 @@ namespace PokerDefense.Managers
             Round++;
         }
 
-        private void GameOver()
+        public void GameOver()
         {
 
         }

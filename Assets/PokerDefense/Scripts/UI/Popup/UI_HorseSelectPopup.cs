@@ -59,7 +59,7 @@ namespace PokerDefense.UI.Popup
             base.Init();
             BindObjects();
 
-            maxBettingPrice = GameManager.Round.Gold;
+            maxBettingPrice = GameManager.Inventory.Gold;
 
             bettingInput.onValueChanged.AddListener(CheckBettingPrice);
         }

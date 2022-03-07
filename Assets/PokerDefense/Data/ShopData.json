@@ -1,5 +1,16 @@
-{
-  "Chance" : 5,
-  "Heart" : 3,
-  "Item1" : 2
-}
+  [
+    "chance",
+    "heart",
+    "attackDamageUp",
+    "attackSpeedUp",
+    "attackBossDamageUp",
+    "enemySlowDown",
+    "someItem1",
+    "someItem2",
+    "someItem3",
+    "someItem4",
+    "someItem5",
+    "someItem6",
+    "someItem7",
+    "someItem8",
+  ]

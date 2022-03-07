@@ -35,11 +35,14 @@ namespace PokerDefense.UI.Scene
             CurrentRoundCountText,
             DiedEnemyCountText,
             ElapsedTimeCountText,
+
+            UserItemSlots,
         }
 
         TextMeshProUGUI heartText, goldText, roundText, chanceText, currentRoundCountText, diedEnemyCountText, elapsedTimeCountText;
         GameObject bottomUIObject;
         Transform remainUiObject, systemMessageUIObject;
+        UI_UserItemSlots userItemSlots;
 
         List<Image> coolTimeImageList = new List<Image>();
 
@@ -59,6 +62,7 @@ namespace PokerDefense.UI.Scene
         private void InitUI()
         {
             InitCoolTimeImage();
+            InitUserItemSlots();
         }
 
         private void InitCoolTimeImage()
@@ -72,6 +76,11 @@ namespace PokerDefense.UI.Scene
                     StartCoroutine(ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime));
                 });
             }
+        }
+
+        private void InitUserItemSlots()
+        {
+            userItemSlots.InitItemSlotsUI();
         }
 
         private void BindObject()
@@ -125,6 +134,8 @@ namespace PokerDefense.UI.Scene
             AddUIEvent(meteoButton,  (evt) => { OnClickSkill(3); }, Define.UIEvent.Click);
             AddButtonAnim(meteoButton);
             coolTimeImageList.Add(meteoButton.transform.GetChild(1).GetComponent<Image>());
+
+            userItemSlots = GetObject((int)GameObjects.UserItemSlots).GetComponent<UI_UserItemSlots>();
         }
 
         private void ShowRemainTime(float remainTime)

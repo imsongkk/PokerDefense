@@ -1,33 +1,21 @@
 using UnityEngine;
 using PokerDefense.Utils;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
 using PokerDefense.Managers;
+using UnityEngine.UI;
 
 namespace PokerDefense.UI.Popup
 {
     public class UI_ShopPopup : UI_Popup
     {
-        public class Item
-        {
-            public Item(string itemName, int price, int uid)
-            {
-                ItemName = itemName;
-                Price = price;
-            }
-            public string ItemName { get; private set; }
-            public int Price { get; private set; }
-            public int Uid { get; private set; }
-        }
+        Transform content;
+        ScrollRect scrollRect;
 
         enum GameObjects
         {
             BackButton,
-
-            ChancePurchaseButton,
+            Content,
+            ScrollView,
         }
-
-        List<Item> itemList = new List<Item>();
 
         private void Start()
             => Init();
@@ -42,8 +30,13 @@ namespace PokerDefense.UI.Popup
 
         private void InitShopData()
         {
-            // TODO : 아이템 데이터 테이블에 맞게 초기화
-            // TODO : 아이템 uid에 맞는 스프라이트 리소스 가져오기
+            var list = GameManager.Data.ShopItemList;
+            foreach (var itemId in list)
+            {
+                GameManager.Data.ItemDataDict.TryGetValue(itemId, out var itemData);
+                UI_ShopItem shopItem = GameManager.Resource.Instantiate("UI/UI_ShopItem", content).GetComponent<UI_ShopItem>();
+                shopItem.InitItem(this, itemData);
+            }
         }
 
         private void BindObjects()
@@ -54,24 +47,11 @@ namespace PokerDefense.UI.Popup
             AddUIEvent(backButton, (a) => ClosePopupUI(), Define.UIEvent.Click);
             AddButtonAnim(backButton);
 
-            GameObject chancePurchaseButton = GetObject((int)GameObjects.ChancePurchaseButton);
-            AddUIEvent(chancePurchaseButton, OnClickChancePurchaseButton, Define.UIEvent.Click);
-            AddButtonAnim(chancePurchaseButton);
+            content = GetObject((int)GameObjects.Content).transform;
+            scrollRect = GetObject((int)GameObjects.ScrollView).GetComponent<ScrollRect>();
         }
 
-        private void OnClickChancePurchaseButton(PointerEventData evt)
-        {
-            GameManager.Data.ShopDataDict.TryGetValue(nameof(GameManager.Round.Chance), out var price);
-
-            if (GameManager.Round.Gold >= price)
-            {
-                GameManager.Round.Chance++;
-                GameManager.Round.Gold -= price;
-            }
-            else
-            {
-                GameManager.UI.ShowPopupUI<UI_ShopErrorPopup>();
-            }
-        }
+        public ScrollRect GetScrollRect()
+            => scrollRect;
     }
 }

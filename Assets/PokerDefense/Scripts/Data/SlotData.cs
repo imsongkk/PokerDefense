@@ -11,10 +11,17 @@ namespace PokerDefense.Data
     {
         public string hardNess;
         public int stageNumber;
+        public InventoryData inventory;
+        public List<TowerSaveData> towerSaveDataList;
+    }
+
+    [Serializable]
+    public class InventoryData
+    {
         public int heart;
         public int gold;
         public int chance;
-        public List<TowerSaveData> towerSaveDataList;
+        public Dictionary<string, int> itemHave = new Dictionary<string, int>(); // key : itemId, value : count
     }
 
     [Serializable]

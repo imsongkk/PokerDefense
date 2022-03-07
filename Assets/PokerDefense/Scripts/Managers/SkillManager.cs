@@ -112,7 +112,7 @@ public class SkillManager : MonoBehaviour
         float skillTime = skillData[skillIndex].skillTime;
         float coolTime = skillData[skillIndex].coolTime;
 
-        GameManager.Round.Gold -= skillData[skillIndex].skillCost; // 스킬 코스트 소비
+        GameManager.Inventory.Gold -= skillData[skillIndex].skillCost; // 스킬 코스트 소비
         skillStarted[skillIndex]?.Invoke(skillTime, coolTime);
     }
 
@@ -132,7 +132,7 @@ public class SkillManager : MonoBehaviour
             // TODO : 시스템 메세지 띄우기
             return false;
         }
-        else if (skillData[skillIndex].skillCost > GameManager.Round.Gold)
+        else if (skillData[skillIndex].skillCost > GameManager.Inventory.Gold)
         {
             GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotEnoughCost);
             Debug.Log("코스트 부족");

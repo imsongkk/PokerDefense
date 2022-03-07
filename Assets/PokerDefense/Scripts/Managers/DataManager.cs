@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 using PokerDefense.Towers;
+using UnityEngine.Events;
 
 namespace PokerDefense.Managers
 {
@@ -22,9 +22,13 @@ namespace PokerDefense.Managers
         public Dictionary<int, SkillData> SkillDataDict { get; private set; } = new Dictionary<int, SkillData>(); // key : skillIndex
         public Dictionary<string, int> SkillIndexDict { get; private set; } = new Dictionary<string, int>(); // key : skillName
         public Dictionary<string, string> SystemMessageDict { get; private set; } = new Dictionary<string, string>(); // key : Define.SystemMessage
-        public Dictionary<string, int> ShopDataDict { get; private set; } = new Dictionary<string, int>();
-        public Dictionary<string, GameData> GameDataDict { get; private set; }
+        public List<string> ShopItemList { get; private set; } = new List<string>();
+        public Dictionary<string, GameData> GameDataDict { get; private set; } = new Dictionary<string, GameData>();
+        public Dictionary<string, ItemData> ItemDataDict { get; private set; } = new Dictionary<string, ItemData>(); // key : itemId
+
+
         public GameData CurrentGameData { get; private set; }
+        public SlotData SlotData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -35,12 +39,12 @@ namespace PokerDefense.Managers
         private string skilJsonFileName = "SkillData";
         private string systemMessageJsonFileName = "SystemMessageData";
         private string shopJsonFileName = "ShopData";
-
+        private string ItemJsonFileName = "ItemData";
         private string gameDataJsonFileName = "GameData_";
 
         public void InitDataManager()
         {
-            InitPlayerData();
+            InitPlayerData();            
 
             InitTowerData();
             InitHardNessDataDict();
@@ -48,7 +52,8 @@ namespace PokerDefense.Managers
             InitEnemyDataDict();
             InitSkillDataDict();
             InitSystemMessageDict();
-            InitShopDataDict();
+            InitItemDataDict();
+            InitShopItemList();
         }
 
         private void InitPlayerData()
@@ -114,9 +119,17 @@ namespace PokerDefense.Managers
             SystemMessageDict = LoadJsonFile<Dictionary<string, string>>(jsonLocation, systemMessageJsonFileName);
         }
 
-        private void InitShopDataDict()
+        private void InitShopItemList()
         {
-            ShopDataDict = LoadJsonFile<Dictionary<string, int>>(jsonLocation, shopJsonFileName);
+            ShopItemList = LoadJsonFile<List<string>>(jsonLocation, shopJsonFileName);
+        }
+
+        private void InitItemDataDict()
+        {
+            var itemList = LoadJsonFile<List<ItemData>>(jsonLocation, ItemJsonFileName);
+
+            foreach(var item in itemList)
+                ItemDataDict.Add(item.itemId, item);
         }
 
         private T LoadJsonFile<T>(string loadPath, string fileName)
@@ -153,11 +166,9 @@ namespace PokerDefense.Managers
         private SlotData MakeSlotData()
         {
             SlotData newSlotData = new SlotData();
-            newSlotData.heart = GameManager.Round.Heart;
-            newSlotData.gold = GameManager.Round.Gold;
-            newSlotData.chance = GameManager.Round.Chance;
             newSlotData.stageNumber = GameManager.Round.Round;
             newSlotData.hardNess = GameManager.Round.HardNess;
+            newSlotData.inventory = GameManager.Inventory.GetSaveData();
 
             List<Tower> userTowerList = GameManager.Tower.GetUserTowerList();
             newSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);

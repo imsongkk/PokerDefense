@@ -73,7 +73,7 @@ public class HorseManager : MonoBehaviour
         PlayerHorseIndex = playerHorseIndex;
         BettingPrice = bettingPrice;
         if (BettingPrice.HasValue)
-            GameManager.Round.Gold -= BettingPrice.Value;
+            GameManager.Inventory.Gold -= BettingPrice.Value;
     }
 
     private void OnRoundFinished()
@@ -87,7 +87,7 @@ public class HorseManager : MonoBehaviour
             int price = GetPlayerPrice(playerRank);
             popup.InitUI(playerRank, price, () =>
             {
-                GameManager.Round.Gold += price;
+                GameManager.Inventory.Gold += price;
                 ResetHorseAndPrice();
             });
         }

@@ -1,0 +1,72 @@
+  [
+    {
+      "itemId" : "heart",
+      "price" : 1,
+      "hasSlot" : false
+    },
+    {
+      "itemId" : "chance",
+      "price" : 2,
+      "hasSlot" : false
+    },
+    {
+      "itemId" : "attackDamageUp",
+      "price" : 3,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "attackSpeedUp",
+      "price" : 4,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "attackBossDamageUp",
+      "price" : 5,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "enemySlowDown",
+      "price" : 6,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem1",
+      "price" : 7,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem2",
+      "price" : 8,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem3",
+      "price" : 9,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem4",
+      "price" : 10,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem5",
+      "price" : 11,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem6",
+      "price" : 12,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem7",
+      "price" : 13,
+      "hasSlot" : true
+    },
+    {
+      "itemId" : "someItem8",
+      "price" : 14,
+      "hasSlot" : true
+    }
+  ]
