@@ -34,7 +34,7 @@ namespace PokerDefense.UI
             itemId = _itemId;
 
             // Todo : hasSlot에 따라 스프라이트 초기화
-            itemImage.sprite = GameManager.Resource.Load<GameObject>($"Prefabs/Item/{itemId}").GetComponent<SpriteRenderer>().sprite;
+            itemImage.sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/{itemId}");
         }
 
         public void ItemPurchased(int count)

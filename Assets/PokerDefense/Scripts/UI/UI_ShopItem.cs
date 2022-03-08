@@ -45,7 +45,7 @@ namespace PokerDefense.UI
             ui_ShopPopup = _ui_ShopPopup;
             scrollRect = ui_ShopPopup.GetScrollRect();
 
-            itemImage.sprite = GameManager.Resource.Load<GameObject>($"Prefabs/Item/{itemData.itemId}").GetComponent<SpriteRenderer>().sprite;
+            itemImage.sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/{itemData.itemId}");
             goldCountText.text = itemData.price.ToString();
         }
 
