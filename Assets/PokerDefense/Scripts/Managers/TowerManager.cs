@@ -19,7 +19,7 @@ namespace PokerDefense.Managers
         }
 
         List<TowerPanel> towerPanelList = new List<TowerPanel>();
-        List<Tower> userTowerList = new List<Tower> ();
+        List<Tower> userTowerList = new List<Tower>();
         TowerPanel selectedTowerPanel = null;
 
         public void InitTowerManager()
@@ -39,7 +39,7 @@ namespace PokerDefense.Managers
                 return;
             }
 
-            for(int i=0; i<towerPanelsObject.transform.childCount; i++)
+            for (int i = 0; i < towerPanelsObject.transform.childCount; i++)
             {
                 TowerPanel towerPanel = towerPanelsObject.transform.GetChild(i).GetComponent<TowerPanel>();
                 towerPanelList.Add(towerPanel);
@@ -113,7 +113,7 @@ namespace PokerDefense.Managers
             EndTowerPanelSelect(target);
 
             // TowerBase 건설된 TowerPanel 저장
-            selectedTowerPanel = target; 
+            selectedTowerPanel = target;
 
             // TowerBase 건설 성공시 라운드 시작
             GameManager.Round.BreakState();

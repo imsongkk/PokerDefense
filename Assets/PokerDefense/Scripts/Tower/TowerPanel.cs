@@ -10,6 +10,7 @@ namespace PokerDefense.Towers
         SpriteRenderer spriteRenderer;
         GameObject towerBase;
 
+        [SerializeField]
         Tower tower;
 
         Color originColor;
@@ -29,16 +30,16 @@ namespace PokerDefense.Towers
             Index = transform.GetSiblingIndex();
         }
 
-        public void GetTouched(RoundState currentState) // InputManager¿¡ ÀÇÇØ È£Ãâ
+        public void GetTouched(RoundState currentState) // InputManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
         {
-            switch(currentState)
+            switch (currentState)
             {
                 case RoundState.NONE:
                 case RoundState.STOP:
                 case RoundState.READY:
                     return;
                 case RoundState.TOWER:
-                    if (HasTower()) // TowerPanel¿¡ ÀÌ¹Ì Tower°¡ ÀÖÀ» °æ¿ì
+                    if (HasTower()) // TowerPanelï¿½ï¿½ ï¿½Ì¹ï¿½ Towerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     {
                         UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
                         towerTouchPopup.InitUI(this);
@@ -50,7 +51,7 @@ namespace PokerDefense.Towers
                     }
                     break;
                 case RoundState.PLAY:
-                    if (HasTower()) // TowerPanel¿¡ ÀÌ¹Ì Tower°¡ ÀÖÀ» °æ¿ì
+                    if (HasTower()) // TowerPanelï¿½ï¿½ ï¿½Ì¹ï¿½ Towerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     {
                         UI_TowerTouchPopup towerTouchPopup = GameManager.UI.ShowPopupUI<UI_TowerTouchPopup>();
                         towerTouchPopup.InitUI(this);

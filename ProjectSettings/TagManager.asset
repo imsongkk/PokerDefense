@@ -13,6 +13,7 @@ TagManager:
   - StartPoint
   - EnemyGroup
   - TowerIdleArea
+  - Tower
   layers:
   - Default
   - TransparentFX
