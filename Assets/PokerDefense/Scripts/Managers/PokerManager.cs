@@ -154,8 +154,15 @@ namespace PokerDefense.Managers
 
         public Hand HandCalaulate(List<(CardShape shape, int number)> cardList)
         {
-            cardList.Sort((x, y) => y.number.CompareTo(x.number));
+            cardList.Sort((x, y) => x.number.CompareTo(y.number));
             int topCard = cardList[4].number;
+
+            //! Debug
+            foreach (var card in cardList)
+            {
+                Debug.Log($"Deck: {card.shape} {card.number}");
+            }
+            Debug.Log($"Topcard: {topCard}");
 
             List<int> sameNumbers = new List<int>();
             int sameNumber = 1;
