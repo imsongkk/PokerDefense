@@ -8,6 +8,8 @@ namespace PokerDefense.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
+        public bool isEditorMode = false;
+
         UIManager uiManager = new UIManager();
         ResourceManager resourceManager = new ResourceManager();
         TowerManager towerManager = new TowerManager();
