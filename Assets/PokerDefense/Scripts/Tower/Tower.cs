@@ -14,8 +14,8 @@ namespace PokerDefense.Towers
     {
         public class TowerIndivData
         {
-            public TowerIndivData(Tower owner, int topCard, int damageLevel, 
-                int speedLevel, int rangeLevel, int criticalLevel, int rareNess, int price, 
+            public TowerIndivData(Tower owner, int topCard, int damageLevel,
+                int speedLevel, int rangeLevel, int criticalLevel, int rareNess, int price,
                 bool isHidden, TowerType towerType, string towerName, int index)
             {
                 GameManager.Data.TowerUpgradeDataDict.TryGetValue(towerName, out towerUpgradeData);
@@ -47,12 +47,12 @@ namespace PokerDefense.Towers
             int maxDamageLevel, maxSpeedLevel, maxRangeLevel, maxCriticalLevel;
 
             public float Damage { get; private set; }
-            public int DamageLevel 
-            { 
-                get => damageLevel; 
-                set 
-                { 
-                    if(damageLevel == maxDamageLevel)
+            public int DamageLevel
+            {
+                get => damageLevel;
+                set
+                {
+                    if (damageLevel == maxDamageLevel)
                     {
                         GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
                         return;
@@ -61,7 +61,7 @@ namespace PokerDefense.Towers
                     damageLevel = value;
                     Damage = towerUpgradeData.attackDamageTable[damageLevel];
                     UpdatePrice();
-                } 
+                }
             }
             public float Speed { get; private set; }
             public int SpeedLevel
@@ -110,7 +110,7 @@ namespace PokerDefense.Towers
                         GameManager.UI.ShowPopupUI<UI_UpgradeErrorPopup>();
                         return;
                     }
-                    
+
                     criticalLevel = value;
                     Critical = towerUpgradeData.attackCriticalTable[criticalLevel];
                     UpdatePrice();
@@ -170,9 +170,9 @@ namespace PokerDefense.Towers
 
         protected IEnumerator Attacking()
         {
-            while(true)
+            while (true)
             {
-                if(enemies.Count > 0)
+                if (enemies.Count > 0)
                 {
                     Attack();
                     yield return attackDelay;
@@ -209,14 +209,16 @@ namespace PokerDefense.Towers
 
             towerIndivData = new TowerIndivData(this, towerSaveData.topCard, towerSaveData.attackDamageLevel,
                 towerSaveData.attackSpeedLevel, towerSaveData.attackRangeLevel, towerSaveData.attackCriticalLevel,
-                towerUniqueData.rareNess, towerUniqueData.basePrice, towerUniqueData.isHidden, towerSaveData.towerType, 
+                towerUniqueData.rareNess, towerUniqueData.basePrice, towerUniqueData.isHidden, towerSaveData.towerType,
                 towerSaveData.towerName, towerSaveData.towerIndex);
 
             //SetRangeCollider();
         }
 
+        //TODO 단일/다중 표적에 대미지를 가하는 기능을 제외하고 모두 하위 스크립트로 이동
         protected virtual void Attack()
         {
+            //! Deprecated
             if (enemies.Count == 0) return;
 
             Enemy target = enemies[0];
@@ -230,6 +232,28 @@ namespace PokerDefense.Towers
             SetAnimAttack(target, isCritical); // 애니메이션 스타트
         }
 
+        protected virtual void AttackTarget(Enemy target)
+        {
+            Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
+            TowerType towerType = towerIndivData.TowerType;
+            bool isCritical = UnityEngine.Random.value <= towerIndivData.Critical / 100;
+
+            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
+
+            target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
+            SetAnimAttack(target, isCritical); // 애니메이션 스타트
+        }
+
+        //
+        protected virtual void DamageTargets(int maxTargetAmount)
+        {
+            int targetAmount = ((enemies.Count < maxTargetAmount) ? enemies.Count : maxTargetAmount);
+            for (int i = 0; i < targetAmount; i++)
+            {
+                AttackTarget(enemies[i]);
+            }
+        }
+
         // 객체마다 다른 공격 방식
 
         protected virtual void DamageCalculate()
@@ -239,7 +263,7 @@ namespace PokerDefense.Towers
 
         protected void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.CompareTag("Enemy"))
+            if (collision.CompareTag("Enemy"))
             {
                 enemies.Add(collision.gameObject.GetComponent<Enemy>());
             }
