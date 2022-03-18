@@ -218,20 +218,17 @@ namespace PokerDefense.Towers
         //TODO 단일/다중 표적에 대미지를 가하는 기능을 제외하고 모두 하위 스크립트로 이동
         protected virtual void Attack()
         {
-            //! Deprecated
-            if (enemies.Count == 0) return;
+            int targetAmount;
+            if (towerUniqueData.maxTargetAmount == -1) targetAmount = enemies.Count;
+            else targetAmount = ((enemies.Count < towerUniqueData.maxTargetAmount) ? enemies.Count : towerUniqueData.maxTargetAmount);
 
-            Enemy target = enemies[0];
-            Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
-            TowerType towerType = towerIndivData.TowerType;
-            bool isCritical = UnityEngine.Random.value <= towerIndivData.Critical / 100;
-
-            float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
-
-            target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
-            SetAnimAttack(target, isCritical); // 애니메이션 스타트
+            for (int i = 0; i < targetAmount; i++)
+            {
+                AttackTarget(enemies[i]);
+            }
         }
 
+        // 객체마다 다른 공격 방식
         protected virtual void AttackTarget(Enemy target)
         {
             Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
@@ -240,21 +237,24 @@ namespace PokerDefense.Towers
 
             float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
 
-            target.OnDamage(calculatedDamage); // 몬스터에게 실제 데미지 전달
+            if (towerUniqueData.isProjectile) ProjectileAttackTarget(target, calculatedDamage, towerUniqueData.isCushion);
+            else DirectAttackTarget(target, calculatedDamage);
+
             SetAnimAttack(target, isCritical); // 애니메이션 스타트
         }
 
-        //
-        protected virtual void DamageTargets(int maxTargetAmount)
+        protected virtual void DebuffTarget(Enemy target) { return; }   //* 하위 타워에서 override
+
+        protected virtual void DirectAttackTarget(Enemy target, float damage)
         {
-            int targetAmount = ((enemies.Count < maxTargetAmount) ? enemies.Count : maxTargetAmount);
-            for (int i = 0; i < targetAmount; i++)
-            {
-                AttackTarget(enemies[i]);
-            }
+            target.OnDamage(damage); // 몬스터에게 실제 데미지 전달
+            DebuffTarget(target);
         }
 
-        // 객체마다 다른 공격 방식
+        protected virtual void ProjectileAttackTarget(Enemy target, float damage, bool isCushion)
+        {
+            //TODO 투사체 발사 및 해당 투사체에서 적에게 대미지 전달하도록 변경(직접데미지 X)
+        }
 
         protected virtual void DamageCalculate()
         {

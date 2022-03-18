@@ -2,81 +2,129 @@
   "HighCard": {
     "rareNess": 0,
     "basePrice": 5,
-    "isHidden": false
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": false,
+    "isCushion": false
   },
   "OnePair": {
     "rareNess": 1,
     "basePrice": 8,
-    "isHidden": false
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": false,
+    "isCushion": false
   },
   "TwoPair": {
     "rareNess": 1,
     "basePrice": 8,
-    "isHidden": false
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": false,
+    "isCushion": false
   },
   "Tripple": {
-    "rareNess": 1,
+    "rareNess": 2,
     "basePrice": 8,
-    "isHidden": false
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": false,
+    "isCushion": false
   },
   "Straight": {
-    "rareNess": 1,
+    "rareNess": 2,
     "basePrice": 8,
-    "isHidden": false
-  },
-  "StraightFlush": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "RoyalStraightFlush": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "FullHouse": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "FourCards": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "Flush": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
   },
   "Beast": {
-    "rareNess": 1,
+    "rareNess": 3,
     "basePrice": 8,
-    "isHidden": false
-  },
-  "RoyalStraight": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "Jackpot": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
-  },
-  "FiveCards": {
-    "rareNess": 1,
-    "basePrice": 8,
-    "isHidden": false
+    "isHidden": true,
+    "maxTargetAmount": 1,
+    "isProjectile": false,
+    "isCushion": false
   },
   "BackStraight": {
-    "rareNess": 1,
+    "rareNess": 3,
     "basePrice": 8,
-    "isHidden": false
+    "isHidden": true,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
+  },
+  "RoyalStraight": {
+    "rareNess": 3,
+    "basePrice": 8,
+    "isHidden": true,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
+  },
+  "FullHouse": {
+    "rareNess": 4,
+    "basePrice": 8,
+    "isHidden": false,
+    "maxTargetAmount": 2,
+    "isProjectile": true,
+    "isCushion": false
+  },
+  "FourCards": {
+    "rareNess": 4,
+    "basePrice": 8,
+    "isHidden": false,
+    "maxTargetAmount": 4,
+    "isProjectile": false,
+    "isCushion": false
+  },
+  "Flush": {
+    "rareNess": 4,
+    "basePrice": 8,
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": false
+  },
+  "StraightFlush": {
+    "rareNess": 5,
+    "basePrice": 8,
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
+  },
+  "RoyalStraightFlush": {
+    "rareNess": 5,
+    "basePrice": 8,
+    "isHidden": false,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
   },
   "BackStraightFlush": {
-    "rareNess": 1,
+    "rareNess": 6,
     "basePrice": 8,
-    "isHidden": false
+    "isHidden": true,
+    "maxTargetAmount": 1,
+    "isProjectile": true,
+    "isCushion": true
+  },
+  "FiveCards": {
+    "rareNess": 6,
+    "basePrice": 8,
+    "isHidden": true,
+    "maxTargetAmount": -1,
+    "isProjectile": false,
+    "isCushion": false
+  },
+  "Jackpot": {
+    "rareNess": 7,
+    "basePrice": 8,
+    "isHidden": true,
+    "maxTargetAmount": -1,
+    "isProjectile": false,
+    "isCushion": false
   }
 }
