@@ -1,6 +1,7 @@
 using PokerDefense.Data;
 using PokerDefense.Managers;
 using PokerDefense.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,12 @@ using static PokerDefense.Utils.Define;
 
 public class Enemy : MonoBehaviour
 {
+    [Flags]
+    public enum Debuff
+    {
+        Slow = 1,
+        Weak = 2
+    }
     public class EnemyIndivData
     {
         public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
@@ -21,13 +28,7 @@ public class Enemy : MonoBehaviour
             Damage = damage;
             Name = name;
             EnemyType = enemyType;
-        }
-
-        [Flags]
-        public enum Debuff
-        {
-            Slow = 1,
-            Weak = 2
+            enemyDebuff = 0;
         }
 
         Enemy owner;
@@ -38,7 +39,7 @@ public class Enemy : MonoBehaviour
         public bool IsBoss { get; private set; }
         public int Damage { get; private set; }
         public EnemyType EnemyType { get; private set; }
-        public Debuff Debuff { get; private set; }
+        public Enemy.Debuff enemyDebuff;
 
 
         public void OnDamage(float damage)
@@ -108,7 +109,6 @@ public class Enemy : MonoBehaviour
         enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp,
             enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
         this.enemyOriginData = enemyOriginData;
-        this.Debuff = 0;
 
         RefreshHpBar();
     }
@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour
         RefreshHpBar();
 
         DebuffEnemy(debuff, debuffTime);
-        buffStack.Invoke;
+        buffStack.Invoke();
     }
 
     public void OnDamage(float damage)
@@ -176,9 +176,9 @@ public class Enemy : MonoBehaviour
     public IEnumerator DebuffEnemy(Debuff debuff, float time)
     {
         // enemyIndivData.OnSlow(time, percent);
-        enemyIndivData.Debuff |= debuff;
-        yield return WaitForSeconds(time);
-        enemyIndivData.Debuff &= ~debuff;
+        enemyIndivData.enemyDebuff |= debuff;
+        yield return new WaitForSeconds(time);
+        enemyIndivData.enemyDebuff &= ~debuff;
         yield return null;
     }
 
