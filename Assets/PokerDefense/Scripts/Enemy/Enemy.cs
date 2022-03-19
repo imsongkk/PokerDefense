@@ -23,6 +23,13 @@ public class Enemy : MonoBehaviour
             EnemyType = enemyType;
         }
 
+        [Flags]
+        public enum Debuff
+        {
+            Slow = 1,
+            Weak = 2
+        }
+
         Enemy owner;
 
         public float Speed { get; private set; }
@@ -31,6 +38,8 @@ public class Enemy : MonoBehaviour
         public bool IsBoss { get; private set; }
         public int Damage { get; private set; }
         public EnemyType EnemyType { get; private set; }
+        public Debuff Debuff { get; private set; }
+
 
         public void OnDamage(float damage)
             => Hp -= damage;
@@ -74,7 +83,7 @@ public class Enemy : MonoBehaviour
 
         GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
         GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
-        GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
+        GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
 
         GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
         GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
@@ -82,7 +91,7 @@ public class Enemy : MonoBehaviour
             GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
             enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
         });
-        GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
+        GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
     }
 
     private void Start()
@@ -96,9 +105,10 @@ public class Enemy : MonoBehaviour
 
     public void InitEnemy(string enemyName, EnemyData enemyOriginData)
     {
-        enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp, 
+        enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp,
             enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
         this.enemyOriginData = enemyOriginData;
+        this.Debuff = 0;
 
         RefreshHpBar();
     }
@@ -112,10 +122,10 @@ public class Enemy : MonoBehaviour
                 MoveHpBar();
 
                 moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
-                if(Util.GetNearFourDirection(moveDirection) == Vector2.right)
+                if (Util.GetNearFourDirection(moveDirection) == Vector2.right)
                     transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
                 else if (Util.GetNearFourDirection(moveDirection) == Vector2.left)
-                    transform.localScale = new Vector2(originScaleX , transform.localScale.y);
+                    transform.localScale = new Vector2(originScaleX, transform.localScale.y);
 
                 transform.Translate(moveDirection * enemyIndivData.Speed * Time.deltaTime);
                 yield return null;
@@ -129,7 +139,7 @@ public class Enemy : MonoBehaviour
 
         Debug.Log($"{enemyIndivData.Name} died");
 
-        if(enemyIndivData.IsBoss)
+        if (enemyIndivData.IsBoss)
         {
             // TODO : 보스 죽음 팝업
         }
@@ -137,8 +147,22 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void OnDamage(float damage) 
+    public void OnHit(float damage, Debuff debuff, float debuffTime, BuffStackDelegate buffStack)
     {
+        Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
+
+        enemyIndivData.OnDamage(damage);
+        if (enemyIndivData.Hp < 0 && !died)
+            Die();
+        RefreshHpBar();
+
+        DebuffEnemy(debuff, debuffTime);
+        buffStack.Invoke;
+    }
+
+    public void OnDamage(float damage)
+    {
+        //! Deprecated
         Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
         enemyIndivData.OnDamage(damage);
@@ -147,9 +171,15 @@ public class Enemy : MonoBehaviour
         RefreshHpBar();
     }
 
-    public void OnSlow(float time, float percent)
+    //* 디버프 목록
+
+    public IEnumerator DebuffEnemy(Debuff debuff, float time)
     {
-        enemyIndivData.OnSlow(time, percent);
+        // enemyIndivData.OnSlow(time, percent);
+        enemyIndivData.Debuff |= debuff;
+        yield return WaitForSeconds(time);
+        enemyIndivData.Debuff &= ~debuff;
+        yield return null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

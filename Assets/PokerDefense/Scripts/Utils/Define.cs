@@ -76,7 +76,7 @@ namespace PokerDefense.Utils
         public enum SystemMessage
         {
             Save,
-            
+
             ReadyStateStart,
             TowerStateStart,
             HorseStateStart,
@@ -126,5 +126,7 @@ namespace PokerDefense.Utils
             // TODO : towerType과 enemyType에 따라 damage 증감식 적용
             return calculatedDamage;
         }
+
+        public delegate void BuffStackDelegate();
     }
 }
