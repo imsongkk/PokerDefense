@@ -17,6 +17,8 @@ namespace PokerDefense.Towers
         protected float damage;
         [SerializeField]
         protected float speed;
+        [SerializeField]
+        protected bool isCushion;
 
         protected Vector3 targetPosition;
 
@@ -35,10 +37,11 @@ namespace PokerDefense.Towers
 
         }
 
-        public void InitProjectile(float damage, float speed)
+        public void InitProjectile(float speed, bool isCushion, ProjectilePool pool)
         {
-            this.damage = damage;
             this.speed = speed;
+            this.isCushion = isCushion;
+            this.pool = pool;
         }
 
         public void SetDamage(float damage)

@@ -8,216 +8,215 @@ using UnityEngine;
 using UnityEngine.UI;
 using static PokerDefense.Utils.Define;
 
-public class Enemy : MonoBehaviour
+namespace PokerDefense.Enemies
 {
-    [Flags]
-    public enum Debuff
+    public class Enemy : MonoBehaviour
     {
-        Slow = 1,
-        Weak = 2
-    }
-
-    public class EnemyIndivData
-    {
-        public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
+        [Flags]
+        public enum Debuff
         {
-            this.owner = owner;
-
-            Speed = speed;
-            Hp = hp;
-            IsBoss = isBoss;
-            Damage = damage;
-            Name = name;
-            EnemyType = enemyType;
-            enemyDebuff = 0;
+            Slow = 1,
+            Weak = 2
         }
 
-        Enemy owner;
-
-        public float Speed { get; private set; }
-        public float Hp { get; private set; }
-        public string Name { get; private set; }
-        public bool IsBoss { get; private set; }
-        public int Damage { get; private set; }
-        public EnemyType EnemyType { get; private set; }
-        public Enemy.Debuff enemyDebuff;
-
-
-        public void OnDamage(float damage)
-            => Hp -= damage;
-
-        public void OnSlow(float time, float percent)
+        public class EnemyIndivData
         {
-            Speed *= 1 - (percent / 100);
-        }
-
-        public void OnSlowResume()
-        {
-            Speed = owner.enemyOriginData.moveSpeed;
-        }
-    }
-    EnemyData enemyOriginData;
-    public EnemyIndivData enemyIndivData { get; private set; }
-
-    [SerializeField] Transform hpBarGroup, hitText;
-    [SerializeField] Image hpBarImage;
-
-    protected int curIndex = 0;
-
-    public static List<Transform> wayPoints;
-    public static Transform endPoint;
-
-    private float originScaleX;
-
-    Vector3 moveDirection;
-
-    bool died = false;
-
-    private void Update()
-    {
-        //MoveHpBar();
-        //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
-    }
-
-    private void Awake()
-    {
-        originScaleX = transform.localScale.x;
-
-        GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-        GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
-        GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
-
-        GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
-        GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
-        {
-            GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
-            enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
-        });
-        GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
-    }
-
-    private void Start()
-        => Init();
-
-    private void Init()
-    {
-        MoveHpBar(); // 1프레임 방지
-        StartCoroutine(Move());
-    }
-
-    public void InitEnemy(string enemyName, EnemyData enemyOriginData)
-    {
-        enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp,
-            enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
-        this.enemyOriginData = enemyOriginData;
-
-        RefreshHpBar();
-    }
-
-    IEnumerator Move()
-    {
-        if (wayPoints.Count >= 2)
-        {
-            while (curIndex < wayPoints.Count)
+            public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
             {
-                MoveHpBar();
+                this.owner = owner;
 
-                moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
-                if (Util.GetNearFourDirection(moveDirection) == Vector2.right)
-                    transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
-                else if (Util.GetNearFourDirection(moveDirection) == Vector2.left)
-                    transform.localScale = new Vector2(originScaleX, transform.localScale.y);
+                Speed = speed;
+                Hp = hp;
+                IsBoss = isBoss;
+                Damage = damage;
+                Name = name;
+                EnemyType = enemyType;
+                enemyDebuff = 0;
+            }
 
-                transform.Translate(moveDirection * enemyIndivData.Speed * Time.deltaTime);
-                yield return null;
+            Enemy owner;
+
+            public float Speed { get; private set; }
+            public float Hp { get; private set; }
+            public string Name { get; private set; }
+            public bool IsBoss { get; private set; }
+            public int Damage { get; private set; }
+            public EnemyType EnemyType { get; private set; }
+
+            public float AdditionalDamage { get; private set; }
+            public Enemy.Debuff enemyDebuff;
+
+
+            public void OnDamage(float damage)
+                => Hp -= damage;
+
+            public void OnSlow(float time, float percent)
+            {
+                Speed *= 1 - (percent / 100);
+            }
+
+            public void OnSlowResume()
+            {
+                Speed = owner.enemyOriginData.moveSpeed;
             }
         }
-    }
+        EnemyData enemyOriginData;
+        public EnemyIndivData enemyIndivData { get; private set; }
 
-    public void Die()
-    {
-        died = true;
+        [SerializeField] Transform hpBarGroup, hitText;
+        [SerializeField] Image hpBarImage;
 
-        Debug.Log($"{enemyIndivData.Name} died");
+        protected int curIndex = 0;
 
-        if (enemyIndivData.IsBoss)
+        public static List<Transform> wayPoints;
+        public static Transform endPoint;
+
+        private float originScaleX;
+
+        Vector3 moveDirection;
+
+        bool died = false;
+
+        private void Update()
         {
-            // TODO : 보스 죽음 팝업
+            //MoveHpBar();
+            //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
         }
-        GameManager.Round.EnemyKillCount++;
-        Destroy(gameObject);
-    }
 
-    public void OnHit(float damage, Debuff debuff, float debuffTime, BuffStackDelegate buffStack)
-    {
-        Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
-
-        enemyIndivData.OnDamage(damage);
-        if (enemyIndivData.Hp < 0 && !died)
-            Die();
-        RefreshHpBar();
-
-        DebuffEnemy(debuff, debuffTime);
-        buffStack.Invoke();
-    }
-
-    public void OnDamage(float damage)
-    {
-        //! Deprecated
-        Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
-
-        enemyIndivData.OnDamage(damage);
-        if (enemyIndivData.Hp < 0 && !died)
-            Die();
-        RefreshHpBar();
-    }
-
-    //* 디버프 목록
-
-    public IEnumerator DebuffEnemy(Debuff debuff, float time)
-    {
-        // enemyIndivData.OnSlow(time, percent);
-        enemyIndivData.enemyDebuff |= debuff;
-        yield return new WaitForSeconds(time);
-        enemyIndivData.enemyDebuff &= ~debuff;
-        yield return null;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("WayPoint"))
-            curIndex++;
-        else if (collision.gameObject.CompareTag("EndPoint"))
+        private void Awake()
         {
-            if (curIndex + 2 >= wayPoints.Count)
-                Destroy(gameObject);
-            GameManager.Round.EnemyEndPointCount++;
+            originScaleX = transform.localScale.x;
+
+            GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
+            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
+
+            GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
+            GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
+            {
+                GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
+                enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
+            });
+            GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
+        }
+
+        private void Start()
+            => Init();
+
+        private void Init()
+        {
+            MoveHpBar(); // 1프레임 방지
+            StartCoroutine(Move());
+        }
+
+        public void InitEnemy(string enemyName, EnemyData enemyOriginData)
+        {
+            enemyIndivData = new EnemyIndivData(this, enemyOriginData.moveSpeed, enemyOriginData.hp,
+                enemyName, enemyOriginData.isBoss, enemyOriginData.damage, enemyOriginData.enemyType);
+            this.enemyOriginData = enemyOriginData;
+
+            RefreshHpBar();
+        }
+
+        IEnumerator Move()
+        {
+            if (wayPoints.Count >= 2)
+            {
+                while (curIndex < wayPoints.Count)
+                {
+                    MoveHpBar();
+
+                    moveDirection = (wayPoints[(curIndex + 1) % wayPoints.Count].position - wayPoints[curIndex].position).normalized;
+                    if (Util.GetNearFourDirection(moveDirection) == Vector2.right)
+                        transform.localScale = new Vector2(originScaleX * -1, transform.localScale.y);
+                    else if (Util.GetNearFourDirection(moveDirection) == Vector2.left)
+                        transform.localScale = new Vector2(originScaleX, transform.localScale.y);
+
+                    transform.Translate(moveDirection * enemyIndivData.Speed * Time.deltaTime);
+                    yield return null;
+                }
+            }
+        }
+
+        public void Die()
+        {
+            died = true;
+
+            Debug.Log($"{enemyIndivData.Name} died");
+
+            if (enemyIndivData.IsBoss)
+            {
+                // TODO : 보스 죽음 팝업
+            }
+            GameManager.Round.EnemyKillCount++;
+            Destroy(gameObject);
+        }
+
+        public void OnHit(float damage, Debuff debuff, float debuffTime, BuffStackDelegate buffStack)
+        {
+            Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
+
+            enemyIndivData.OnDamage(damage);
+            if (enemyIndivData.Hp < 0 && !died)
+                Die();
+            RefreshHpBar();
+
+            DebuffEnemy(debuff, debuffTime);
+            buffStack.Invoke();
+        }
+
+        public void OnDamage(float damage)
+        {
+            //! Deprecated
+            Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
+
+            enemyIndivData.OnDamage(damage);
+            if (enemyIndivData.Hp < 0 && !died)
+                Die();
+            RefreshHpBar();
+        }
+
+        //* 디버프 목록
+
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag("WayPoint"))
+                curIndex++;
+            else if (collision.gameObject.CompareTag("EndPoint"))
+            {
+                if (curIndex + 2 >= wayPoints.Count)
+                    Destroy(gameObject);
+                GameManager.Round.EnemyEndPointCount++;
+            }
+        }
+
+        public bool IsInRange(Vector2 screenSpaceOffset, float range)
+        {
+            float pixelsPerUnitInScreenSpace = Util.GetPixelsPerUnitInScreenSpace();
+            Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+            float distance = Vector2.Distance(screenSpaceOffset, enemyScreenPos);
+
+            if (distance <= range * pixelsPerUnitInScreenSpace)
+                return true;
+            return false;
+        }
+
+        private void MoveHpBar()
+        {
+            hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
+        }
+
+        private void RefreshHpBar()
+        {
+            hpBarImage.fillAmount = (enemyIndivData.Hp > 0 ? enemyIndivData.Hp : 0) / enemyOriginData.hp;
+        }
+
+        private void RefreshHitText()
+        {
+
         }
     }
 
-    public bool IsInRange(Vector2 screenSpaceOffset, float range)
-    {
-        float pixelsPerUnitInScreenSpace = Util.GetPixelsPerUnitInScreenSpace();
-        Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-        float distance = Vector2.Distance(screenSpaceOffset, enemyScreenPos);
-
-        if (distance <= range * pixelsPerUnitInScreenSpace)
-            return true;
-        return false;
-    }
-
-    private void MoveHpBar()
-    {
-        hpBarGroup.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.2f, 0f));
-    }
-
-    private void RefreshHpBar()
-    {
-        hpBarImage.fillAmount = (enemyIndivData.Hp > 0 ? enemyIndivData.Hp : 0) / enemyOriginData.hp;
-    }
-
-    private void RefreshHitText()
-    {
-
-    }
 }
