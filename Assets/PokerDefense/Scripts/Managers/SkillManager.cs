@@ -12,10 +12,10 @@ using UnityEngine.UI;
 public class SkillManager : MonoBehaviour
 {
     /// <summary>
-    /// °¢ ½ºÅ³¿¡°Ô ºÎ¿©µÈ index´Â jsonµ¥ÀÌÅÍ¸¦ È®ÀÎÇÒ °Í
+    /// ï¿½ï¿½ ï¿½ï¿½Å³ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½ï¿½ï¿½ indexï¿½ï¿½ jsonï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     /// </summary>
     /// 
-    public UnityEvent<float, float>[] skillStarted; // ½ºÅ³ Áö¼Ó½Ã°£, ½ºÅ³ ÄðÅ¸ÀÓ
+    public UnityEvent<float, float>[] skillStarted; // ï¿½ï¿½Å³ ï¿½ï¿½ï¿½Ó½Ã°ï¿½, ï¿½ï¿½Å³ ï¿½ï¿½Å¸ï¿½ï¿½
     public UnityEvent[] skillFinished;
 
     SkillData[] skillData;
@@ -61,7 +61,7 @@ public class SkillManager : MonoBehaviour
                 {
                     GameManager.SystemText.SetSystemMessage(Define.SystemMessage.TimeStopSkillUse);
                     UseSkill(skillIndex);
-                    // TODO : UI_InGameSceneÀÇ timeText È¦µù
+                    // TODO : UI_InGameSceneï¿½ï¿½ timeText È¦ï¿½ï¿½
                 }
                 break;
             case 1: //FireHole
@@ -69,7 +69,7 @@ public class SkillManager : MonoBehaviour
                     var popup = GameManager.UI.ShowPopupUI<UI_SkillRangePopup>();
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
-						skillStarted[skillIndex].AddListener((a, b)=>{ SpawnFireHole(rangeScreenPos, skillData[skillIndex]); });
+                        skillStarted[skillIndex].AddListener((a, b) => { SpawnFireHole(rangeScreenPos, skillData[skillIndex]); });
                         GameManager.SystemText.SetSystemMessage(Define.SystemMessage.FireHoleSkillUse);
                         UseSkill(skillIndex);
                     });
@@ -96,12 +96,12 @@ public class SkillManager : MonoBehaviour
     }
 
     private void SpawnFireHole(Vector2 rangeScreenPos, SkillData skillData)
-	{
+    {
         StartCoroutine(SpawnFireHoleCoroutine(rangeScreenPos, skillData));
     }
 
     private void SpawnMeteo(Vector2 rangeScreenPos, SkillData skillData)
-	{
+    {
         var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData.skillRange);
         foreach (var enemy in enemyList)
             enemy.OnDamage(skillData.skillDamage);
@@ -112,7 +112,7 @@ public class SkillManager : MonoBehaviour
         float skillTime = skillData[skillIndex].skillTime;
         float coolTime = skillData[skillIndex].coolTime;
 
-        GameManager.Inventory.Gold -= skillData[skillIndex].skillCost; // ½ºÅ³ ÄÚ½ºÆ® ¼Òºñ
+        GameManager.Inventory.Gold -= skillData[skillIndex].skillCost; // ï¿½ï¿½Å³ ï¿½Ú½ï¿½Æ® ï¿½Òºï¿½
         skillStarted[skillIndex]?.Invoke(skillTime, coolTime);
     }
 
@@ -121,22 +121,22 @@ public class SkillManager : MonoBehaviour
         if (skillData[skillIndex].isInCoolTime)
         {
             GameManager.SystemText.SetSystemMessage(Define.SystemMessage.IsCoolTime);
-            Debug.Log("ÄðÅ¸ÀÓ ÀÔ´Ï´Ù");
-            // TODO : ÄðÅ¸ÀÓ ºÎÁ· ½Ã½ºÅÛ ¸Þ¼¼Áö ¶ç¿ì±â
+            Debug.Log("ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ô´Ï´ï¿½");
+            // TODO : ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return false;
         }
         else if (GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
         {
             GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotPlayState);
-            Debug.Log("Áö±ÝÀº ½ºÅ³À» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù");
-            // TODO : ½Ã½ºÅÛ ¸Þ¼¼Áö ¶ç¿ì±â
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½");
+            // TODO : ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return false;
         }
         else if (skillData[skillIndex].skillCost > GameManager.Inventory.Gold)
         {
             GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotEnoughCost);
-            Debug.Log("ÄÚ½ºÆ® ºÎÁ·");
-            // TODO : ÄÚ½ºÆ® ºÎÁ· ½Ã½ºÅÛ ¸Þ¼¼Áö ¶ç¿ì±â
+            Debug.Log("ï¿½Ú½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½");
+            // TODO : ï¿½Ú½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return false;
         }
 
@@ -177,7 +177,7 @@ public class SkillManager : MonoBehaviour
         fireHole.transform.localScale = new Vector2(2 * skillRange, 2 * skillRange);
         fireHole.SetActive(true);
 
-        while(accumulatedTic < skillTime)
+        while (accumulatedTic < skillTime)
         {
             var enemyList = GameManager.Round.GetEnemyInRange(fireHoleScreenPos, skillRange);
             foreach (var enemy in enemyList)

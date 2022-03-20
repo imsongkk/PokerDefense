@@ -181,7 +181,7 @@ namespace PokerDefense.Towers
             }
         }
 
-        public void InitTower(string towerName, TowerType towerType, int topCard, int index) // 타워 처음 생성
+        public virtual void InitTower(string towerName, TowerType towerType, int topCard, int index) // 타워 처음 생성
         {
             // 더미 세이브 데이터 생성
 
@@ -198,7 +198,7 @@ namespace PokerDefense.Towers
             InitTower(towerSaveData);
         }
 
-        public void InitTower(TowerSaveData towerSaveData) // 세이브 된 데이터로 생성
+        public virtual void InitTower(TowerSaveData towerSaveData) // 세이브 된 데이터로 생성
         {
             string towerName = towerSaveData.towerName;
             GameManager.Data.TowerUniqueDataDict.TryGetValue(towerName, out towerUniqueData);

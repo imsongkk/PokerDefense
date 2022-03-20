@@ -10,19 +10,71 @@ namespace PokerDefense.Towers
 {
     public class Projectile : MonoBehaviour
     {
+        protected ProjectilePool pool;
         protected Enemy target;
+
+        [SerializeField]
         protected float damage;
+        [SerializeField]
+        protected float speed;
 
+        protected Vector3 targetPosition;
 
-        public void InitProjectile(Enemy target, float damage)
+        private void Start()
         {
-            this.target = target;
+
+        }
+
+        private void Update()
+        {
+            if (target != null)
+            {
+                targetPosition = target.transform.position;
+                transform.Translate((targetPosition - this.transform.position).normalized * speed);
+            }
+
+        }
+
+        public void InitProjectile(float damage, float speed)
+        {
+            this.damage = damage;
+            this.speed = speed;
+        }
+
+        public void SetDamage(float damage)
+        {
             this.damage = damage;
         }
 
-        protected virtual void DamageTarget()
+        public void SetPool(ProjectilePool pool)
         {
-            target.OnDamage(damage);
+            this.pool = pool;
+        }
+
+        public void SetTarget(Enemy target)
+        {
+            this.target = target;
+        }
+
+        protected void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Enemy"))
+            {
+                DamageTarget(collision.GetComponent<Enemy>());
+                OnHit();
+            }
+        }
+
+        protected virtual void DamageTarget(Enemy target)
+        {
+            //TODO debuff target
+            target.OnDamage(this.damage);
+        }
+
+        protected virtual void OnHit()
+        {
+            //override on cushion projectile
+            pool.Enqueue(this);
         }
     }
 

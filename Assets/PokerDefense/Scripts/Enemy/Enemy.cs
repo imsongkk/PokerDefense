@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
         Slow = 1,
         Weak = 2
     }
+
     public class EnemyIndivData
     {
         public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
