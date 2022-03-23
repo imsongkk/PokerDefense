@@ -1,4 +1,5 @@
 using PokerDefense.Data;
+using PokerDefense.Enemies;
 using PokerDefense.UI.Popup;
 using PokerDefense.UI.Scene;
 using System.Collections;
@@ -99,7 +100,7 @@ namespace PokerDefense.Managers
                     GameManager.Inventory.Heart--;
                 enemyEndPointCount = value;
             }
-        } 
+        }
         public int EnemyEntireCount { get; private set; } // 라운드 종결 판정
 
         private bool stateBreak = false;
@@ -195,7 +196,7 @@ namespace PokerDefense.Managers
                     break;
                 case RoundState.READY:
                     if (stateChanged) { ReadyStateStart(); }
-                    if(stateBreak)
+                    if (stateBreak)
                     {
                         CurrentState = RoundState.TOWER;
                         stateBreak = false;
@@ -247,7 +248,7 @@ namespace PokerDefense.Managers
             /* ReadyState 일단 기능 없앰
              * 추후 필요에 의하면 사용
              */
-            
+
             //GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
             BreakState();
             stateChanged = false;
@@ -352,7 +353,7 @@ namespace PokerDefense.Managers
             for (int i = 0; i < enemyGroup.childCount; i++)
             {
                 Enemy enemy = enemyGroup.GetChild(i).GetComponent<Enemy>();
-                if(enemy.IsInRange(screenSpaceRangeOffset, range))
+                if (enemy.IsInRange(screenSpaceRangeOffset, range))
                     ret.Add(enemy);
             }
             return ret;
@@ -391,7 +392,7 @@ namespace PokerDefense.Managers
         {
             int elapsedTime = 0;
             WaitForSeconds timeDelay = new WaitForSeconds(1f);
-            while(true)
+            while (true)
             {
                 elapsedTime++;
                 yield return timeDelay;

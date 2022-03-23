@@ -1,6 +1,7 @@
 using UnityEngine;
 using PokerDefense.Data;
 using PokerDefense.Managers;
+using PokerDefense.Enemies;
 using static PokerDefense.Managers.TowerManager;
 using System.Collections;
 using System.Collections.Generic;

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Enemies
@@ -17,6 +18,13 @@ namespace PokerDefense.Enemies
         {
             Slow = 1,
             Weak = 2
+        }
+
+        public struct DebuffData
+        {
+            public Debuff debuff;          // 디버프 종류
+            public float debuffTime;       // 디버프 시간
+            public float debuffPercent;    // 디버프 강도
         }
 
         public class EnemyIndivData
@@ -32,6 +40,9 @@ namespace PokerDefense.Enemies
                 Name = name;
                 EnemyType = enemyType;
                 enemyDebuff = 0;
+
+                debuffTime.Add(Enemy.Debuff.Slow, 0);
+                debuffTime.Add(Enemy.Debuff.Weak, 0);
             }
 
             Enemy owner;
@@ -43,25 +54,47 @@ namespace PokerDefense.Enemies
             public int Damage { get; private set; }
             public EnemyType EnemyType { get; private set; }
 
-            public float AdditionalDamage { get; private set; }
-            public Enemy.Debuff enemyDebuff;
+            private float additionalDamage;
+            private float slowPercent;
 
+            public float AdditionalDamage
+            {
+                get { return additionalDamage; }
+                set { additionalDamage = value; }
+            }
+
+            public float SlowPercent
+            {
+                get { return slowPercent; }
+                set
+                {
+                    slowPercent = value;
+                    Speed = owner.enemyOriginData.moveSpeed * (1 - (slowPercent / 100));
+                }
+            }
+            public Enemy.Debuff enemyDebuff;
+            public Dictionary<Enemy.Debuff, float> debuffTime;
 
             public void OnDamage(float damage)
-                => Hp -= damage;
+                => Hp -= (damage + additionalDamage);
 
-            public void OnSlow(float time, float percent)
+            public void OnSlow(float percent)
             {
-                Speed *= 1 - (percent / 100);
+                //! Deprecated
+                SlowPercent = percent;
             }
 
             public void OnSlowResume()
             {
+                //! Deprecated
                 Speed = owner.enemyOriginData.moveSpeed;
             }
         }
         EnemyData enemyOriginData;
         public EnemyIndivData enemyIndivData { get; private set; }
+
+        public Dictionary<Debuff, UnityEvent<float>> debuffEvents;     // 디버프 적용 함수 목록
+        public Dictionary<Debuff, UnityEvent> debuffStopEvents; // 디버프 해제 함수 목록
 
         [SerializeField] Transform hpBarGroup, hitText;
         [SerializeField] Image hpBarImage;
@@ -81,23 +114,63 @@ namespace PokerDefense.Enemies
         {
             //MoveHpBar();
             //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
+
+            //* 디버프 시간 측정 및 디버프 해제
+            if ((enemyIndivData.enemyDebuff & Debuff.Slow) != 0)
+            {
+                if (enemyIndivData.debuffTime[Debuff.Slow] > 0)
+                {
+                    enemyIndivData.debuffTime[Debuff.Slow] -= Time.deltaTime;
+                }
+                else
+                {
+                    enemyIndivData.enemyDebuff &= ~Debuff.Slow;
+                    enemyIndivData.debuffTime[Debuff.Slow] = 0;
+                    debuffStopEvents[Debuff.Slow].Invoke();
+                }
+            }
+            if ((enemyIndivData.enemyDebuff & Debuff.Weak) != 0)
+            {
+                if (enemyIndivData.debuffTime[Debuff.Weak] > 0)
+                {
+                    enemyIndivData.debuffTime[Debuff.Weak] -= Time.deltaTime;
+                }
+                else
+                {
+                    enemyIndivData.enemyDebuff &= ~Debuff.Weak;
+                    enemyIndivData.debuffTime[Debuff.Weak] = 0;
+                    debuffStopEvents[Debuff.Weak].Invoke();
+                }
+            }
         }
 
         private void Awake()
         {
             originScaleX = transform.localScale.x;
 
+            //* 스킬 목록
             GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
+            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(100));
             GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
 
             GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
             GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
             {
                 GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
-                enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
+                enemyIndivData.OnSlow(skillData.slowPercent);
             });
             GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(() => { enemyIndivData.OnSlowResume(); });
+
+            //* 발동 이벤트 추가
+            debuffEvents.Add(Debuff.Slow, new UnityEvent<float>());
+            debuffEvents[Debuff.Slow].AddListener(SlowEnemy);
+            debuffEvents.Add(Debuff.Weak, new UnityEvent<float>());
+            debuffEvents[Debuff.Weak].AddListener(WeakEnemy);
+
+            debuffStopEvents.Add(Debuff.Slow, new UnityEvent());
+            debuffStopEvents[Debuff.Slow].AddListener(StopSlowEnemy);
+            debuffStopEvents.Add(Debuff.Weak, new UnityEvent());
+            debuffStopEvents[Debuff.Weak].AddListener(StopWeakEnemy);
         }
 
         private void Start()
@@ -152,7 +225,7 @@ namespace PokerDefense.Enemies
             Destroy(gameObject);
         }
 
-        public void OnHit(float damage, Debuff debuff, float debuffTime, BuffStackDelegate buffStack)
+        public void OnHit(float damage, DebuffData debuffData, BuffStackDelegate buffStack)
         {
             Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
@@ -161,7 +234,7 @@ namespace PokerDefense.Enemies
                 Die();
             RefreshHpBar();
 
-            DebuffEnemy(debuff, debuffTime);
+            DebuffEnemy(debuffData);
             buffStack.Invoke();
         }
 
@@ -176,8 +249,47 @@ namespace PokerDefense.Enemies
             RefreshHpBar();
         }
 
-        //* 디버프 목록
+        public void DebuffEnemy(DebuffData debuffData)
+        {
+            DebuffEnemy(debuffData.debuff, debuffData.debuffTime, debuffData.debuffPercent);
+        }
 
+        public void DebuffEnemy(Debuff debuff, float debuffTime, float debuffPercent)
+        {
+            //* 디버프 적용
+            enemyIndivData.enemyDebuff ^= debuff;
+            enemyIndivData.debuffTime[debuff] += debuffTime;
+
+            UnityEvent<float> debuffEvent;
+            debuffEvents.TryGetValue(debuff, out debuffEvent);
+            debuffEvent.Invoke(debuffPercent);
+        }
+
+        //* 각 디버프 적용 함수 목록: debuffEvents에 추가
+        private void SlowEnemy(float debuffPercent)
+        {
+            // debuffPercent만큼의 비율로 속도 감소
+            if (enemyIndivData.SlowPercent < debuffPercent)
+            {
+                enemyIndivData.SlowPercent = debuffPercent;
+            }
+        }
+
+        private void WeakEnemy(float debuffPercent)
+        {
+            // debuffPercent만큼의 비율로 데미지 증가. 중첩되지 않으며, 
+            if (enemyIndivData.AdditionalDamage < debuffPercent) enemyIndivData.AdditionalDamage = debuffPercent;
+        }
+
+        private void StopSlowEnemy()
+        {
+            enemyIndivData.SlowPercent = 0;
+        }
+
+        private void StopWeakEnemy()
+        {
+            enemyIndivData.AdditionalDamage = 0;
+        }
 
 
         private void OnTriggerEnter2D(Collider2D collision)
