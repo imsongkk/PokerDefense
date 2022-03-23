@@ -12,7 +12,6 @@ namespace PokerDefense.Towers
 {
     public class ProjectilePool
     {
-        //* child of parent Tower
         private Queue<Projectile> projectilePool;
         private int poolSize;
         private Transform parentTower;
