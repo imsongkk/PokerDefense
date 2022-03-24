@@ -16,7 +16,7 @@ namespace PokerDefense.Managers
         {
             if (Input.GetMouseButtonDown(0))
             {
-                roundState = GameManager.Round.CurrentState;
+                roundState = InGameManager.Round.CurrentState;
 
                 // UI 입력은 EventSystem이 따로 해주기 떄문에 무시
 #if UNITY_EDITOR

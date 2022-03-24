@@ -51,7 +51,7 @@ namespace PokerDefense.UI
 
         private void OnClickPurchaseButton(PointerEventData evt)
         {
-            GameManager.Inventory.OnClickPuchase(itemData.itemId, 1);
+            InGameManager.Inventory.OnClickPuchase(itemData.itemId, 1);
             scrollRect.OnBeginDrag(evt);
         }
 

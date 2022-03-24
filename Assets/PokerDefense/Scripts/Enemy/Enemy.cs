@@ -73,16 +73,16 @@ public class Enemy : MonoBehaviour
         originScaleX = transform.localScale.x;
 
         GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-        GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
-        GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
+        InGameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) => enemyIndivData.OnSlow(stopTime, 100));
+        InGameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
 
         GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
-        GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
+        InGameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
         {
             GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
             enemyIndivData.OnSlow(slowTime, skillData.slowPercent);
         });
-        GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
+        InGameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(()=> { enemyIndivData.OnSlowResume(); });
     }
 
     private void Start()
@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour
         {
             // TODO : 보스 죽음 팝업
         }
-        GameManager.Round.EnemyKillCount++;
+        InGameManager.Round.EnemyKillCount++;
         Destroy(gameObject);
     }
 
@@ -160,7 +160,7 @@ public class Enemy : MonoBehaviour
         {
             if (curIndex + 2 >= wayPoints.Count)
                 Destroy(gameObject);
-            GameManager.Round.EnemyEndPointCount++;
+            InGameManager.Round.EnemyEndPointCount++;
         }
     }
 

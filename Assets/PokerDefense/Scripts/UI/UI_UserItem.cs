@@ -54,7 +54,7 @@ namespace PokerDefense.UI
 
         private void OnClickItem(PointerEventData evt)
         {
-            GameManager.Inventory.OnClickUse(itemId);
+            InGameManager.Inventory.OnClickUse(itemId);
             scrollRect.OnBeginDrag(evt);
         }
 

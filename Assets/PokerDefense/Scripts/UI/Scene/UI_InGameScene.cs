@@ -70,7 +70,7 @@ namespace PokerDefense.UI.Scene
             for (int i = 0; i < coolTimeImageList.Count; i++)
             {
                 int lambdaCapture = i;
-                GameManager.Skill.skillStarted[lambdaCapture].AddListener((remainTime, coolTime) =>
+                InGameManager.Skill.skillStarted[lambdaCapture].AddListener((remainTime, coolTime) =>
                 {
                     ShowRemainTime(remainTime);
                     StartCoroutine(ShowCoolTime(coolTimeImageList[lambdaCapture], coolTime));
@@ -171,7 +171,7 @@ namespace PokerDefense.UI.Scene
 
         private void OnClickReadyButton(PointerEventData evt)
         {
-            GameManager.Round.OnClickReadyButton();
+            InGameManager.Round.OnClickReadyButton();
         }
 
         private void OnClickShopButton(PointerEventData evt)
@@ -181,7 +181,7 @@ namespace PokerDefense.UI.Scene
 
         private void OnClickSkill(int skillIndex)
         {
-            GameManager.Skill.SkillClicked(skillIndex);
+            InGameManager.Skill.SkillClicked(skillIndex);
         }
 
         public void ActivateBottomUI()

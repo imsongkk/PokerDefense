@@ -166,11 +166,11 @@ namespace PokerDefense.Managers
         private SlotData MakeSlotData()
         {
             SlotData newSlotData = new SlotData();
-            newSlotData.stageNumber = GameManager.Round.Round;
-            newSlotData.hardNess = GameManager.Round.HardNess;
-            newSlotData.inventory = GameManager.Inventory.GetSaveData();
+            newSlotData.stageNumber = InGameManager.Round.Round;
+            newSlotData.hardNess = InGameManager.Round.HardNess;
+            newSlotData.inventory = InGameManager.Inventory.GetSaveData();
 
-            List<Tower> userTowerList = GameManager.Tower.GetUserTowerList();
+            List<Tower> userTowerList = InGameManager.Tower.GetUserTowerList();
             newSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);
 
             return newSlotData;

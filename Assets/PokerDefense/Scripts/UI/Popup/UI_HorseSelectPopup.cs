@@ -59,7 +59,7 @@ namespace PokerDefense.UI.Popup
             base.Init();
             BindObjects();
 
-            maxBettingPrice = GameManager.Inventory.Gold;
+            maxBettingPrice = InGameManager.Inventory.Gold;
 
             bettingInput.onValueChanged.AddListener(CheckBettingPrice);
         }
@@ -132,13 +132,13 @@ namespace PokerDefense.UI.Popup
                 return;
             }
 
-            GameManager.Horse.OnBettingFinished(horseIndex, bettingPrice);
+            InGameManager.Horse.OnBettingFinished(horseIndex, bettingPrice);
             ClosePopupUI();
         }
 
         private void OnClickCancelButton(PointerEventData evt)
         {
-            GameManager.Horse.OnBettingFinished(null, null);
+            InGameManager.Horse.OnBettingFinished(null, null);
             ClosePopupUI();
         }
 

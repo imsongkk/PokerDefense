@@ -82,7 +82,7 @@ namespace PokerDefense.UI.Popup
             LoadTowerIdleAnim(towerName);
             SetUIText(touchedTower);
 
-            GameManager.Tower.StartTowerPanelSelect(touchedTowerPanel);
+            InGameManager.Tower.StartTowerPanelSelect(touchedTowerPanel);
         }
 
         private void LoadTowerIdleAnim(string towerName)
@@ -137,7 +137,7 @@ namespace PokerDefense.UI.Popup
 
         public override void ClosePopupUI()
         {
-            GameManager.Tower.EndTowerPanelSelect(touchedTowerPanel);
+            InGameManager.Tower.EndTowerPanelSelect(touchedTowerPanel);
 
             base.ClosePopupUI();
         }

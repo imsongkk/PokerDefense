@@ -18,14 +18,14 @@ namespace PokerDefense.UI
         {
             InitUserItemsUI();
 
-            GameManager.Inventory.ItemPurchased.AddListener(ItemPurchased);
-            GameManager.Inventory.ItemUsed.AddListener(ItemUsed);
-            GameManager.Inventory.ItemDeleted.AddListener(ItemDeleted);
+            InGameManager.Inventory.ItemPurchased.AddListener(ItemPurchased);
+            InGameManager.Inventory.ItemUsed.AddListener(ItemUsed);
+            InGameManager.Inventory.ItemDeleted.AddListener(ItemDeleted);
         }
 
         private void InitUserItemsUI()
         {
-            var dict = GameManager.Inventory.ItemDict;
+            var dict = InGameManager.Inventory.ItemDict;
             foreach (var item in dict)
             {
                 GameManager.Data.ItemDataDict.TryGetValue(item.Key, out var itemData);

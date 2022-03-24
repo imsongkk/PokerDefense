@@ -36,7 +36,7 @@ public class HorseManager : MonoBehaviour
             if(playerHorseIndex != null)
                 RunHorse();
 
-            GameManager.Round.BreakState();
+            InGameManager.Round.BreakState();
         }
     }
 
@@ -49,7 +49,7 @@ public class HorseManager : MonoBehaviour
         originHorsePositionX = horseList[0].position.x;
         updateDelay = new WaitForSeconds(updateInterval);
 
-        GameManager.Round.RoundFinished.AddListener(OnRoundFinished);
+        InGameManager.Round.RoundFinished.AddListener(OnRoundFinished);
     }
 
     private void ResetHorseAndPrice()
@@ -73,7 +73,7 @@ public class HorseManager : MonoBehaviour
         PlayerHorseIndex = playerHorseIndex;
         BettingPrice = bettingPrice;
         if (BettingPrice.HasValue)
-            GameManager.Inventory.Gold -= BettingPrice.Value;
+            InGameManager.Inventory.Gold -= BettingPrice.Value;
     }
 
     private void OnRoundFinished()
@@ -87,7 +87,7 @@ public class HorseManager : MonoBehaviour
             int price = GetPlayerPrice(playerRank);
             popup.InitUI(playerRank, price, () =>
             {
-                GameManager.Inventory.Gold += price;
+                InGameManager.Inventory.Gold += price;
                 ResetHorseAndPrice();
             });
         }

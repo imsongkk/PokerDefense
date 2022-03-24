@@ -47,14 +47,14 @@ namespace PokerDefense.UI.Popup
         {
             selectedTowerPanel = target;
 
-            GameManager.Tower.StartTowerPanelSelect(selectedTowerPanel);
+            InGameManager.Tower.StartTowerPanelSelect(selectedTowerPanel);
         }
 
         private void OnClickConfirmButton(PointerEventData evt)
         {
             //속성이 없는 기본 타워 기반
             selectedTowerPanel.SetTowerBaseStatus(true);
-            GameManager.Tower.AfterTowerBaseConstructed(selectedTowerPanel);
+            InGameManager.Tower.AfterTowerBaseConstructed(selectedTowerPanel);
 
             ClosePopupUI();
         }
@@ -73,7 +73,7 @@ namespace PokerDefense.UI.Popup
 
         public override void ClosePopupUI()
         {
-            GameManager.Tower.EndTowerPanelSelect(selectedTowerPanel);
+            InGameManager.Tower.EndTowerPanelSelect(selectedTowerPanel);
 
             base.ClosePopupUI();
         }

@@ -59,7 +59,7 @@ public class SkillManager : MonoBehaviour
         {
             case 0: //TimeStop
                 {
-                    GameManager.SystemText.SetSystemMessage(Define.SystemMessage.TimeStopSkillUse);
+                    InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.TimeStopSkillUse);
                     UseSkill(skillIndex);
                     // TODO : UI_InGameScene의 timeText 홀딩
                 }
@@ -70,14 +70,14 @@ public class SkillManager : MonoBehaviour
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
 						skillStarted[skillIndex].AddListener((a, b)=>{ SpawnFireHole(rangeScreenPos, skillData[skillIndex]); });
-                        GameManager.SystemText.SetSystemMessage(Define.SystemMessage.FireHoleSkillUse);
+                        InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.FireHoleSkillUse);
                         UseSkill(skillIndex);
                     });
                 }
                 break;
             case 2: //EarthQuake
                 {
-                    GameManager.SystemText.SetSystemMessage(Define.SystemMessage.EarthQuakeSkillUse);
+                    InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.EarthQuakeSkillUse);
                     UseSkill(skillIndex);
                 }
                 break;
@@ -87,7 +87,7 @@ public class SkillManager : MonoBehaviour
                     popup.InitSkillRangePopup(skillIndex, (rangeScreenPos) =>
                     {
                         skillStarted[skillIndex].AddListener((a, b) => { SpawnMeteo(rangeScreenPos, skillData[skillIndex]); });
-                        GameManager.SystemText.SetSystemMessage(Define.SystemMessage.MeteoSkillUse);
+                        InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.MeteoSkillUse);
                         UseSkill(skillIndex);
                     });
                 }
@@ -102,7 +102,7 @@ public class SkillManager : MonoBehaviour
 
     private void SpawnMeteo(Vector2 rangeScreenPos, SkillData skillData)
 	{
-        var enemyList = GameManager.Round.GetEnemyInRange(rangeScreenPos, skillData.skillRange);
+        var enemyList = InGameManager.Round.GetEnemyInRange(rangeScreenPos, skillData.skillRange);
         foreach (var enemy in enemyList)
             enemy.OnDamage(skillData.skillDamage);
     }
@@ -112,7 +112,7 @@ public class SkillManager : MonoBehaviour
         float skillTime = skillData[skillIndex].skillTime;
         float coolTime = skillData[skillIndex].coolTime;
 
-        GameManager.Inventory.Gold -= skillData[skillIndex].skillCost; // 스킬 코스트 소비
+        InGameManager.Inventory.Gold -= skillData[skillIndex].skillCost; // 스킬 코스트 소비
         skillStarted[skillIndex]?.Invoke(skillTime, coolTime);
     }
 
@@ -120,21 +120,21 @@ public class SkillManager : MonoBehaviour
     {
         if (skillData[skillIndex].isInCoolTime)
         {
-            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.IsCoolTime);
+            InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.IsCoolTime);
             Debug.Log("쿨타임 입니다");
             // TODO : 쿨타임 부족 시스템 메세지 띄우기
             return false;
         }
-        else if (GameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
+        else if (InGameManager.Round.CurrentState != RoundManager.RoundState.PLAY)
         {
-            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotPlayState);
+            InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.NotPlayState);
             Debug.Log("지금은 스킬을 사용할 수 없습니다");
             // TODO : 시스템 메세지 띄우기
             return false;
         }
-        else if (skillData[skillIndex].skillCost > GameManager.Inventory.Gold)
+        else if (skillData[skillIndex].skillCost > InGameManager.Inventory.Gold)
         {
-            GameManager.SystemText.SetSystemMessage(Define.SystemMessage.NotEnoughCost);
+            InGameManager.SystemMessage.SetSystemMessage(Define.SystemMessage.NotEnoughCost);
             Debug.Log("코스트 부족");
             // TODO : 코스트 부족 시스템 메세지 띄우기
             return false;
@@ -179,7 +179,7 @@ public class SkillManager : MonoBehaviour
 
         while(accumulatedTic < skillTime)
         {
-            var enemyList = GameManager.Round.GetEnemyInRange(fireHoleScreenPos, skillRange);
+            var enemyList = InGameManager.Round.GetEnemyInRange(fireHoleScreenPos, skillRange);
             foreach (var enemy in enemyList)
                 enemy.OnDamage(skillDamage);
 

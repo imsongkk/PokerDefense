@@ -37,7 +37,7 @@ namespace PokerDefense.UI.Popup
             BindObjects();
             InitCardItems();
 
-            cardList = GameManager.Poker.CardList; // 유저의 5개 카드 리스트
+            cardList = InGameManager.Poker.CardList; // 유저의 5개 카드 리스트
         }
 
         private void BindObjects()
@@ -71,7 +71,7 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickPokerButton(PointerEventData evt)
         {
-            GameManager.Poker.GetHand((int index) =>
+            InGameManager.Poker.GetHand((int index) =>
             {
                 cardItems[index].OnPokerDrawed(cardList[index]);
             });
@@ -84,7 +84,7 @@ namespace PokerDefense.UI.Popup
         {
             // 포커 패 확정!
             // RoundManager에게 Poker State 종료 알리기
-            GameManager.Round.BreakState();
+            InGameManager.Round.BreakState();
             ClosePopupUI();
         }
 

@@ -21,9 +21,9 @@ namespace PokerDefense.Managers
 
         }
 
-        public void InitSystemTextManager(UI_InGameScene uI_InGameScene)
+        public void InitSystemMessageManager()
         {
-            Transform systemMessageUIObject = uI_InGameScene.GetSystemMessageUIObject();
+            Transform systemMessageUIObject = InGameManager.UI_InGameScene.GetSystemMessageUIObject();
             isInit = true;
             messageUI = systemMessageUIObject;
         }

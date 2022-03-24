@@ -43,14 +43,14 @@ namespace PokerDefense.UI
             rerollButton.SetActive(false);
             chanceButton.SetActive(true);
 
-            GameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
+            InGameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
         }
 
         private void OnClickChanceButton(PointerEventData evt)
         {
             Debug.Log($"{shape.ToString()} {number} 터치됨");
 
-            GameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
+            InGameManager.Poker.ChangeCard(cardIndex, SetCardInfo);
         }
 
         public void InitCard(int index, (CardShape shape, int number) tuple)
@@ -75,6 +75,6 @@ namespace PokerDefense.UI
         }
 
         private void RefreshImage() // Poker 패에 맞는 스프라이트 가져오기
-            => cardImage.sprite = GameManager.Poker.GetSprite((shape, number));
+            => cardImage.sprite = InGameManager.Poker.GetSprite((shape, number));
     }
 }

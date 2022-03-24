@@ -45,8 +45,6 @@ namespace PokerDefense.Managers
         [SerializeField]
         List<Transform> wayPoints = new List<Transform>();
 
-        UI_InGameScene ui_InGameScene;
-
         public UnityEvent RoundStarted = new UnityEvent();
         public UnityEvent RoundFinished = new UnityEvent();
 
@@ -74,7 +72,7 @@ namespace PokerDefense.Managers
                 round = value;
                 if (round == roundDataList.Count + 1)
                     GameClear();
-                ui_InGameScene.SetCurrentRoundCountText(round, roundDataList.Count);
+                InGameManager.UI_InGameScene.SetCurrentRoundCountText(round, roundDataList.Count);
                 //ui_InGameScene.SetRoundText(round);
                 InitCurrentRound();
             }
@@ -85,7 +83,7 @@ namespace PokerDefense.Managers
             set
             {
                 enemyKillCount = value;
-                ui_InGameScene.SetDiedEnemyCountText(EnemyKillCount, EnemyEntireCount);
+                InGameManager.UI_InGameScene.SetDiedEnemyCountText(EnemyKillCount, EnemyEntireCount);
                 if (EnemyKillCount >= EnemyEntireCount)
                     RoundClear();
             }
@@ -96,7 +94,7 @@ namespace PokerDefense.Managers
             set
             {
                 if (value != 0) // 라운드 별 초기화가 아닌 실제 에너미가 엔드포인트에 닿을 때
-                    GameManager.Inventory.Heart--;
+                    InGameManager.Inventory.Heart--;
                 enemyEndPointCount = value;
             }
         } 
@@ -119,14 +117,12 @@ namespace PokerDefense.Managers
             BreakState();
         }
 
-        public void InitRoundManager(UI_InGameScene ui_InGameScene) // 처음으로 게임이 시작될 때 호출
+        public void InitRoundManager() // 처음으로 게임이 시작될 때 호출
         {
             /* TODO : 데이터 실체화
              * Round와 HardNess는 MainScene에서 받아옴
              * Round는 초기값이 1이 아닐 수 있음(세이브 데이터)
              */
-            this.ui_InGameScene = ui_InGameScene;
-
             InitWayPoints();
             InitTimeStopSkill();
             InitEnemySpawner();
@@ -165,8 +161,8 @@ namespace PokerDefense.Managers
         private void InitTimeStopSkill()
         {
             GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
-            GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
-            GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
+            //InGameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((a, b) => { isStoppedEnemySpawn = true; interruptedSpawnTime = Time.time; });
+            //InGameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() => { isStoppedEnemySpawn = false; });
         }
 
         private void InitEnemySpawner()
@@ -182,7 +178,7 @@ namespace PokerDefense.Managers
             RoundFinished.AddListener(() =>
             {
                 StopCoroutine(TimerCoroutine);
-                ui_InGameScene.SetElapsedTimeCountText(0);
+                InGameManager.UI_InGameScene.SetElapsedTimeCountText(0);
             });
         }
 
@@ -248,36 +244,36 @@ namespace PokerDefense.Managers
              * 추후 필요에 의하면 사용
              */
             
-            //GameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
+            //InGameManager.SystemText.SetSystemMessage(SystemMessage.ReadyStateStart);
             BreakState();
             stateChanged = false;
         }
 
         private void TowerStateStart()
         {
-            GameManager.SystemText.SetSystemMessage(SystemMessage.TowerStateStart);
+            InGameManager.SystemMessage.SetSystemMessage(SystemMessage.TowerStateStart);
             stateChanged = false;
         }
 
         private void PokerStateStart()
         {
-            GameManager.SystemText.SetSystemMessage(SystemMessage.PokerStateStart);
-            GameManager.Poker.PokerStart();
+            InGameManager.SystemMessage.SetSystemMessage(SystemMessage.PokerStateStart);
+            InGameManager.Poker.PokerStart();
             GameManager.UI.ShowPopupUI<UI_Poker>();
             stateChanged = false;
         }
 
         private void HorseStateStart()
         {
-            GameManager.SystemText.SetSystemMessage(SystemMessage.HorseStateStart);
-            ui_InGameScene.ActivateBottomUI();
+            InGameManager.SystemMessage.SetSystemMessage(SystemMessage.HorseStateStart);
+            InGameManager.UI_InGameScene.ActivateBottomUI();
             GameManager.UI.ShowPopupUI<UI_HorseSelectPopup>();
             stateChanged = false;
         }
 
         private void PlayStateStart()
         {
-            GameManager.SystemText.SetSystemMessage(SystemMessage.PlayStateStart);
+            InGameManager.SystemMessage.SetSystemMessage(SystemMessage.PlayStateStart);
             RoundStarted?.Invoke();
             stateChanged = false;
         }
@@ -285,11 +281,11 @@ namespace PokerDefense.Managers
         private void PokerConfirm()
         {
             // 손패 계산
-            Hand roundHand = GameManager.Poker.CalculateMyHand();
-            GameManager.Poker.ResetInitialChance(); // 라운드 찬스 초기화
+            Hand roundHand = InGameManager.Poker.CalculateMyHand();
+            InGameManager.Poker.ResetInitialChance(); // 라운드 찬스 초기화
             Debug.Log(roundHand.Rank);
             // 타워 종류 결정
-            GameManager.Tower.ConfirmTower(roundHand);
+            InGameManager.Tower.ConfirmTower(roundHand);
         }
 
         private int CountRoundEnemy()
@@ -395,7 +391,7 @@ namespace PokerDefense.Managers
             {
                 elapsedTime++;
                 yield return timeDelay;
-                ui_InGameScene.SetElapsedTimeCountText(elapsedTime);
+                InGameManager.UI_InGameScene.SetElapsedTimeCountText(elapsedTime);
             }
         }
     }

@@ -204,8 +204,8 @@ namespace PokerDefense.Towers
             GameManager.Data.TowerUniqueDataDict.TryGetValue(towerName, out towerUniqueData);
             if (towerUniqueData == null) return;
 
-            GameManager.Round.RoundStarted.AddListener(StartAttacking);
-            GameManager.Round.RoundFinished.AddListener(StopAttacking);
+            InGameManager.Round.RoundStarted.AddListener(StartAttacking);
+            InGameManager.Round.RoundFinished.AddListener(StopAttacking);
 
             towerIndivData = new TowerIndivData(this, towerSaveData.topCard, towerSaveData.attackDamageLevel,
                 towerSaveData.attackSpeedLevel, towerSaveData.attackRangeLevel, towerSaveData.attackCriticalLevel,

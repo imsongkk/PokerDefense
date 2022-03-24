@@ -1,9 +1,7 @@
 using PokerDefense.Towers;
 using static PokerDefense.Utils.Define;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace PokerDefense.Managers
@@ -23,10 +21,7 @@ namespace PokerDefense.Managers
         TowerPanel selectedTowerPanel = null;
 
         public void InitTowerManager()
-        {
-            InitTowerPanels();
-        }
-        /* 테스트 */
+            => InitTowerPanels();
 
         private void InitTowerPanels()
         {
@@ -116,7 +111,7 @@ namespace PokerDefense.Managers
             selectedTowerPanel = target;
 
             // TowerBase 건설 성공시 라운드 시작
-            GameManager.Round.BreakState();
+            InGameManager.Round.BreakState();
         }
 
         public void StartTowerPanelSelect(TowerPanel target) // 포커 패를 뽑기 전, Tower의 위치 선정

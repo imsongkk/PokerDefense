@@ -1,8 +1,5 @@
 using PokerDefense.Managers;
 using PokerDefense.UI.Scene;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace PokerDefense.Scene
 {
@@ -14,8 +11,11 @@ namespace PokerDefense.Scene
         protected override void Init()
         {
             base.Init();
+            // ENTRY POINT
             SceneType = Utils.Define.Scene.Loading;
             GameManager.UI.ShowSceneUI<UI_LoadingScene>("UI_LoadingScene");
+
+            GameManager.Data.InitDataManager();
         }
     }
 }

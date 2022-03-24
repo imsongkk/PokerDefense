@@ -17,7 +17,7 @@ public class InventoryManager
             InventoryData.heart = value;
             ui_InGameScene.SetHeartText(InventoryData.heart);
             if (InventoryData.heart <= 0)
-                GameManager.Round.GameOver();
+                InGameManager.Round.GameOver();
         }
     }
     public int Gold
@@ -50,10 +50,24 @@ public class InventoryManager
 
     UI_InGameScene ui_InGameScene;
 
-    public void InitInventoryManager(UI_InGameScene _ui_InGameScene)
+    public InventoryManager()
     {
-        ui_InGameScene = _ui_InGameScene;
+        /*
+        Debug.Log("INVENINIT");
+        ItemPurchased.AddListener(OnItemPurchased);
+        ItemUsed.AddListener(OnItemUsed);
+        ItemDeleted.AddListener(OnItemDeleted);
 
+        InitInventory();
+        InitItemDict();
+
+        ui_InGameScene = InGameManager.UI_InGameScene;
+        */
+    }
+
+    public void InitInventoryManager()
+    {
+        ui_InGameScene = InGameManager.UI_InGameScene;
         ItemPurchased.AddListener(OnItemPurchased);
         ItemUsed.AddListener(OnItemUsed);
         ItemDeleted.AddListener(OnItemDeleted);
@@ -94,7 +108,7 @@ public class InventoryManager
         {
             InventoryData = new InventoryData();
 
-            string hardNess = GameManager.Round.HardNess;
+            string hardNess = InGameManager.Round.HardNess;
             GameManager.Data.HardNessDataDict.TryGetValue(hardNess, out var hardNessData);
 
             Heart = hardNessData.heart;
