@@ -35,5 +35,10 @@ namespace PokerDefense.Towers
             //TODO 투사체 발사 및 해당 투사체에서 적에게 대미지 전달하도록 변경(직접데미지 X)
             projectilePool.Dequeue(target, damage, projectileSpeed);
         }
+
+        protected override void AttackTarget(Enemy target)
+        {
+            base.AttackTarget(target);
+        }
     }
 }

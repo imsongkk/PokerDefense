@@ -35,8 +35,8 @@ namespace PokerDefense.Towers
         public void Enqueue(Projectile projectile)
         {
             projectilePool.Enqueue(projectile);
-            projectile.gameObject.SetActive(false);
             projectile.transform.position = parentTower.position;
+            projectile.gameObject.SetActive(false);
         }
 
         public void Dequeue(Enemy target)

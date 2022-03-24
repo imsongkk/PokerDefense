@@ -229,7 +229,7 @@ namespace PokerDefense.Towers
             }
         }
 
-        // 객체마다 다른 공격 방식
+        //* 객체마다 다른 공격 방식: 자손에서 Override
         protected virtual void AttackTarget(Enemy target)
         {
             Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
@@ -244,11 +244,12 @@ namespace PokerDefense.Towers
             SetAnimAttack(target, isCritical); // 애니메이션 스타트
         }
 
-        protected virtual void DebuffTarget(Enemy target) { return; }   //* 하위 타워에서 override
+        protected virtual void DebuffTarget(Enemy target) { return; } //* Debuff enemy. 자손에서 override
 
         protected virtual void DirectAttackTarget(Enemy target, float damage)
         {
-            target.OnDamage(damage); // 몬스터에게 실제 데미지 전달
+            target.OnDamage(damage);
+            // target.OnDamage(damage); // 몬스터에게 실제 데미지 전달
             DebuffTarget(target);
         }
 

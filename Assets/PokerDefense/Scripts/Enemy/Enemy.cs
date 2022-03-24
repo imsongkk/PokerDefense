@@ -13,22 +13,6 @@ namespace PokerDefense.Enemies
 {
     public class Enemy : MonoBehaviour
     {
-        [Flags]
-        public enum Debuff
-        {
-            Slow = 1,
-            Weak = 2,
-            EarthQuake = 4,
-            TimeStop = 8
-        }
-
-        public struct DebuffData
-        {
-            public Debuff debuff;          // 디버프 종류
-            public float debuffTime;       // 디버프 시간
-            public float debuffPercent;    // 디버프 강도
-        }
-
         public class EnemyIndivData
         {
             public EnemyIndivData(Enemy owner, float speed, float hp, string name, bool isBoss, int damage, EnemyType enemyType)
@@ -43,8 +27,9 @@ namespace PokerDefense.Enemies
                 EnemyType = enemyType;
                 enemyDebuff = 0;
 
-                debuffTime.Add(Enemy.Debuff.Slow, 0);
-                debuffTime.Add(Enemy.Debuff.Weak, 0);
+                debuffTime = new Dictionary<Debuff, float>();
+                debuffTime.Add(Debuff.Slow, 0);
+                debuffTime.Add(Debuff.Weak, 0);
             }
 
             Enemy owner;
@@ -75,8 +60,8 @@ namespace PokerDefense.Enemies
                     Speed = owner.enemyOriginData.moveSpeed * (1 - (slowPercent / 100));
                 }
             }
-            public Enemy.Debuff enemyDebuff;
-            public Dictionary<Enemy.Debuff, float> debuffTime;
+            public Debuff enemyDebuff;
+            public Dictionary<Debuff, float> debuffTime;
 
             public void OnDamage(float damage)
                 => Hp -= (damage + additionalDamage);
@@ -187,6 +172,9 @@ namespace PokerDefense.Enemies
             });
 
             //* 발동 이벤트 추가
+            debuffEvents = new Dictionary<Debuff, UnityEvent<float>>();
+            debuffStopEvents = new Dictionary<Debuff, UnityEvent>();
+
             debuffEvents.Add(Debuff.Slow, new UnityEvent<float>());
             debuffEvents[Debuff.Slow].AddListener(SlowEnemy);
             debuffEvents.Add(Debuff.Weak, new UnityEvent<float>());
@@ -250,7 +238,7 @@ namespace PokerDefense.Enemies
             Destroy(gameObject);
         }
 
-        public void OnHit(float damage, DebuffData debuffData, BuffStackDelegate buffStack)
+        public void OnDamage(float damage, BuffStackDelegate buffStack)
         {
             Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
@@ -259,13 +247,11 @@ namespace PokerDefense.Enemies
                 Die();
             RefreshHpBar();
 
-            DebuffEnemy(debuffData);
             buffStack.Invoke();
         }
 
         public void OnDamage(float damage)
         {
-            //! Deprecated
             Debug.Log($"{enemyIndivData.Name} got {damage} damaged");
 
             enemyIndivData.OnDamage(damage);
@@ -274,12 +260,21 @@ namespace PokerDefense.Enemies
             RefreshHpBar();
         }
 
-        public void DebuffEnemy(DebuffData debuffData)
+        public void SetDebuff(DebuffData debuffData)
+        {
+            if (debuffData != null)
+            {
+                Debug.Log($"{enemyIndivData.Name} got {debuffData.debuff.ToString()} debuff");
+                DebuffEnemy(debuffData);
+            }
+        }
+
+        protected void DebuffEnemy(DebuffData debuffData)
         {
             DebuffEnemy(debuffData.debuff, debuffData.debuffTime, debuffData.debuffPercent);
         }
 
-        public void DebuffEnemy(Debuff debuff, float debuffTime, float debuffPercent)
+        protected void DebuffEnemy(Debuff debuff, float debuffTime, float debuffPercent)
         {
             //* 디버프 적용
             enemyIndivData.enemyDebuff ^= debuff;

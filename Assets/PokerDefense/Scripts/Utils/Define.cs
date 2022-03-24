@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,22 @@ namespace PokerDefense.Utils
             Small,
             Middle,
             Large,
+        }
+
+        [Flags]
+        public enum Debuff
+        {
+            Slow = 1,
+            Weak = 2,
+            EarthQuake = 4,
+            TimeStop = 8
+        }
+
+        public class DebuffData
+        {
+            public Debuff debuff;          // 디버프 종류
+            public float debuffTime;       // 디버프 시간
+            public float debuffPercent;    // 디버프 강도
         }
 
         public enum CardShape
