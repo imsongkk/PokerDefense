@@ -238,7 +238,7 @@ namespace PokerDefense.Towers
 
             float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
 
-            if (towerUniqueData.isProjectile) ProjectileAttackTarget(target, calculatedDamage, towerUniqueData.isCushion);
+            if (towerUniqueData.isProjectile) ProjectileAttackTarget(target, calculatedDamage);
             else DirectAttackTarget(target, calculatedDamage);
 
             SetAnimAttack(target, isCritical); // 애니메이션 스타트
@@ -248,12 +248,11 @@ namespace PokerDefense.Towers
 
         protected virtual void DirectAttackTarget(Enemy target, float damage)
         {
-            target.OnDamage(damage);
-            // target.OnDamage(damage); // 몬스터에게 실제 데미지 전달
             DebuffTarget(target);
+            target.OnDamage(damage);
         }
 
-        protected virtual void ProjectileAttackTarget(Enemy target, float damage, bool isCushion)
+        protected virtual void ProjectileAttackTarget(Enemy target, float damage)
         {
             //TODO 투사체 발사 및 해당 투사체에서 적에게 대미지 전달하도록 변경(직접데미지 X)
         }

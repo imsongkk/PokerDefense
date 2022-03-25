@@ -2,6 +2,7 @@ using UnityEngine;
 using PokerDefense.Data;
 using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
+using static PokerDefense.Utils.Define;
 using PokerDefense.Enemies;
 
 namespace PokerDefense.Towers

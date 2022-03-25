@@ -22,7 +22,8 @@ namespace PokerDefense.Towers
         protected float speed;
         [SerializeField]
         protected bool isCushion;
-        protected DebuffData debuffData;
+        // protected DebuffData debuffData;
+        protected List<DebuffData> debuffDatas;
         protected BuffStackDelegate buffStackDelegate;
 
         protected Vector3 targetPosition;
@@ -54,12 +55,11 @@ namespace PokerDefense.Towers
 
         }
 
-        public void InitProjectile(float speed, bool isCushion, ProjectilePool pool, DebuffData debuffData, BuffStackDelegate buffStackDelegate)
+        public void InitProjectile(float speed, bool isCushion, ProjectilePool pool, BuffStackDelegate buffStackDelegate)
         {
             this.speed = speed;
             this.isCushion = isCushion;
             this.pool = pool;
-            this.debuffData = debuffData;
             this.buffStackDelegate = buffStackDelegate;
         }
 
@@ -78,11 +78,14 @@ namespace PokerDefense.Towers
             this.target = target;
         }
 
-        public void SetDebuff(Debuff debuff, float time, float percent)
+        public void AddDebuff(DebuffData debuff)
         {
-            this.debuffData.debuff = debuff;
-            this.debuffData.debuffTime = time;
-            this.debuffData.debuffPercent = percent;
+            debuffDatas.Add(debuff);
+        }
+
+        public void SetBuffStack(BuffStackDelegate buffStack)
+        {
+            this.buffStackDelegate = buffStack;
         }
 
         protected void OnTriggerEnter2D(Collider2D collision)
@@ -96,14 +99,17 @@ namespace PokerDefense.Towers
 
         protected virtual void DamageTarget(Enemy target)
         {
-            //TODO debuff target
-            target.OnDamage(this.damage, this.buffStackDelegate);
-            target.SetDebuff(this.debuffData);
+            foreach (var debuffData in this.debuffDatas)
+            {
+                target.SetDebuff(debuffData);
+            }
+            target.OnDamage(this.damage);
         }
 
         protected virtual void OnHit()
         {
             //override on cushion projectile
+            this.buffStackDelegate();
             pool.Enqueue(this);
         }
     }

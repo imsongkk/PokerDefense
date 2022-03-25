@@ -19,13 +19,8 @@ namespace PokerDefense.Towers
 
         private void Awake()
         {
-            slowDebuff.debuff = Debuff.Slow;
-            slowDebuff.debuffTime = 5f;
-            slowDebuff.debuffPercent = .5f;
-
-            weakDebuff.debuff = Debuff.Weak;
-            weakDebuff.debuffTime = 3f;
-            weakDebuff.debuffPercent = .3f;
+            slowDebuff = new DebuffData(Debuff.Slow, 5f, .5f);
+            weakDebuff = new DebuffData(Debuff.Weak, 3f, .3f);
         }
 
         protected override void DebuffTarget(Enemy target)
