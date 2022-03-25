@@ -53,7 +53,8 @@ namespace PokerDefense.UI.Scene
             while (!op.isDone)
             {
                 timer += Time.deltaTime;
-                yield return new WaitForSeconds(0.1f);
+                /* 개발 편의를 위해 잠시 로딩바 삭제 */
+                //yield return new WaitForSeconds(0.1f);
                 if(op.progress < 0.9f)
                 {
                     loadingBar.fillAmount = Mathf.Lerp(loadingBar.fillAmount, op.progress, timer);

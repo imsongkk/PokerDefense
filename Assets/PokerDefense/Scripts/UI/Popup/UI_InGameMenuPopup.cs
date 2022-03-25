@@ -2,6 +2,7 @@ using UnityEngine;
 using PokerDefense.Utils;
 using UnityEngine.EventSystems;
 using PokerDefense.Managers;
+using UnityEngine.SceneManagement;
 
 namespace PokerDefense.UI.Popup
 {
@@ -54,7 +55,7 @@ namespace PokerDefense.UI.Popup
 
         private void OnClickQuitButton(PointerEventData evt)
         {
-
+            SceneManager.LoadScene("MainScene");
         }
     }
 }

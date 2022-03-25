@@ -12,6 +12,8 @@ namespace PokerDefense.Scene
         protected override void Init()
         {
             base.Init();
+            // ENTRY POINT
+            InGameManager.InitInGameManager();
         }
     }
 }

@@ -36,7 +36,6 @@ namespace PokerDefense.Managers
         private void Awake()
         {
             UI_InGameScene = GameManager.UI.ShowSceneUI<UI_InGameScene>();
-            GetManagers();
         }
 
         private static void Init()
@@ -48,7 +47,24 @@ namespace PokerDefense.Managers
             }
         }
 
-        private void GetManagers() 
+        public static void InitInGameManager() // InGameScene에 의해 호출
+		{
+            Instance.GetManagers();
+
+            switch (GameManager.InGameSceneMode)
+            {
+                case GameManager.inGameSceneMode.NewGame:
+                    Instance.InitManagersNewGame();
+                    break;
+                case GameManager.inGameSceneMode.LoadGame:
+                    Instance.InitManagersLoadGame();
+                    break;
+                case GameManager.inGameSceneMode.EditorMode:
+                    break;
+            }
+		}
+
+        public void GetManagers() 
         {
             // Mono
             Instance.skillManager = gameObject.GetComponentInChildren<SkillManager>();
@@ -57,7 +73,11 @@ namespace PokerDefense.Managers
             Instance.horseManager = gameObject.GetComponentInChildren<HorseManager>();
             Instance.inputManager = gameObject.GetComponentInChildren<InputManager>();
             Instance.systemMessageManager = gameObject.GetComponentInChildren<SystemMessageManager>();
+        }
 
+        private void InitManagersNewGame()
+		{
+            Debug.Log("New");
             // Mono중에 Init 필요한 애들
             Skill.InitSkillManager();
             Round.InitRoundManager();
@@ -68,6 +88,25 @@ namespace PokerDefense.Managers
             Inventory.InitInventoryManager();
             Tower.InitTowerManager();
         }
+
+        private void InitManagersLoadGame()
+		{
+            Debug.Log("Load");
+            // Mono중에 Init 필요한 애들
+            Skill.InitSkillManager();
+            Round.InitRoundManager();
+            Horse.InitHorseManager();
+            SystemMessage.InitSystemMessageManager();
+
+            // Non-Mono
+            Inventory.InitInventoryManager();
+            Tower.InitTowerManager();
+        }
+
+        private void InitManagersEditorMode()
+		{
+
+		}
 
         public void Reset()
         {

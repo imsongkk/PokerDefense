@@ -10,7 +10,7 @@ namespace PokerDefense.Data
     public class SlotData
     {
         public string hardNess;
-        public int stageNumber;
+        public int round;
         public InventoryData inventory;
         public List<TowerSaveData> towerSaveDataList;
     }

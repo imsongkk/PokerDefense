@@ -1,15 +1,19 @@
-{
-  "hardNess": "Easy",
-  "stageNumber": 1,
-  "inventory": {
-    "heart": 30,
-    "gold": 978,
-    "chance": 7,
-    "itemHave": {
-      "attackDamageUp": 3,
-      "attackSpeedUp": 2,
-      "attackBossDamageUp": 1
-    }
-  },
-  "towerSaveDataList": []
-}
+[
+	{
+		"hardNess": "Easy",
+		"round": 1,
+		"inventory": {
+			"heart": 30,
+			"gold": 978,
+			"chance": 7,
+			"itemHave": {
+				"attackDamageUp": 3,
+				"attackSpeedUp": 2,
+				"attackBossDamageUp": 1
+			}
+		},
+		"towerSaveDataList": []
+	},
+	,
+	,
+]

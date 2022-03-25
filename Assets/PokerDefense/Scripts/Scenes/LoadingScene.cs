@@ -14,8 +14,13 @@ namespace PokerDefense.Scene
             // ENTRY POINT
             SceneType = Utils.Define.Scene.Loading;
             GameManager.UI.ShowSceneUI<UI_LoadingScene>("UI_LoadingScene");
-
-            GameManager.Data.InitDataManager();
+            InitManagers();
         }
+
+        private void InitManagers()
+		{
+            GameManager.Data.InitDataManager();
+            // TODO : 게임 보드 연동, Firebase 연동
+		}
     }
 }

@@ -8,15 +8,25 @@ namespace PokerDefense.Managers
         static GameManager instance;
         public static GameManager Instance { get { Init(); return instance; } }
 
-        public bool isEditorMode = false;
+        public enum inGameSceneMode
+		{
+            None,
 
+            NewGame,
+            LoadGame,
+            EditorMode
+		}
+
+        inGameSceneMode mode = inGameSceneMode.None;
         UIManager uiManager = new UIManager();
         ResourceManager resourceManager = new ResourceManager();
         DataManager dataManager = new DataManager();
 
+        public static inGameSceneMode InGameSceneMode { get => Instance.mode; set => Instance.mode = value; }
         public static UIManager UI { get => Instance.uiManager; }
         public static ResourceManager Resource { get => Instance.resourceManager; }
         public static DataManager Data { get => Instance.dataManager; }
+
         void Awake()
             => Init();
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using PokerDefense.Towers;
 using UnityEngine.Events;
+using UnityEngine;
 
 namespace PokerDefense.Managers
 {
@@ -28,6 +29,9 @@ namespace PokerDefense.Managers
 
 
         public GameData CurrentGameData { get; private set; }
+
+        public SlotData CurrentSlotData { get; private set; }
+        public List<SlotData> SlotDataList { get; private set; }
         public SlotData SlotData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
@@ -54,6 +58,7 @@ namespace PokerDefense.Managers
             InitSystemMessageDict();
             InitItemDataDict();
             InitShopItemList();
+            InitSlotDatList();
         }
 
         private void InitPlayerData()
@@ -63,12 +68,8 @@ namespace PokerDefense.Managers
 
         private void InitTowerData()
         {
-
             TowerUniqueDataDict = LoadJsonFile<Dictionary<string, TowerUniqueData>>(jsonLocation, towerUniqueDataJsonFileName);
             TowerUpgradeDataDict = LoadJsonFile<Dictionary<string, TowerUpgradeData>>(jsonLocation, towerUpgradeDataJsonFileName);
-
-            //Debug.Log(TowerDataDict);
-            //Debug.Log(JsonConvert.SerializeObject(TowerDataDict));
         }
 
         private void InitEnemyDataDict()
@@ -132,6 +133,11 @@ namespace PokerDefense.Managers
                 ItemDataDict.Add(item.itemId, item);
         }
 
+        private void InitSlotDatList()
+		{
+            SlotDataList = LoadJsonFile<List<SlotData>>(jsonLocation, slotJsonFileName);
+        }
+
         private T LoadJsonFile<T>(string loadPath, string fileName)
         {
             FileStream fileStream = new FileStream($"{loadPath}/{fileName}.json", FileMode.Open);
@@ -156,6 +162,27 @@ namespace PokerDefense.Managers
             fileStream.Close();
         }
 
+        public void CreateSlot(string hardNess) // TODO : 게임 모드도 추가 (무한 모드, 일반 모드)
+		{
+
+		}
+
+        public void DeleteSlot(int index)
+		{
+
+		}
+
+        public void SelectSlot(int index)
+		{
+            CurrentSlotData = SlotDataList[index];
+		}
+
+        public List<SlotData> GetSlotDataList()
+		{
+            return null;
+		}
+
+
         public void SaveSlotData()
         {
             SlotData newData = MakeSlotData();
@@ -166,7 +193,7 @@ namespace PokerDefense.Managers
         private SlotData MakeSlotData()
         {
             SlotData newSlotData = new SlotData();
-            newSlotData.stageNumber = InGameManager.Round.Round;
+            newSlotData.round = InGameManager.Round.Round;
             newSlotData.hardNess = InGameManager.Round.HardNess;
             newSlotData.inventory = InGameManager.Inventory.GetSaveData();
 
@@ -178,6 +205,7 @@ namespace PokerDefense.Managers
 
         public SlotData LoadSlotData()
         {
+            SlotData = LoadJsonFile<SlotData>(jsonLocation, slotJsonFileName);
             return null;
         }
     }
