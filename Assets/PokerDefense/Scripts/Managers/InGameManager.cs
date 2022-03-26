@@ -1,5 +1,6 @@
 using PokerDefense.UI.Scene;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PokerDefense.Managers
 {
@@ -107,6 +108,19 @@ namespace PokerDefense.Managers
 		{
 
 		}
+
+        public static void NewGame(int slotIndex, bool isOverwrite = false)
+        {
+            GameManager.Data.SelectSlot(slotIndex, isOverwrite);
+            SceneManager.LoadScene("InGameScene");
+        }
+
+        public static void LoadGame(int slotIndex)
+        {
+            GameManager.Data.SelectSlot(slotIndex);
+            SceneManager.LoadScene("InGameScene");
+        }
+
 
         public void Reset()
         {

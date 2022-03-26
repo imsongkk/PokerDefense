@@ -8,6 +8,7 @@ namespace PokerDefense.UI.Popup
         enum GameObjects
         {
             SlotList,
+            BackButton,
         }
 
         Transform slotList;
@@ -26,6 +27,10 @@ namespace PokerDefense.UI.Popup
         private void BindObjects()
         {
             Bind<GameObject>(typeof(GameObjects));
+
+            GameObject backButton = GetObject((int)GameObjects.BackButton);
+            AddUIEvent(backButton, (a) => ClosePopupUI(), Define.UIEvent.Click);
+            AddButtonAnim(backButton);
 
             slotList = GetObject((int)GameObjects.SlotList).transform;
         }

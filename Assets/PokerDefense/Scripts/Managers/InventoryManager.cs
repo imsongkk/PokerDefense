@@ -73,7 +73,6 @@ public class InventoryManager
         ItemDeleted.AddListener(OnItemDeleted);
 
         InitInventory();
-        InitItemDict();
     }
 
     private void OnItemPurchased(string itemId, int count)
@@ -102,9 +101,8 @@ public class InventoryManager
 
     private void InitInventory()
     {
-        if(GameManager.Data.SlotData != null) // 로드 된 데이터가 있다면
-            InventoryData = GameManager.Data.SlotData.inventory;
-        else // 새 게임이면
+        InventoryData = GameManager.Data.CurrentSlotData.inventory;
+        if (InventoryData == null) // 새 게임이면
         {
             InventoryData = new InventoryData();
 
@@ -115,6 +113,14 @@ public class InventoryManager
             Gold = hardNessData.gold;
             Chance = hardNessData.chance;
         }
+        else // 새 게임이 아니면 기존 인벤토리 그대로
+        {
+            Heart = InventoryData.heart;
+            Gold = InventoryData.gold;
+            Chance = InventoryData.chance;
+        }
+
+        InitItemDict();
     }
 
     private void InitItemDict()

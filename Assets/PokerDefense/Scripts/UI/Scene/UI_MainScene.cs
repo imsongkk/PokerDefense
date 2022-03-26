@@ -63,17 +63,14 @@ namespace PokerDefense.UI.Scene
 
         private void OnClickNewGameButton(PointerEventData evt)
         {
-            GameManager.UI.ShowPopupUI<UI_SlotSelectPopup>();
-            /*
             GameManager.InGameSceneMode = GameManager.inGameSceneMode.NewGame;
-            SceneManager.LoadScene("InGameScene");
-            */
+            GameManager.UI.ShowPopupUI<UI_SlotSelectPopup>();
         }
 
         private void OnClickContinueButton(PointerEventData evt)
         {
             GameManager.InGameSceneMode = GameManager.inGameSceneMode.LoadGame;
-            SceneManager.LoadScene("InGameScene");
+            GameManager.UI.ShowPopupUI<UI_SlotSelectPopup>();
         }
 
         private void OnClickSettingButton(PointerEventData evt)

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using PokerDefense.Towers;
 using UnityEngine.Events;
 using UnityEngine;
+using System;
 
 namespace PokerDefense.Managers
 {
@@ -32,7 +33,6 @@ namespace PokerDefense.Managers
 
         public SlotData CurrentSlotData { get; private set; }
         public List<SlotData> SlotDataList { get; private set; }
-        public SlotData SlotData { get; private set; }
 
         private string jsonLocation = "Assets/PokerDefense/Data";
         private string towerUniqueDataJsonFileName = "TowerUniqueData";
@@ -167,46 +167,43 @@ namespace PokerDefense.Managers
 
 		}
 
-        public void DeleteSlot(int index)
+        public void DeleteSlot(int index, Action deleteAction)
 		{
+            SlotDataList[index] = null;
 
+            string slotDataJson = JsonConvert.SerializeObject(SlotDataList, Formatting.Indented);
+            CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);
+
+            deleteAction?.Invoke();
 		}
 
-        public void SelectSlot(int index)
+        private int? selectSlotIndex = null;
+
+        public void SelectSlot(int index, bool isOverwrite = false)
 		{
+            selectSlotIndex = index;
+
+            if(isOverwrite && selectSlotIndex.HasValue)
+                SlotDataList[selectSlotIndex.Value] = null;
+
             CurrentSlotData = SlotDataList[index];
-		}
 
-        public List<SlotData> GetSlotDataList()
-		{
-            return null;
+            if(CurrentSlotData == null) // 새 게임이면
+                CurrentSlotData = new SlotData();
 		}
-
 
         public void SaveSlotData()
         {
-            SlotData newData = MakeSlotData();
-            string slotDataJson = JsonConvert.SerializeObject(newData, Formatting.Indented);
-            CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);
-        }
-
-        private SlotData MakeSlotData()
-        {
-            SlotData newSlotData = new SlotData();
-            newSlotData.round = InGameManager.Round.Round;
-            newSlotData.hardNess = InGameManager.Round.HardNess;
-            newSlotData.inventory = InGameManager.Inventory.GetSaveData();
+            CurrentSlotData.round = InGameManager.Round.Round;
+            CurrentSlotData.hardNess = InGameManager.Round.HardNess;
+            CurrentSlotData.inventory = InGameManager.Inventory.GetSaveData();
 
             List<Tower> userTowerList = InGameManager.Tower.GetUserTowerList();
-            newSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);
+            CurrentSlotData.towerSaveDataList = TowerSaveData.ConvertTowerSaveData(userTowerList);
 
-            return newSlotData;
-        }
-
-        public SlotData LoadSlotData()
-        {
-            SlotData = LoadJsonFile<SlotData>(jsonLocation, slotJsonFileName);
-            return null;
+            SlotDataList[selectSlotIndex.Value] = CurrentSlotData;
+            string slotDataJson = JsonConvert.SerializeObject(SlotDataList, Formatting.Indented);
+            CreateJsonFile(jsonLocation, slotJsonFileName, slotDataJson);
         }
     }
 }
