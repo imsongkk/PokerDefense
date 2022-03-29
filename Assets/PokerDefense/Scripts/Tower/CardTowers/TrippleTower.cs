@@ -20,6 +20,7 @@ namespace PokerDefense.Towers
             if (trippleBuffStack == 3)
             {
                 damage *= (1 + trippleBuffPercent);
+                Debug.Log($"{trippleBuffPercent}배 추가 대미지!");
                 trippleBuffStack = 1;
             }
             else { trippleBuffStack++; }

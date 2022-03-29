@@ -14,10 +14,12 @@ namespace PokerDefense.Towers
 {
     public class ProjectileTower : Tower
     {
-        protected ProjectilePool projectilePool;
+        [SerializeField]
         protected GameObject projectilePrefab;
+
+        protected ProjectilePool projectilePool;
         protected int poolSize = 5;
-        protected float projectileSpeed = 5;
+        protected float projectileSpeed = 0.5f;
         protected BuffStackDelegate buffStackDelegate;
 
         public override void InitTower(string towerName, TowerType towerType, int topCard, int index)

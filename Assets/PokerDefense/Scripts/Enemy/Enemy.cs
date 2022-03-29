@@ -41,8 +41,8 @@ namespace PokerDefense.Enemies
             public int Damage { get; private set; }
             public EnemyType EnemyType { get; private set; }
 
-            private float additionalDamage;
-            private float slowPercent;
+            private float additionalDamage = 0;
+            private float slowPercent = 0;
 
             public float AdditionalDamage
             {
@@ -57,7 +57,7 @@ namespace PokerDefense.Enemies
                 {
                     //* 변수 변경 시 Speed에 즉시 적용
                     slowPercent = value;
-                    Speed = owner.enemyOriginData.moveSpeed * (1 - (slowPercent / 100));
+                    Speed = owner.enemyOriginData.moveSpeed * (1 - slowPercent);
                 }
             }
             public Debuff enemyDebuff;
@@ -113,8 +113,9 @@ namespace PokerDefense.Enemies
             //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
 
             //* 디버프 시간 측정 및 디버프 해제
-            if ((enemyIndivData.enemyDebuff & Debuff.Slow) != 0)
+            if ((enemyIndivData.enemyDebuff & (Debuff.Slow ^ Debuff.TimeStop)) != 0)
             {
+                // TimeStop 시에는 디버프 카운트다운이 줄어들지 않음
                 if (enemyIndivData.debuffTime[Debuff.Slow] > 0)
                 {
                     enemyIndivData.debuffTime[Debuff.Slow] -= Time.deltaTime;
@@ -150,7 +151,7 @@ namespace PokerDefense.Enemies
             GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) =>
             {
                 enemyIndivData.enemyDebuff ^= Debuff.TimeStop;
-                enemyIndivData.OnSlow(100);
+                enemyIndivData.OnSlow(1f);
             });
             GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() =>
             {
@@ -276,9 +277,9 @@ namespace PokerDefense.Enemies
 
         protected void DebuffEnemy(Debuff debuff, float debuffTime, float debuffPercent)
         {
-            //* 디버프 적용
+            //* 디버프 적용, 효과 및 시간 중첩되지 않음
             enemyIndivData.enemyDebuff ^= debuff;
-            enemyIndivData.debuffTime[debuff] += debuffTime;
+            enemyIndivData.debuffTime[debuff] = debuffTime;
 
             UnityEvent<float> debuffEvent;
             debuffEvents.TryGetValue(debuff, out debuffEvent);

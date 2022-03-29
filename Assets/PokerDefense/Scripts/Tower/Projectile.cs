@@ -23,10 +23,10 @@ namespace PokerDefense.Towers
         [SerializeField]
         protected bool isCushion;
         // protected DebuffData debuffData;
-        protected List<DebuffData> debuffDatas;
+        protected static List<DebuffData> debuffDatas = new List<DebuffData>();
         protected BuffStackDelegate buffStackDelegate;
 
-        protected Vector3 targetPosition;
+        protected Vector2 targetPosition;
 
         [SerializeField]
         private Sprite projectileSprite;
@@ -40,17 +40,20 @@ namespace PokerDefense.Towers
             }
         }
 
-        private void Start()
-        {
+        private Rigidbody2D rigidbody;
 
+        private void Awake()
+        {
+            this.rigidbody = this.GetComponent<Rigidbody2D>();
+            this.buffStackDelegate = null;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            if (target != null)
+            if (gameObject.activeSelf && (target != null))
             {
-                targetPosition = target.transform.position;
-                transform.Translate((targetPosition - this.transform.position).normalized * speed);
+                targetPosition = (Vector2)target.transform.position;
+                rigidbody.MovePosition(this.rigidbody.position + (targetPosition - this.rigidbody.position).normalized * speed);
             }
 
         }
@@ -90,16 +93,16 @@ namespace PokerDefense.Towers
 
         protected void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Enemy"))
+            if (collision.GetComponent<Enemy>() == target)
             {
-                DamageTarget(collision.GetComponent<Enemy>());
+                DamageTarget(target);
                 OnHit();
             }
         }
 
         protected virtual void DamageTarget(Enemy target)
         {
-            foreach (var debuffData in this.debuffDatas)
+            foreach (var debuffData in debuffDatas)
             {
                 target.SetDebuff(debuffData);
             }
@@ -109,7 +112,7 @@ namespace PokerDefense.Towers
         protected virtual void OnHit()
         {
             //override on cushion projectile
-            this.buffStackDelegate();
+            if (buffStackDelegate != null) this.buffStackDelegate();
             pool.Enqueue(this);
         }
     }
