@@ -2,6 +2,7 @@ using PokerDefense.Data;
 using PokerDefense.Managers;
 using PokerDefense.Utils;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,11 @@ namespace PokerDefense.Enemies
                 debuffTime = new Dictionary<Debuff, float>();
                 debuffTime.Add(Debuff.Slow, 0);
                 debuffTime.Add(Debuff.Weak, 0);
+
+                slowPercentDictionary = new Dictionary<Debuff, float>();
+                slowPercentDictionary.Add(Debuff.Slow, 0);
+                slowPercentDictionary.Add(Debuff.EarthQuake, 0);
+                slowPercentDictionary.Add(Debuff.TimeStop, 0);
             }
 
             Enemy owner;
@@ -58,32 +64,59 @@ namespace PokerDefense.Enemies
                     //* 변수 변경 시 Speed에 즉시 적용
                     slowPercent = value;
                     Speed = owner.enemyOriginData.moveSpeed * (1 - slowPercent);
+                    Debug.Log($"Slow Percent: {slowPercent}, Speed: {Speed}");
                 }
             }
-            public Debuff enemyDebuff;
+
+            // private float earthQuakeSlow = 0;
+            // private float debuffSlow = 0;
+            private Dictionary<Debuff, float> slowPercentDictionary;
+
+            public Debuff enemyDebuff { get; private set; }
             public Dictionary<Debuff, float> debuffTime;
 
             public void OnDamage(float damage)
                 => Hp -= (damage + additionalDamage);
 
-            public void OnSlow(float percent)
+            public void OnSlowDebuff(float percent)
             {
                 //* 가해진 디버프의 강도가 기존의 슬로우 정도보다 강할 경우에만 적용
+                enemyDebuff ^= Debuff.Slow;
+                // debuffSlow = percent;
+                slowPercentDictionary[Debuff.Slow] = percent;
                 SlowPercent = ((SlowPercent < percent) ? percent : SlowPercent);
             }
 
-            public void OnSlowResume()
+            public void OnEarthQuake(float percent)
             {
-                SlowPercent = 0;
+                enemyDebuff ^= Debuff.EarthQuake;
+                slowPercentDictionary[Debuff.EarthQuake] = percent;
+                SlowPercent = ((SlowPercent < percent) ? percent : SlowPercent);
+            }
+
+            public void OnTimeStop()
+            {
+                enemyDebuff ^= Debuff.TimeStop;
+                slowPercentDictionary[Debuff.TimeStop] = 1f;
+                SlowPercent = 1f;
+            }
+
+            public void OnSlowResume(Debuff debuff)
+            {
+                enemyDebuff &= ~debuff;
+                slowPercentDictionary[debuff] = 0;
+                SlowPercent = slowPercentDictionary.Values.Max();
             }
 
             public void OnWeak(float percent)
             {
+                enemyDebuff ^= Debuff.Weak;
                 AdditionalDamage = ((AdditionalDamage < percent) ? percent : AdditionalDamage);
             }
 
             public void OnWeakResume()
             {
+                enemyDebuff &= ~Debuff.Weak;
                 AdditionalDamage = 0;
             }
         }
@@ -113,16 +146,15 @@ namespace PokerDefense.Enemies
             //hitText.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0.1f, 0f));
 
             //* 디버프 시간 측정 및 디버프 해제
-            if ((enemyIndivData.enemyDebuff & (Debuff.Slow ^ Debuff.TimeStop)) != 0)
+            if ((enemyIndivData.enemyDebuff & Debuff.Slow) != 0)
             {
                 // TimeStop 시에는 디버프 카운트다운이 줄어들지 않음
-                if (enemyIndivData.debuffTime[Debuff.Slow] > 0)
+                if ((enemyIndivData.debuffTime[Debuff.Slow] > 0))
                 {
-                    enemyIndivData.debuffTime[Debuff.Slow] -= Time.deltaTime;
+                    if ((enemyIndivData.enemyDebuff & Debuff.TimeStop) == 0) enemyIndivData.debuffTime[Debuff.Slow] -= Time.deltaTime;
                 }
                 else
                 {
-                    enemyIndivData.enemyDebuff &= ~Debuff.Slow;
                     enemyIndivData.debuffTime[Debuff.Slow] = 0;
                     debuffStopEvents[Debuff.Slow].Invoke();
                 }
@@ -135,7 +167,6 @@ namespace PokerDefense.Enemies
                 }
                 else
                 {
-                    enemyIndivData.enemyDebuff &= ~Debuff.Weak;
                     enemyIndivData.debuffTime[Debuff.Weak] = 0;
                     debuffStopEvents[Debuff.Weak].Invoke();
                 }
@@ -150,26 +181,22 @@ namespace PokerDefense.Enemies
             GameManager.Data.SkillIndexDict.TryGetValue("TimeStop", out var timeStopSkillIndex);
             GameManager.Skill.skillStarted[timeStopSkillIndex].AddListener((stopTime, nouse) =>
             {
-                enemyIndivData.enemyDebuff ^= Debuff.TimeStop;
-                enemyIndivData.OnSlow(1f);
+                enemyIndivData.OnTimeStop();
             });
             GameManager.Skill.skillFinished[timeStopSkillIndex].AddListener(() =>
             {
-                enemyIndivData.enemyDebuff &= ~Debuff.TimeStop;
-                if ((enemyIndivData.enemyDebuff & (Debuff.EarthQuake ^ Debuff.Slow)) == 0) enemyIndivData.OnSlowResume();
+                enemyIndivData.OnSlowResume(Debuff.TimeStop);
             });
 
             GameManager.Data.SkillIndexDict.TryGetValue("EarthQuake", out var earthQuakeSkillIndex);
             GameManager.Skill.skillStarted[earthQuakeSkillIndex].AddListener((slowTime, nouse) =>
             {
-                enemyIndivData.enemyDebuff ^= Debuff.EarthQuake;
                 GameManager.Data.SkillDataDict.TryGetValue(earthQuakeSkillIndex, out var skillData);
-                enemyIndivData.OnSlow(skillData.slowPercent);
+                enemyIndivData.OnEarthQuake(skillData.slowPercent);
             });
             GameManager.Skill.skillFinished[earthQuakeSkillIndex].AddListener(() =>
             {
-                enemyIndivData.enemyDebuff &= ~Debuff.EarthQuake;
-                if ((enemyIndivData.enemyDebuff & (Debuff.TimeStop ^ Debuff.Slow)) == 0) enemyIndivData.OnSlowResume();
+                enemyIndivData.OnSlowResume(Debuff.EarthQuake);
             });
 
             //* 발동 이벤트 추가
@@ -278,8 +305,7 @@ namespace PokerDefense.Enemies
         protected void DebuffEnemy(Debuff debuff, float debuffTime, float debuffPercent)
         {
             //* 디버프 적용, 효과 및 시간 중첩되지 않음
-            enemyIndivData.enemyDebuff ^= debuff;
-            enemyIndivData.debuffTime[debuff] = debuffTime;
+            if (debuffTime > enemyIndivData.debuffTime[debuff]) enemyIndivData.debuffTime[debuff] = debuffTime;
 
             UnityEvent<float> debuffEvent;
             debuffEvents.TryGetValue(debuff, out debuffEvent);
@@ -290,7 +316,7 @@ namespace PokerDefense.Enemies
         private void SlowEnemy(float debuffPercent)
         {
             // debuffPercent만큼의 비율로 속도 감소. 중첩되지 않음
-            enemyIndivData.OnSlow(debuffPercent);
+            enemyIndivData.OnSlowDebuff(debuffPercent);
         }
 
         private void WeakEnemy(float debuffPercent)
@@ -302,8 +328,7 @@ namespace PokerDefense.Enemies
         //* 각 디버프 적용 해제 함수 목록: debuffStopEvents에 추가
         private void StopSlowEnemy()
         {
-            // 지진 및 시간정지 스킬이 사용되지 않는 동안에만 슬로우 해제
-            if ((enemyIndivData.enemyDebuff & (Debuff.EarthQuake ^ Debuff.TimeStop)) == 0) enemyIndivData.OnSlowResume();
+            enemyIndivData.OnSlowResume(Debuff.Slow);
         }
 
         private void StopWeakEnemy()

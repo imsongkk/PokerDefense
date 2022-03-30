@@ -8,7 +8,7 @@
     "skillCost" : 5,
     "skillRange" : 0,
     "skillDamage" : 0,
-    "skillTic" : 0,
+    "skillTic" : 0
   },
   "FireHole": {
     "skillIndex" : 1,
@@ -19,18 +19,18 @@
     "skillCost" : 5,
     "skillRange" : 5,
     "skillDamage" : 20,
-    "skillTic" : 1,
+    "skillTic" : 1
   },
   "EarthQuake": {
     "skillIndex" : 2,
     "skillName" : "EarthQuake",
     "skillTime" : 5,
     "coolTime" : 10,
-    "slowPercent" : 50,
+    "slowPercent" : 0.7,
     "skillCost" : 5,
     "skillRange" : 0,
     "skillDamage" : 0,
-    "skillTic" : 0,
+    "skillTic" : 0
   },
   "Meteo": {
     "skillIndex" : 3,
@@ -41,6 +41,6 @@
     "skillCost" : 5,
     "skillRange" : 2,
     "skillDamage" : 20,
-    "skillTic" : 0,
+    "skillTic" : 0
   }
 }
