@@ -3,19 +3,21 @@ using PokerDefense.Data;
 using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
 using PokerDefense.Utils;
+using PokerDefense.Enemies;
 
 namespace PokerDefense.Towers
 {
-    public class OnePairTower : Tower
+    public class OnePairTower : DirectAttackTower
     {
-        protected override void Attack()
+        protected override void InitDebuff()
         {
-            base.Attack();
+            base.InitDebuff();
         }
 
-        protected override void DamageCalculate()
+        protected override void DirectAttackTarget(Enemy target, float damage)
         {
-            base.DamageCalculate();
+            base.DirectAttackTarget(target, damage);
         }
+
     }
 }

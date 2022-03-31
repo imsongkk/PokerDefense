@@ -1,20 +1,24 @@
 using UnityEngine;
 using PokerDefense.Data;
+using PokerDefense.Enemies;
 using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
+using static PokerDefense.Utils.Define;
+
 
 namespace PokerDefense.Towers
 {
-    public class JackpotTower : Tower
+    public class JackpotTower : ProjectileTower
     {
-        protected override void Attack()
+        protected override void ProjectileAttackTarget(Enemy target, float damage)
         {
-            base.Attack();
+            base.ProjectileAttackTarget(target, damage);
         }
 
-        protected override void DamageCalculate()
+
+        protected override void AddDebuff()
         {
-            base.DamageCalculate();
+
         }
     }
 }

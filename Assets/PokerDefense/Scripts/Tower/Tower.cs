@@ -228,9 +228,7 @@ namespace PokerDefense.Towers
                 AttackTarget(enemies[i]);
             }
         }
-
-        //* 객체마다 다른 공격 방식: 자손에서 Override
-        protected virtual void AttackTarget(Enemy target)
+        private void AttackTarget(Enemy target)
         {
             Define.EnemyType enemyType = target.enemyIndivData.EnemyType;
             TowerType towerType = towerIndivData.TowerType;
@@ -238,29 +236,13 @@ namespace PokerDefense.Towers
 
             float calculatedDamage = Define.CalculateDamage(towerType, enemyType, towerIndivData.Damage, isCritical);
 
-            if (towerUniqueData.isProjectile) ProjectileAttackTarget(target, calculatedDamage);
-            else DirectAttackTarget(target, calculatedDamage);
-
+            //* tower attack override(Projectile/Direct Attack)
+            AttackMethod(target, calculatedDamage);
             SetAnimAttack(target, isCritical); // 애니메이션 스타트
         }
 
-        protected virtual void DebuffTarget(Enemy target) { return; } //* Debuff enemy. 자손에서 override
-
-        protected virtual void DirectAttackTarget(Enemy target, float damage)
-        {
-            DebuffTarget(target);
-            target.OnDamage(damage);
-        }
-
-        protected virtual void ProjectileAttackTarget(Enemy target, float damage)
-        {
-            //TODO 투사체 발사 및 해당 투사체에서 적에게 대미지 전달하도록 변경(직접데미지 X)
-        }
-
-        protected virtual void DamageCalculate()
-        {
-            // Deprecated 
-        }
+        protected virtual void AttackMethod(Enemy target, float damage) { return; }
+        //* 공격방식(직접/투사체). 하위 타워(ProjectileTower/DirectAttackTower에서 구체화)
 
         protected void OnTriggerEnter2D(Collider2D collision)
         {

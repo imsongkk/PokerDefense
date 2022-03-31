@@ -37,20 +37,20 @@ namespace PokerDefense.Towers
 
         protected virtual void AddDebuff()
         {
-            //* override 전용
+            //* override 전용, projectiletower 전용
             //* 부여할 모든 디버프를 pool에 추가
             //  projectilePool.AddDebuff(debuffData)
         }
 
-        protected override void ProjectileAttackTarget(Enemy target, float damage)
+        protected override void AttackMethod(Enemy target, float damage)
+        {
+            ProjectileAttackTarget(target, damage);
+        }
+
+        protected virtual void ProjectileAttackTarget(Enemy target, float damage)
         {
             //TODO 투사체 발사 및 해당 투사체에서 적에게 대미지 전달하도록 변경(직접데미지 X)
             projectilePool.Dequeue(target, damage);
-        }
-
-        protected override void AttackTarget(Enemy target)
-        {
-            base.AttackTarget(target);
         }
     }
 }

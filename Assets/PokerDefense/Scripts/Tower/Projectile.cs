@@ -6,7 +6,6 @@ using PokerDefense.Enemies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PokerDefense.Utils;
 using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Towers
@@ -40,11 +39,11 @@ namespace PokerDefense.Towers
             }
         }
 
-        private Rigidbody2D rigidbody;
+        private Rigidbody2D rb2D;
 
         private void Awake()
         {
-            this.rigidbody = this.GetComponent<Rigidbody2D>();
+            this.rb2D = this.GetComponent<Rigidbody2D>();
             this.buffStackDelegate = null;
         }
 
@@ -53,7 +52,7 @@ namespace PokerDefense.Towers
             if (gameObject.activeSelf && (target != null))
             {
                 targetPosition = (Vector2)target.transform.position;
-                rigidbody.MovePosition(this.rigidbody.position + (targetPosition - this.rigidbody.position).normalized * speed);
+                rb2D.MovePosition(this.rb2D.position + (targetPosition - this.rb2D.position).normalized * speed);
             }
 
         }

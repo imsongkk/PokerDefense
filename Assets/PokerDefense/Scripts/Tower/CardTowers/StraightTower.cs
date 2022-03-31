@@ -8,9 +8,9 @@ namespace PokerDefense.Towers
 {
     public class StraightTower : ProjectileTower
     {
-        protected override void AttackTarget(Enemy target)
+        protected override void ProjectileAttackTarget(Enemy target, float damage)
         {
-            base.AttackTarget(target);
+            base.ProjectileAttackTarget(target, damage);
         }
 
         protected override void AddDebuff()

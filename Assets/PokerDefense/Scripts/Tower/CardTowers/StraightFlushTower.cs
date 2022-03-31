@@ -1,20 +1,21 @@
 using UnityEngine;
 using PokerDefense.Data;
+using PokerDefense.Enemies;
 using PokerDefense.Managers;
 using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Towers
 {
-    public class StraightFlushTower : Tower
+    public class StraightFlushTower : ProjectileTower
     {
-        protected override void Attack()
+        protected override void ProjectileAttackTarget(Enemy target, float damage)
         {
-            base.Attack();
+            base.ProjectileAttackTarget(target, damage);
         }
 
-        protected override void DamageCalculate()
+        protected override void AddDebuff()
         {
-            base.DamageCalculate();
+
         }
     }
 }
