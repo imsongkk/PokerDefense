@@ -3231,7 +3231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd56183099beef44f89ce06ec95ce84c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 3645061698258024670, guid: c62efff03ccde384e8efc2c11434bed5, type: 3}
+  projectilePrefab: {fileID: 3645061698258024670, guid: 39c9314140b0c404ab4280d1b1a5f272, type: 3}
 --- !u!58 &-7316643618024672580
 CircleCollider2D:
   m_ObjectHideFlags: 0

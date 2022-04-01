@@ -19,9 +19,7 @@ namespace PokerDefense.Towers
         protected float damage;
         [SerializeField]
         protected float speed;
-        [SerializeField]
-        protected bool isCushion;
-        // protected DebuffData debuffData;
+
         protected static List<DebuffData> debuffDatas = new List<DebuffData>();
         protected BuffStackDelegate buffStackDelegate;
 
@@ -41,7 +39,7 @@ namespace PokerDefense.Towers
 
         private Rigidbody2D rb2D;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             this.rb2D = this.GetComponent<Rigidbody2D>();
             this.buffStackDelegate = null;
@@ -57,10 +55,9 @@ namespace PokerDefense.Towers
 
         }
 
-        public void InitProjectile(float speed, bool isCushion, ProjectilePool pool, BuffStackDelegate buffStackDelegate)
+        public void InitProjectile(float speed, ProjectilePool pool, BuffStackDelegate buffStackDelegate)
         {
             this.speed = speed;
-            this.isCushion = isCushion;
             this.pool = pool;
             this.buffStackDelegate = buffStackDelegate;
         }
@@ -110,7 +107,6 @@ namespace PokerDefense.Towers
 
         protected virtual void OnHit()
         {
-            //override on cushion projectile
             if (buffStackDelegate != null) this.buffStackDelegate();
             pool.Enqueue(this);
         }
