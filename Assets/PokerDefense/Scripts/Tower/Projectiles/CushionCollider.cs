@@ -13,21 +13,41 @@ namespace PokerDefense.Towers
     public class CushionCollider : MonoBehaviour
     {
         private CircleCollider2D cushionRangeCollider;
-        private Queue<Enemy> enemies = new Queue<Enemy>();
+        private List<Enemy> enemies = new List<Enemy>();
         private Enemy nextTarget;
         private float nextTargetDistance;
+
+        private Enemy collidedEnemy;
 
         private void Awake()
         {
             cushionRangeCollider = this.GetComponent<CircleCollider2D>();
+
+        }
+
+        private void OnEnable()
+        {
+
+        }
+
+        private void OnDisable()
+        {
+            TargetClear();
+            Debug.Log("target cleared");
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Enemy"))
             {
-                Debug.Log($"Target Entered: {collision.gameObject.ToString()}");
-                enemies.Enqueue(collision.gameObject.GetComponent<Enemy>());
+                collidedEnemy = collision.gameObject.GetComponent<Enemy>();
+                if (!(collidedEnemy.isCollided))
+                {
+                    Debug.Log($"OnTriggerEnter2D Called");
+                    Debug.Log($"Target Entered: {collision.gameObject.ToString()}");
+                    collidedEnemy.isCollided = true;
+                    enemies.Add(collidedEnemy);
+                }
             }
         }
 
@@ -35,9 +55,11 @@ namespace PokerDefense.Towers
         {
             if (collision.CompareTag("Enemy"))
             {
-                Debug.Log($"Target Exit: {collision.gameObject.ToString()}");
-                enemies.Dequeue();
+                collidedEnemy = collision.gameObject.GetComponent<Enemy>();
+                collidedEnemy.isCollided = false;
+                if (enemies.Remove(collidedEnemy)) Debug.Log($"Target Exit: {collision.gameObject.ToString()}");
             }
+
         }
 
         public Enemy NextTarget(Enemy currentTarget)
@@ -45,21 +67,29 @@ namespace PokerDefense.Towers
             nextTarget = null;
             nextTargetDistance = 2123456789f;
 
+            enemies.Remove(currentTarget);
             foreach (var enemy in enemies)
             {
-                if (enemy != currentTarget)
+                float targetDistance = Vector3.Distance(enemy.transform.position, this.transform.position);
+                if (targetDistance < nextTargetDistance)
                 {
-                    float targetDistance = Vector3.Distance(enemy.transform.position, this.transform.position);
-                    if (targetDistance < nextTargetDistance)
-                    {
-                        nextTarget = enemy;
-                        nextTargetDistance = targetDistance;
-                    }
+                    nextTarget = enemy;
+                    nextTargetDistance = targetDistance;
                 }
                 else continue;
             }
+
             Debug.Log($"Next Target: {nextTarget}");
             return nextTarget;
+        }
+
+        private void TargetClear()
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.isCollided = false;
+            }
+            enemies.Clear();
         }
     }
 }

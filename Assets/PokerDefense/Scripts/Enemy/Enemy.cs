@@ -134,6 +134,8 @@ namespace PokerDefense.Enemies
         public static List<Transform> wayPoints;
         public static Transform endPoint;
 
+        public bool isCollided = false;     // called from CushionCollider
+
         private float originScaleX;
 
         Vector3 moveDirection;

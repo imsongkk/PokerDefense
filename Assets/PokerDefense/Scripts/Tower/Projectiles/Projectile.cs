@@ -20,6 +20,8 @@ namespace PokerDefense.Towers
         [SerializeField]
         protected float speed;
 
+        protected float realDamage;
+
         protected static List<DebuffData> debuffDatas = new List<DebuffData>();
         protected BuffStackDelegate buffStackDelegate;
 
@@ -43,6 +45,17 @@ namespace PokerDefense.Towers
         {
             this.rb2D = this.GetComponent<Rigidbody2D>();
             this.buffStackDelegate = null;
+            this.realDamage = damage;
+        }
+
+        protected virtual void OnEnable()
+        {
+
+        }
+
+        protected virtual void OnDisable()
+        {
+
         }
 
         private void FixedUpdate()
@@ -65,6 +78,7 @@ namespace PokerDefense.Towers
         public void SetDamage(float damage)
         {
             this.damage = damage;
+            this.realDamage = this.damage;
         }
 
         public void SetPool(ProjectilePool pool)
@@ -102,7 +116,7 @@ namespace PokerDefense.Towers
             {
                 target.SetDebuff(debuffData);
             }
-            target.OnDamage(this.damage);
+            target.OnDamage(this.realDamage);
         }
 
         protected virtual void OnHit()
