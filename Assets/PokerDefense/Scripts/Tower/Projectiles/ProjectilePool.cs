@@ -31,6 +31,7 @@ namespace PokerDefense.Towers
             for (int i = 0; i < poolSize; i++)
             {
                 Projectile projectile = GameObject.Instantiate(projectilePrefab, parentTower).GetComponent<Projectile>();
+                projectile.SetBuffStack(this.buffStackDelegate);
                 projectile.SetPool(this);
                 projectilePool.Enqueue(projectile);
                 projectile.gameObject.SetActive(false);

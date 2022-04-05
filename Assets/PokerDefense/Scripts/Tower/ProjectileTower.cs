@@ -26,7 +26,13 @@ namespace PokerDefense.Towers
         {
             base.InitTower(towerName, towerType, topCard, index);
 
+            InitBuffStack();
             InitPool();
+        }
+
+        protected virtual void InitBuffStack()
+        {
+            return;
         }
 
         protected void InitPool()
