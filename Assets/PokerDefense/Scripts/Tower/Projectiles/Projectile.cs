@@ -15,7 +15,6 @@ namespace PokerDefense.Towers
         protected ProjectilePool pool;
         protected Enemy target;
 
-        [SerializeField]
         protected float damage;
         [SerializeField]
         protected float speed;

@@ -6,7 +6,7 @@ using static PokerDefense.Managers.TowerManager;
 
 namespace PokerDefense.Towers
 {
-    public class StraightFlushTower : ProjectileTower
+    public class StraightFlushTower : FlushTower
     {
         protected override void ProjectileAttackTarget(Enemy target, float damage)
         {

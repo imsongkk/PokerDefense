@@ -8,7 +8,7 @@ using static PokerDefense.Utils.Define;
 
 namespace PokerDefense.Towers
 {
-    public class RoyalStraightFlushTower : ProjectileTower
+    public class RoyalStraightFlushTower : FlushTower
     {
         protected override void ProjectileAttackTarget(Enemy target, float damage)
         {

@@ -96,7 +96,7 @@ namespace PokerDefense.Towers
 
                     rangeLevel = value;
                     Range = towerUpgradeData.attackRangeTable[rangeLevel];
-                    OnUpdageRange();
+                    OnUpdateRange();
                     UpdatePrice();
                 }
             }
@@ -125,7 +125,7 @@ namespace PokerDefense.Towers
             public string TowerName { get; private set; }
             public int Index { get; private set; }
 
-            private void OnUpdageRange()
+            private void OnUpdateRange()
             {
                 owner.rangeCollider.radius = Range; // 실제 사거리 변경
                 owner.attackRangeCircle.localScale = new Vector2(Range * 2, Range * 2);
@@ -140,7 +140,30 @@ namespace PokerDefense.Towers
             {
                 // TODO : 알맞게 가격 upgrade
             }
+
+            public void AddDamageBuff(float buffPercent)
+            {
+                this.Damage *= (1 + buffPercent);
+            }
+
+            public void DeleteDamageBuff(float buffPercent)
+            {
+                this.Damage /= (1 + buffPercent);
+            }
+
+            public void AddSpeedBuff(float buffPercent)
+            {
+                this.Speed *= (1 + buffPercent);
+                OnUpdateSpeed();
+            }
+
+            public void DeleteSpeedBuff(float buffPercent)
+            {
+                this.Speed /= (1 + buffPercent);
+                OnUpdateSpeed();
+            }
         }
+
         protected TowerUniqueData towerUniqueData; // 족보로 결정되는 불변한 수치들
         public TowerIndivData towerIndivData { get; private set; } // 타워 개개인이 가지고 있는 데이터
 
