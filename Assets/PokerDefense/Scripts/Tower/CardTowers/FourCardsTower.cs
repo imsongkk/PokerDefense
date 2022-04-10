@@ -10,6 +10,11 @@ namespace PokerDefense.Towers
 {
     public class FourCardsTower : DirectAttackTower
     {
+        private int fourCardsBuffStack = 1;
+        private float fourCardsBuffPercent = 1f;
+
+        public Sprite magicArea;
+
         protected override void InitDebuff()
         {
             base.InitDebuff();
@@ -17,6 +22,12 @@ namespace PokerDefense.Towers
 
         protected override void DirectAttackTarget(Enemy target, float damage)
         {
+            if (fourCardsBuffStack >= 4)
+            {
+                damage *= (1 + fourCardsBuffPercent);
+                fourCardsBuffStack = 1;
+            }
+            else { fourCardsBuffStack++; }
             base.DirectAttackTarget(target, damage);
         }
 

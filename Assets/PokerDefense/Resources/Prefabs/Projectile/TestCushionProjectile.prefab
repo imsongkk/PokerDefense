@@ -69,7 +69,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.234375}
   serializedVersion: 2
-  m_Radius: 3
+  m_Radius: 100
 --- !u!114 &2723273043757679060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,9 +181,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  speed: 1
+  speed: 0.2
+  lookAt: 0
+  spin: 1
   projectileSprite: {fileID: 0}
+  cushionDamageDrop: 0.2
   maxCushionTimes: 3
+  cushionColliderRadius: 3
 --- !u!50 &-4406543770931287640
 Rigidbody2D:
   serializedVersion: 4

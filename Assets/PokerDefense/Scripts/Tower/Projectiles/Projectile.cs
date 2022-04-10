@@ -19,10 +19,17 @@ namespace PokerDefense.Towers
         [SerializeField]
         protected float speed;
 
+        protected float realDamage;
+
         protected static List<DebuffData> debuffDatas = new List<DebuffData>();
         protected BuffStackDelegate buffStackDelegate;
 
         protected Vector2 targetPosition;
+
+        [SerializeField]
+        protected bool lookAt = false;
+        [SerializeField]
+        protected bool spin = false;
 
         [SerializeField]
         private Sprite projectileSprite;
@@ -42,6 +49,17 @@ namespace PokerDefense.Towers
         {
             this.rb2D = this.GetComponent<Rigidbody2D>();
             this.buffStackDelegate = null;
+            this.realDamage = damage;
+        }
+
+        protected virtual void OnEnable()
+        {
+
+        }
+
+        protected virtual void OnDisable()
+        {
+
         }
 
         private void FixedUpdate()
@@ -50,6 +68,14 @@ namespace PokerDefense.Towers
             {
                 targetPosition = (Vector2)target.transform.position;
                 rb2D.MovePosition(this.rb2D.position + (targetPosition - this.rb2D.position).normalized * speed);
+                if (lookAt)
+                {
+                    rb2D.rotation = Mathf.Atan2((this.rb2D.position - targetPosition).y, (this.rb2D.position - targetPosition).x) * Mathf.Rad2Deg + 90;
+                }
+                if (spin)
+                {
+                    rb2D.rotation += 5f;
+                }
             }
 
         }
@@ -64,6 +90,7 @@ namespace PokerDefense.Towers
         public void SetDamage(float damage)
         {
             this.damage = damage;
+            this.realDamage = this.damage;
         }
 
         public void SetPool(ProjectilePool pool)
@@ -101,7 +128,7 @@ namespace PokerDefense.Towers
             {
                 target.SetDebuff(debuffData);
             }
-            target.OnDamage(this.damage);
+            target.OnDamage(this.realDamage);
         }
 
         protected virtual void OnHit()

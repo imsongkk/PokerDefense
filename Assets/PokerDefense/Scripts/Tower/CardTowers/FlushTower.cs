@@ -36,6 +36,11 @@ namespace PokerDefense.Towers
 
         protected override void AddDebuff()
         {
+            base.AddDebuff();
+        }
+
+        protected virtual void FlushBuff()
+        {
 
         }
     }
