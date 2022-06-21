@@ -23,9 +23,9 @@ namespace PokerDefense.Utils
 
             return transform.gameObject;
         }
-        /* FindChild : goÀÇ ÀÚ½Äµé Áß¿¡¼­ T ÄÄÆ÷³ÍÆ®¸¦ °¡Áö¸ç name°ú ÀÌ¸§ÀÌ ÀÏÄ¡ÇÏ´Â 
-         *             recursive°¡ falseÀÏ ¶§´Â goÀÇ Á÷¼Ó ÀÚ½Äµé Áß¿¡¼­ T ÄÄÆ÷³ÍÆ®¸¦ °¡Áø ÀÚ½ÄÀ» Ã£À½
-         *             recursive°¡ trueÀÏ ¶§´Â goÀÇ ¸ðµç ÀÚ½Äµé Áß¿¡¼­ T ÄÄÆ÷³ÍÆ®¸¦ °¡Áø ÀÚ½ÄÀ» Ã£À½
+        /* FindChild : goï¿½ï¿½ ï¿½Ú½Äµï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ T ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nameï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ 
+         *             recursiveï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ goï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½Äµï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ T ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
+         *             recursiveï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ goï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ú½Äµï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ T ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
          * 
          * 
          */
@@ -105,7 +105,7 @@ namespace PokerDefense.Utils
         /*
         public static IEnumerator Fade(float fadeTime, bool isOut, Action callback)
         {
-            // isOutÀÌ True¸é alpha °¨¼Ò
+            // isOutï¿½ï¿½ Trueï¿½ï¿½ alpha ï¿½ï¿½ï¿½ï¿½
             Image fadeImage = GameManager.UI.ShowFadeUI().GetComponent<Image>();
 
             float curTime = Time.time;
